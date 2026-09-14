@@ -1,0 +1,36 @@
+[00:02:32]: [WW_ENGINE_PASS] world service loaded on dedicated server
+[00:02:32]: [WW_ENGINE_PASS] server does not load UI
+[00:02:32]: [WW_ENGINE_PASS] facts:beefalo
+[00:02:32]: [WW_ENGINE_PASS] facts:berries
+[00:02:32]: [WW_ENGINE_PASS] facts:axe
+[00:02:32]: [WW_ENGINE_PASS] facts:armorwood
+[00:02:32]: [WW_ENGINE_PASS] facts:strawhat
+[00:02:32]: [WW_ENGINE_PASS] facts:icebox
+[00:02:32]: [WW_ENGINE_PASS] facts:farm_plant_carrot
+[00:02:32]: [WW_ENGINE_PASS] facts:meatballs
+[00:02:32]: [WW_ENGINE_PASS] facts:raincoat
+[00:02:32]: [WW_ENGINE_PASS] facts:lantern
+[00:02:32]: [WW_ENGINE_PASS] facts:pigman
+[00:02:32]: [WW_ENGINE_PASS] facts:firepit
+[00:02:32]: [WW_ENGINE_PASS] facts:saddle_basic
+[00:02:32]: [WW_ENGINE_PASS] facts:rope
+[00:02:32]: [WW_ENGINE_PASS] facts:bundle
+[00:02:32]: [WW_ENGINE_PASS] food estimates match actual engine eating
+[00:02:32]: [WW_ENGINE_PASS] native stack count conservation
+[00:02:32]: [WW_ENGINE_PASS] manual and unknown items protected as merge targets
+[00:02:32]: [WW_ENGINE_PASS] native icon resolves without copying assets
+[00:02:32]: [WW_ENGINE_PASS] observer healthdelta produces delta and releases listeners
+[00:02:32]: [WW_ENGINE_PASS] native MapExplorer isolation
+[00:02:32]: [WW_ENGINE_PASS] persistent map round trip
+[00:02:32]: [WW_ENGINE_PASS] native partial inventory pickup preserves leftover stack
+[00:02:32]: [WW_ENGINE_PASS] native mount facts follow saddle and obedience values
+[00:02:32]: [WW_ENGINE_RESULT] passed=26 failed=0 build=747465
+[00:02:32]: [WW_UI_PASS] native HUD constructor and update
+[00:02:32]: [WW_UI_PASS] all native menu pages in Chinese and English
+[00:02:32]: [WW_UI_PASS] native general key callback receives key and down
+[00:02:32]: [WW_UI_PASS] native batch outline has no pointer-following component
+[00:02:32]: [WW_UI_RESULT] passed=4 failed=0 build=747465
+[00:02:38]: [WW_EVENT_PASS] real lootdropper events land and merge with count conservation
+[00:02:38]: [WW_EVENT_PASS] manual DropItem remains protected after landing
+[00:02:38]: [WW_EVENT_RESULT] passed=2 failed=0 build=747465
+[00:06:20]: [WW_CLIENT_RESULT] passed=1 failed=0 host_fixture=true

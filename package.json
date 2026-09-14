@@ -1,0 +1,17 @@
+{
+  "name": "wildwise-dev",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "lua5.1 tests/run.lua",
+    "lint": "luacheck modmain.lua modinfo.lua scripts tests",
+    "check": "npm run lint && npm test && python3 tools/package.py --check",
+    "package": "python3 tools/package.py",
+    "prepare": "git config core.hooksPath .githooks"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1"
+  }
+}

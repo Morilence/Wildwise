@@ -1,0 +1,47 @@
+{
+  "date": "2026-09-14",
+  "game_version": "747465",
+  "reference_source_only_not_redistributed": [
+    {
+      "workshop_id": "1595631294",
+      "modinfo_version": "1.1.8",
+      "source": "SteamCMD workshop_download_item 322330 1595631294",
+      "sha256": {
+        "modinfo.lua": "2aad0fd7431117dafd58131e45e9e6fdb66701b9feb26f6f3b0f28d5578163a5",
+        "modmain.lua": "5df256dd4c1a988307882b1a5508d4bde4ade693e7748972d65154e968cf7843",
+        "scripts/components/smart_minisign.lua": "4217ac49de4e625600f81c770b5d992ccd556588321d9b456511d86063a220f8"
+      }
+    },
+    {
+      "workshop_id": "2477889104",
+      "modinfo_version": "1.4.0",
+      "source": "SteamCMD workshop_download_item 322330 2477889104",
+      "sha256": {
+        "modinfo.lua": "639282b05b8f3e9467a3e4f5c92d6757dfbde024a13e29267cedfe455d8d12ef",
+        "modmain.lua": "c16f5fb4d920c2047acfffc3b6e9f5eb3d9416a541d8479f8bf4be277c22aee2",
+        "scripts/widgets/beefaloBadge.lua": "d5d75a0c458a86df72ddcae1e2defc3186661dd8ae6b6d49f3e7ba258219f913",
+        "scripts/widgets/beefaloStatusBar.lua": "8b52cc27bef6e8b8387057c3b04e2f3c0765cff0a5c4af9673a8360c631feb3d"
+      }
+    },
+    {
+      "workshop_id": "1803285852",
+      "modinfo_version": "0.3.1",
+      "source": "SteamCMD workshop_download_item 322330 1803285852",
+      "sha256": {
+        "modinfo.lua": "215d9d11922f887f1ac73d8afbe76d97e2ee4d23e0c197a55fadda417a77a8e6",
+        "modmain.lua": "801f118ae83902d552565656d1ba5c5f94f55c44a7bfca6caaf9d00df275953b"
+      }
+    },
+    {
+      "workshop_id": "362175979",
+      "modinfo_version": "1.4.5",
+      "source": "SteamCMD original legacy ZIP",
+      "sha256": {
+        "modinfo.lua": "adf8ad09a025ba78108fb3f2d625ee56ce0b6587237025d2b9d0dba5868d3648",
+        "modmain.lua": "30bc6d6e9c6a5516985ffc0e9f2c3829c2f8beff417a02f6f0cee6d29d4a9408",
+        "scripts/components/wormhole_counter.lua": "853b71e49188d22a5fd1b881efe0586c6c2f5fb9507a2c520bb2b7d417a747ef",
+        "scripts/components/wormhole_marks.lua": "e5087726924698f86ccb1e61dc475dc25d8c73f8b714c2bb86a6ca07dc35de2c"
+      }
+    }
+  ]
+}

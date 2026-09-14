@@ -1,0 +1,7 @@
+[00:00:02]: No mods registered
+[00:00:06]: No mods registered
+[00:00:41]: [WW_REMOVAL]	true	true
+[00:00:41]: [WW_REMOVAL_PORTAL]	1
+[00:00:43]: Serializing world: session/00838CA1FD2AE768/0000000015
+[00:01:21]: Serializing world: session/00838CA1FD2AE768/0000000016
+[00:01:22]: Serializing world: session/00838CA1FD2AE768/0000000017
