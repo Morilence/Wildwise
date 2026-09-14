@@ -1,0 +1,62 @@
+﻿字段,分类,类型,单位,级别,查看者相关,声明,有实际赋值,边界
+absorption,combat,number,%,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+armor,combat,number,未配置,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+attack_range,combat,number,未配置,2,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+bundle,container,text,未配置,2,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。 当前摘要用 prefab/标签键，非完整中文名称映射。
+burning,combat,boolean,未配置,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+contents,container,text,未配置,2,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。 当前摘要用 prefab/标签键，非完整中文名称映射。
+cook_time,progress,number,s,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+count,container,number,未配置,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+damage,combat,number,未配置,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+dapperness,equipment,number,未配置,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+day,world,number,未配置,2,false,✅,✅,世界 state.cycles 原始值，读取器未加一；需核对 UI 日数口径。
+domesticated,beefalo,boolean,未配置,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。 骑乘文字面板未枚举此字段；可能在普通 hover 显示。
+domestication,beefalo,number,%,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+dry_time,progress,number,s,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+durability,equipment,number,%,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+edible,food,boolean,未配置,1,true,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+fertilizer,farm,text,未配置,2,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+food_health,food,number,未配置,1,true,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+food_hunger,food,number,未配置,1,true,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+food_sanity,food,number,未配置,1,true,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+food_type,food,text,未配置,1,true,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+freshness,food,number,%,2,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+frozen,combat,boolean,未配置,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+fuel,progress,number,未配置,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+fuel_time,progress,number,s,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+fuel_value,progress,number,未配置,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+growth_time,progress,number,s,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+harvest,progress,number,未配置,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+health,combat,number,未配置,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+health_max,combat,number,未配置,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。 骑乘文字面板未枚举此字段；可能在普通 hover 显示。
+hunger,beefalo,number,未配置,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+hunger_max,beefalo,number,未配置,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。 骑乘文字面板未枚举此字段；可能在普通 hover 显示。
+hunger_rate,world,number,未配置,2,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+ingredients,food,text,未配置,2,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。 当前摘要用 prefab/标签键，非完整中文名称映射。
+insulation,equipment,number,未配置,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+insulation_type,equipment,text,未配置,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+leader,follower,text,未配置,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+loyalty,follower,number,s,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+moisture,farm,boolean,未配置,2,false,✅,✅,原生 IsSoilMoistAtPoint 布尔值，不是精确水分。
+naughtiness,world,number,未配置,2,false,✅,❌,只有 schema/翻译；viewer(world) 明确未写入，实际不支持。
+nutrients,farm,text,未配置,2,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+obedience,beefalo,number,%,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+perish_time,food,number,未配置,2,false,✅,✅,perishremainingtime，基础腐败余量，不是环境修正倒计时。
+phase,world,text,未配置,2,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+planar_damage,combat,number,未配置,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+planar_defense,combat,number,未配置,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+ride_time,beefalo,number,s,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+saddle_uses,beefalo,number,未配置,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+sanity_rate,world,number,未配置,2,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+season,world,text,未配置,2,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+season_days,world,number,未配置,2,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+speed,equipment,number,未配置,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+stage,progress,scalar,未配置,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+stress,farm,text,未配置,2,true,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+temperature,world,number,未配置,2,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+tendency,beefalo,text,未配置,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+uses,equipment,number,未配置,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+uses_max,equipment,number,未配置,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+waterproof,equipment,number,%,1,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+wetness,world,number,未配置,2,false,✅,✅,字段由组件/状态条件读取，缺值即省略；按分类/级别/行数和文本预算显示。
+world_events,world,text,未配置,2,false,✅,✅,服主允许后最多12个原始timer名/时间，文本可能截断。

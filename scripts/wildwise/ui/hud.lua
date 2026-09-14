@@ -7,6 +7,7 @@ local Templates = require("widgets/redux/templates")
 local U = require("wildwise/core/util")
 local Format = require("wildwise/ui/format")
 local Facts = require("wildwise/services/facts")
+local Badge = require("widgets/badge")
 -- 创建引擎生命周期对象，资源归属当前实例并在移除时释放。
 local HUD = G.Class(Widget, function(self, client)
     Widget._ctor(self, "WildwiseHUD")
@@ -53,9 +54,20 @@ local HUD = G.Class(Widget, function(self, client)
     self.mount_bg = self.mount:AddChild(Image("images/global.xml", "square.tex"))
     self.mount_bg:SetSize(280, 215)
     self.mount_bg:SetTint(0.07, 0.06, 0.05, 0.82)
+    self.mount_health = self.mount:AddChild(Badge(nil, client.player, { 0.8, 0.2, 0.2, 1 }, "status_health"))
+    self.mount_hunger = self.mount:AddChild(Badge(nil, client.player, { 1, 0.8, 0.2, 1 }, "status_hunger"))
+    self.mount_health:SetPosition(-65, 88)
+    self.mount_hunger:SetPosition(65, 88)
     self.mount_text = self.mount:AddChild(Text(G.UIFONT, 21, ""))
+    self.mount_text:SetPosition(0, -36)
+    self.mount_bg:SetSize(310, 290)
     self.mount_text:SetClickable(false)
     self.mount:SetTooltip(client:L("beefalo"))
+    for _, name in ipairs(G.KnownModIndex and G.KnownModIndex:GetModsToLoad() or {}) do
+        if tostring(name):match("345692228$") then
+            self.combined_status = true
+        end
+    end
     self:StartUpdating()
 end)
 
@@ -98,7 +110,8 @@ function HUD:update_hover(hoverer)
         return
     end
     local detailed = G.TheInput:IsControlPressed(G.CONTROL_FORCE_INSPECT)
-    local content = Format.lines(fields, client.settings, client.lang, detailed, client.visible_bars[client.hover])
+    local content =
+        Format.lines(fields, client.settings, client.lang, detailed, client.visible_bars[client.hover], G.STRINGS.NAMES)
     self.hover_text:SetString(content)
     self.hover_text:SetSize(client.settings.info.font_size)
     local _, height = self.hover_text:GetRegionSize()
@@ -197,15 +210,69 @@ function HUD:OnUpdate()
             "tendency",
             "ride_time",
             "saddle_uses",
+            "saddle_name",
             "hunger",
         }) do
-            if mount[key] ~= nil and (key ~= "hunger" or self.hunger_active) then
-                lines[#lines + 1] = c:L(key) .. ": " .. Format.value(mount[key], Facts.schema[key], c.lang)
+            if
+                mount[key] ~= nil
+                and (
+                    key ~= "hunger"
+                    or (
+                        self.hunger_active
+                        and c.settings.beefalo.show_hunger ~= false
+                        and c.config.beefalo.show_hunger ~= false
+                    )
+                )
+            then
+                local value = Format.value(mount[key], Facts.schema[key], c.lang, c.settings.info, G.STRINGS.NAMES)
+                if (key == "health" or key == "hunger") and U.finite(mount[key .. "_max"]) then
+                    value = string.format("%.0f / %.0f", mount[key], mount[key .. "_max"])
+                end
+                lines[#lines + 1] = c:L(key) .. ": " .. value
             end
         end
+        self.mount:SetScale(c.settings.beefalo.scale or 1)
+        local badges = c.settings.beefalo.layout ~= "compact"
+        self.mount_bg:SetTint(0.07, 0.06, 0.05, c.settings.beefalo.background or 0.82)
+        self.mount_bg:SetSize(310, badges and 290 or 235)
+        self.mount_text:SetPosition(0, badges and -36 or 0)
+        local hunger_visible = self.hunger_active
+            and c.settings.beefalo.show_hunger ~= false
+            and c.config.beefalo.show_hunger ~= false
+        for _, entry in ipairs({
+            { self.mount_health, "health", true },
+            { self.mount_hunger, "hunger", hunger_visible },
+        }) do
+            local badge, key = entry[1], entry[2]
+            if
+                badges
+                and entry[3]
+                and U.finite(mount[key])
+                and U.finite(mount[key .. "_max"])
+                and mount[key .. "_max"] > 0
+            then
+                badge:SetPercent(U.clamp(mount[key] / mount[key .. "_max"], 0, 1), mount[key .. "_max"])
+                badge:SetTooltip(c:L(key) .. ": " .. string.format("%.0f / %.0f", mount[key], mount[key .. "_max"]))
+                badge:Show()
+            else
+                badge:Hide()
+            end
+        end
+        local panel_scale = c.settings.beefalo.scale or 1
+        local margin_x, margin_y = 165 * panel_scale, 155 * panel_scale
+        local overflow = c.player.replica.inventory and c.player.replica.inventory:GetOverflowContainer()
+        local lower_bound = margin_y + (overflow and U.call(overflow, "IsOpenedBy", c.player) and 135 or 90)
         self.mount:SetPosition(
-            w / scale - 420 + (c.settings.beefalo.offset_x or 0),
-            h / scale - 230 + (c.settings.beefalo.offset_y or 0)
+            U.clamp(
+                w / scale - (self.combined_status and 520 or 440) + (c.settings.beefalo.offset_x or 0),
+                margin_x,
+                math.max(margin_x, w / scale - margin_x)
+            ),
+            U.clamp(
+                h / scale - 285 + (c.settings.beefalo.offset_y or 0),
+                math.min(lower_bound, h / scale - margin_y),
+                h / scale - margin_y
+            )
         )
         self.mount_text:SetString(table.concat(lines, "\n"))
         self.mount:Show()
@@ -257,6 +324,7 @@ end
 function HUD:update_indicators(w, h, scale)
     local c = self.client
     local active = c.config.map.enabled
+        and c.settings.map.show_players ~= false
         and (
             c.settings.map.indicators == "always"
             or (c.settings.map.indicators == "scoreboard" and G.TheInput:IsControlPressed(G.CONTROL_SHOW_PLAYER_STATUS))

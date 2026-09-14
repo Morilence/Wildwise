@@ -2,7 +2,7 @@ name = "Wildwise"
 description =
     "Unified insight, combat bars, shared maps, item handling, action queues, smart storage signs and beefalo status.\n统一信息、血条、协作地图、物品整理、行为队列、智能小木牌与牛状态。"
 author = "Morilence"
-version = "0.2.1"
+version = "0.3.0"
 api_version = 10
 dst_compatible = true
 all_clients_require_mod = true
@@ -106,4 +106,92 @@ configuration_options = {
         15,
         values({ 0, 5, 15, 25 })
     ),
+    -- 独立能力与兼容配置 / Independent capabilities
+    option("info_combat", "Combat numbers", "战斗数值", true),
+    option("info_food_values", "Food effects", "食物三维", true),
+    option("info_perishable", "Freshness and perish estimates", "鲜度与保鲜估时", true),
+    option("info_equipment", "Equipment details", "装备详情", true),
+    option("info_progress", "Processing and growth", "加工与生长", true),
+    option("info_farm", "Farm details", "农田详情", true),
+    option("info_follower", "Follower details", "随从详情", true),
+    option("info_cooldowns", "Recharge and cooldown", "充能与冷却", true),
+    option("info_timers", "Named entity timers", "已知实体计时器", true),
+    option("info_max_lines", "Normal information lines", "常规信息行数", 10, values({ 4, 8, 10, 15, 20, 25 })),
+    option(
+        "info_inspect_lines",
+        "Inspection information lines",
+        "检查信息行数",
+        25,
+        values({ 10, 15, 20, 25, 35 })
+    ),
+    option("info_time_style", "Time display", "时间格式", "clock", {
+        { description = label("Minutes:seconds", "分:秒"), data = "clock" },
+        { description = label("Seconds", "秒"), data = "seconds" },
+        { description = label("Game days", "游戏天"), data = "days" },
+        { description = label("Time and game days", "时间与游戏天"), data = "both" },
+    }),
+    option("info_temperature_units", "Temperature units", "温度单位", "game", {
+        { description = label("Game units", "游戏值"), data = "game" },
+        { description = label("Celsius", "摄氏度"), data = "celsius" },
+        { description = label("Fahrenheit", "华氏度"), data = "fahrenheit" },
+    }),
+    option("map_wormholes", "Wormhole markers", "虫洞标记", true),
+    option("map_pings", "Allow map pings", "允许地图标记", true),
+    option("map_signal_fires", "Allow signal fires", "允许信号火", true),
+    option(
+        "items_world_radius",
+        "World stacking radius",
+        "世界掉落合堆半径",
+        0,
+        values({ 0, 1, 2, 4, 6, 8, 10, 15, 20, 25 }),
+        label(
+            "0 inherits Item radius; other values are independent.",
+            "0 跟随物品处理半径；其他值独立生效。"
+        )
+    ),
+    option(
+        "items_manual_radius",
+        "Manual stacking radius",
+        "玩家丢弃合堆半径",
+        0,
+        values({ 0, 1, 2, 4, 6, 8, 10, 15, 20, 25 }),
+        label(
+            "0 inherits Item radius; other values are independent.",
+            "0 跟随物品处理半径；其他值独立生效。"
+        )
+    ),
+    option(
+        "items_pickup_radius",
+        "Auto pickup radius",
+        "自动拾取半径",
+        0,
+        values({ 0, 1, 2, 4, 6, 8, 10, 15, 20, 25 }),
+        label(
+            "0 inherits Item radius; other values are independent.",
+            "0 跟随物品处理半径；其他值独立生效。"
+        )
+    ),
+    option("items_world_ash", "World stacking: ash", "世界掉落合堆：灰烬", false),
+    option("items_world_poop", "World stacking: manure", "世界掉落合堆：粪便", false),
+    option("items_world_seeds", "World stacking: seeds", "世界掉落合堆：种子", false),
+    option("items_manual_ash", "Manual stacking: ash", "玩家丢弃合堆：灰烬", false),
+    option("items_manual_poop", "Manual stacking: manure", "玩家丢弃合堆：粪便", false),
+    option("items_manual_seeds", "Manual stacking: seeds", "玩家丢弃合堆：种子", false),
+    option("items_pickup_ash", "Auto pickup: ash", "自动拾取：灰烬", false),
+    option("items_pickup_poop", "Auto pickup: manure", "自动拾取：粪便", false),
+    option("items_pickup_seeds", "Auto pickup: seeds", "自动拾取：种子", false),
+    option("queue_collect_after_work", "Collect after work", "工作后收集", false),
+    option(
+        "queue_double_click_speed",
+        "Double click interval",
+        "双击间隔",
+        0.35,
+        values({ 0.2, 0.25, 0.35, 0.5, 0.75 })
+    ),
+    option("queue_double_click_range", "Double click radius", "双击同类半径", 15, values({ 5, 10, 15, 20, 25 })),
+    option("signs_bundle_contents", "Show bundled contents on signs", "木牌显示包裹内容", true),
+    option("signs_body_skins", "Use stored mini sign skins", "使用箱中小木牌皮肤", true),
+    option("signs_scale", "Storage sign scale", "小木牌缩放", 0.65, values({ 0.5, 0.65, 0.8, 1 })),
+    option("beefalo_show_hunger", "Show mount hunger", "显示坐骑饥饿", true),
+    option("beefalo_scale", "Mount panel scale", "坐骑栏独立缩放", 1, values({ 0.75, 1, 1.25, 1.5 })),
 }

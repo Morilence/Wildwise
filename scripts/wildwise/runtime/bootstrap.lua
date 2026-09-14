@@ -61,7 +61,7 @@ function M.register(api, G, config)
             if Signs.enabled(prefab, config.signs) then
                 api.AddPrefabPostInit(prefab, function(inst)
                     if G.TheWorld.ismastersim then
-                        require("wildwise/runtime/signs").attach(inst, G)
+                        require("wildwise/runtime/signs").attach(inst, G, config.signs)
                     end
                 end)
             end
@@ -112,7 +112,7 @@ function M.register(api, G, config)
                 Hooks.wrap(scope, inst.components.fueled, "TakeFuelItem", function(original, component, item, ...)
                     local charcoal = U.valid(item) and item.prefab == "charcoal"
                     local result = U.pack(original(component, item, ...))
-                    if charcoal and result[1] then
+                    if charcoal and result[1] and config.map.signal_fires ~= false then
                         local s = server()
                         if s then
                             s.fires[inst] = true

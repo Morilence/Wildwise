@@ -1,0 +1,87 @@
+{
+  "version": "0.3.0",
+  "date": "2026-09-14",
+  "engine": {
+    "game": 747465,
+    "steamPublicBuild": 24700372,
+    "graphical": false,
+    "remotePlayers": false,
+    "cavesRoundTrip": false,
+    "combinedStatusVisual": false,
+    "skinAssetStubInLifecycleTest": true
+  },
+  "counts": {
+    "nativeOptions": 74,
+    "personalSettingLeaves": 57,
+    "factSchema": 80,
+    "allowedActionIds": 47
+  },
+  "validation": {
+    "lua": {
+      "passed": 121,
+      "failed": 0
+    },
+    "researchFixtures": {
+      "passed": 7,
+      "failed": 0
+    },
+    "engineContracts": {
+      "passed": 111,
+      "failed": 0,
+      "suites": {
+        "base": 26,
+        "workshop": 34,
+        "regression": 9,
+        "ui": 7,
+        "containers": 8,
+        "hostContract": 1,
+        "capabilities": 17,
+        "appearanceLifecycle": 6,
+        "events": 3
+      }
+    },
+    "lint": {
+      "luaFiles": 52,
+      "warnings": 0,
+      "errors": 0
+    }
+  },
+  "loadProbe": {
+    "scope": "wildwise_world.Tick CPU milliseconds only",
+    "scenes": [
+      {
+        "count": 100,
+        "conserved": true,
+        "stacks": 3,
+        "samples": 200,
+        "p50_ms": 0.017,
+        "p95_ms": 0.197,
+        "p99_ms": 2.175,
+        "elapsed": 20.0,
+        "pending": 0
+      },
+      {
+        "count": 500,
+        "conserved": true,
+        "stacks": 13,
+        "samples": 200,
+        "p50_ms": 0.019,
+        "p95_ms": 2.123,
+        "p99_ms": 2.152,
+        "elapsed": 20.0,
+        "pending": 0
+      },
+      {
+        "count": 1000,
+        "conserved": true,
+        "stacks": 26,
+        "samples": 200,
+        "p50_ms": 0.034,
+        "p95_ms": 2.144,
+        "p99_ms": 2.31,
+        "elapsed": 20.0,
+        "pending": 0
+      }
+    ]
+  }
+}

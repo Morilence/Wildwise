@@ -1,0 +1,379 @@
+Wildwise 0.3.0 / 2026-09-14 / official game 747465
+Headless, isolated save, no remote players. Skin lifecycle uses an asset stub.
+Intermediate failures are retained; the LAST RESULT for each suite is final.
+
+[00:01:00]: [WW3_ENGINE_PASS] real spoilage getter observes fridge multiplier without consuming food
+[00:01:00]: [WW3_ENGINE_PASS] native recharge cooldown sewing and timer details
+[00:01:00]: [WW3_ENGINE_PASS] plant stress details read recorded state without invoking stress tests
+[00:01:00]: [WW3_ENGINE_PASS] display day agrees with native clock cycle plus one
+[00:01:00]: [WW3_ENGINE_PASS] native cooked dish is identified from the stewer state
+[00:01:00]: [WW3_ENGINE_PASS] original pitchfork and watering can expose agricultural modes
+[00:01:00]: [WW3_ENGINE_PASS] native container transfer frees a drying slot before hanging new meat
+[00:01:00]: [WW3_ENGINE_PASS] drying queue leaves still-drying items untouched
+[00:01:00]: [WW3_ENGINE_PASS] ordinary chests and players cannot enter rack or gifting automation
+[00:01:00]: [WW3_ENGINE_PASS] burning native twigs remain separate
+[00:01:00]: [WW3_ENGINE_PASS] native bundle display respects independent content permission
+[00:01:00]: [WW3_ENGINE_PASS] native mount badge percentages and scale render into real Widgets
+[00:01:00]: [WW3_ENGINE_PASS] native drying rack reports product and pause without advancing its timer
+[00:01:00]: [WW3_ENGINE_PASS] native seasoned food preserves the dish and spice drawable layers
+[00:01:00]: [WW3_ENGINE_PASS] native map wheel keeps its opening coordinates and deletes only own ping
+[00:01:00]: [WW3_ENGINE_PASS] sign display RPC enforces distance and supported container type
+[00:01:00]: [WW3_ENGINE_RESULT] passed=16 failed=0 build=747465 no_graphics=true no_remote_players=true
+[00:01:18]: [WW_ENGINE_PASS] world service loaded on dedicated server
+[00:01:18]: [WW_ENGINE_PASS] server does not load UI
+[00:01:18]: [WW_ENGINE_PASS] facts:beefalo
+[00:01:18]: [WW_ENGINE_PASS] facts:berries
+[00:01:18]: [WW_ENGINE_PASS] facts:axe
+[00:01:18]: [WW_ENGINE_PASS] facts:armorwood
+[00:01:18]: [WW_ENGINE_PASS] facts:strawhat
+[00:01:18]: [WW_ENGINE_PASS] facts:icebox
+[00:01:18]: [WW_ENGINE_PASS] facts:farm_plant_carrot
+[00:01:18]: [WW_ENGINE_PASS] facts:meatballs
+[00:01:18]: [WW_ENGINE_PASS] facts:raincoat
+[00:01:18]: [WW_ENGINE_PASS] facts:lantern
+[00:01:18]: [WW_ENGINE_PASS] facts:pigman
+[00:01:18]: [WW_ENGINE_PASS] facts:firepit
+[00:01:18]: [WW_ENGINE_PASS] facts:saddle_basic
+[00:01:18]: [WW_ENGINE_PASS] facts:rope
+[00:01:18]: [WW_ENGINE_PASS] facts:bundle
+[00:01:18]: [WW_ENGINE_PASS] food estimates match actual engine eating
+[00:01:18]: [WW_ENGINE_PASS] native stack count conservation
+[00:01:18]: [WW_ENGINE_PASS] manual and unknown items protected as merge targets
+[00:01:18]: [WW_ENGINE_PASS] native icon resolves without copying assets
+[00:01:18]: [WW_ENGINE_PASS] observer healthdelta produces delta and releases listeners
+[00:01:18]: [WW_ENGINE_PASS] native MapExplorer isolation
+[00:01:18]: [WW_ENGINE_PASS] persistent map round trip
+[00:01:18]: [WW_ENGINE_PASS] native partial inventory pickup preserves leftover stack
+[00:01:18]: [WW_ENGINE_PASS] native mount facts follow saddle and obedience values
+[00:01:18]: [WW_ENGINE_RESULT] passed=26 failed=0 build=747465
+[00:01:18]: [WW2_ENGINE_PASS] WWE-01 merm_tool read-only inspection and retirement
+[00:01:18]: [WW2_ENGINE_PASS] WWE-01 merm_tool_upgraded read-only inspection and retirement
+[00:01:18]: [WW2_ENGINE_PASS] WWE-01 shieldofterror read-only inspection and retirement
+[00:01:18]: [WW2_ENGINE_PASS] WWE-01 wathgrithr_shield read-only inspection and retirement
+[00:01:18]: [WW2_ENGINE_PASS] WWE-01 voidcloth_boomerang read-only inspection and retirement
+[00:01:18]: [WW2_ENGINE_PASS] WWE-01 rabbitkingspear read-only inspection and retirement
+[00:01:18]: [WW2_ENGINE_PASS] WWE-01 rabbitkinghorn read-only inspection and retirement
+[00:01:18]: [WW2_ENGINE_PASS] WWE-01 horseshoe read-only inspection and retirement
+[00:01:18]: [WW2_ENGINE_PASS] WWE-01 cotl_trinket read-only inspection and retirement
+[00:01:18]: [WW2_ENGINE_PASS] WWE-01 slingshot read-only inspection and retirement
+[00:01:18]: [WW2_ENGINE_PASS] WWE-01 slingshotammo_rock read-only inspection and retirement
+[00:01:18]: [WW2_ENGINE_PASS] WWE-01 alterguardian_phase4_lunarrift read-only inspection and retirement
+[00:01:18]: [WW2_ENGINE_PASS] WWE-01 mutateddeerclops read-only inspection and retirement
+[00:01:18]: [WW2_ENGINE_PASS] WWE-01 mutatedbearger read-only inspection and retirement
+[00:01:18]: [WW2_ENGINE_PASS] WWE-01 mutatedwarg read-only inspection and retirement
+[00:01:18]: [WW2_ENGINE_PASS] WWE-01 lunarthrall_plant read-only inspection and retirement
+[00:01:18]: [WW2_ENGINE_PASS] WWE-01 worm_boss read-only inspection and retirement
+[00:01:18]: [WW2_ENGINE_PASS] WWE-01 oceanfishingrod read-only inspection and retirement
+[00:01:18]: [WW2_ENGINE_PASS] WWE-01 wobybig read-only inspection and retirement
+[00:01:18]: [WW2_ENGINE_PASS] WWE-01 chester read-only inspection and retirement
+[00:01:18]: [WW2_ENGINE_PASS] WWE-01 wx78_scanner read-only inspection and retirement
+[00:01:18]: [WW2_ENGINE_PASS] WWE-01 horn read-only inspection and retirement
+[00:01:18]: [WW2_ENGINE_PASS] WWE-01 goldenaxe read-only inspection and retirement
+[00:01:18]: [WW2_ENGINE_PASS] WWE-02 grass regeneration follows the live timer
+[00:01:18]: [WW2_ENGINE_PASS] WWE-02 sapling regeneration follows the live timer
+[00:01:18]: [WW2_ENGINE_PASS] WWE-02 berrybush regeneration follows the live timer
+[00:01:18]: [WW2_ENGINE_PASS] WWE-03 California roll and Warly recipes agree with native cooking
+[00:01:18]: [WW2_ENGINE_PASS] WWE-04 Wolfgang favorite food uses current affinity instead of an old hunger formula
+[00:01:18]: [WW2_ENGINE_PASS] WWE-05 sealed bundle is found and described without unwrapping
+[00:01:18]: [WW2_ENGINE_PASS] WWE-06 horseshoe loot processing keeps native quantity and components
+[00:01:18]: [WW2_ENGINE_PASS] WWE-07 Abigail regeneration keeps native health method and observer lifecycle
+[00:01:18]: [WW2_ENGINE_PASS] WWE-08 encoded facts retain health under worst-case text expansion
+[00:01:18]: [WW2_ENGINE_PASS] WWE-09 World propagates transport failure and wormhole cancellation
+[00:01:18]: [WW2_ENGINE_PASS] WWE-10 Woby rack uses the native dryingrack compatibility component
+[00:01:18]: [WW2_ENGINE_RESULT] passed=34 failed=0
+[00:01:18]: [WW_UI_PASS] native HUD constructor and update
+[00:01:18]: [WW_UI_PASS] all native menu pages in Chinese and English
+[00:01:18]: [WW_UI_PASS] native general key callback receives key and down
+[00:01:18]: [WW_UI_PASS] native menu edits module settings without changing server defaults
+[00:01:18]: [WW_UI_PASS] native mod configuration screen exposes all scalar options including container signs
+[00:01:18]: [WW_UI_PASS] native batch outline has no pointer-following component
+[00:01:18]: [WW_UI_PASS] WW-U01 hover text follows replacement owner and is removed with HUD
+[00:01:18]: [WW_UI_RESULT] passed=7 failed=0 build=747465
+[00:01:37]: [WW_REG_PASS] WW-B01 Woby and missing mount are safe
+[00:01:37]: [WW_REG_PASS] WW-X02 beefalo and information readers preserve native player state
+[00:01:37]: [WW_REG_PASS] WW-O05 new dryingrack snapshot and queue do not toggle container
+[00:01:37]: [WW_REG_PASS] WW-H01 removing a parasite target releases combined subscriptions
+[00:01:37]: [WW_REG_PASS] WW-M04 reciprocal wormholes work independently of forest-only components
+[00:01:37]: [WW_REG_PASS] WW-S02 repeated attachment shares one lifetime
+[00:01:37]: [WW_REG_PASS] WW-S03 signs are decorative and do not own item actions
+[00:01:38]: [WW_REG_PASS] WW-S04 first-slot imagechange refreshes without reopening chest
+[00:01:38]: [WW_REG_PASS] WW-S05 empty chest and teardown remove stale signs
+[00:01:38]: [WW_REG_RESULT] passed=9 failed=0 build=747465
+[00:02:09]: [WW_CLIENT_RESULT] passed=1 failed=0 host_fixture=true
+[00:02:10]: [WW_SIGN_PASS] saltbox expected=false
+[00:02:10]: [WW_SIGN_PASS] hutch expected=false
+[00:02:10]: [WW_SIGN_PASS] treasurechest expected=true
+[00:02:10]: [WW_SIGN_PASS] dragonflychest expected=true
+[00:02:10]: [WW_SIGN_PASS] boat_ancient_container expected=true
+[00:02:10]: [WW_SIGN_PASS] icebox expected=false
+[00:02:10]: [WW_SIGN_PASS] fish_box expected=false
+[00:02:10]: [WW_SIGN_PASS] chester expected=false
+[00:02:10]: [WW_SIGN_RESULT] passed=8 failed=0 build=747465
+[00:03:14]: [WW3_APPEARANCE_PASS] native spice drawing and helper scale
+[00:03:14]: [WW3_APPEARANCE_PASS] linked skin arguments rebuild helper without duplicate entities (asset stub)
+[00:03:15]: [WW3_APPEARANCE_PASS] removing linked skin returns helper to native default (asset stub)
+[00:03:15]: [WW3_APPEARANCE_PASS] per-container hide removes helper and preserves all contents
+[00:03:15]: [WW3_APPEARANCE_PASS] show recreates one helper which follows container movement
+[00:03:15]: [WW3_APPEARANCE_PASS] burn event closes owned listeners and destroys the helper
+[00:03:15]: [WW3_APPEARANCE_RESULT] passed=6 failed=0 no_graphics=true skin_asset_stub=true
+[00:03:46]: [WW_EVENT_PASS] real lootdropper events land and merge with count conservation
+[00:03:46]: [WW_EVENT_PASS] manual DropItem remains protected after landing
+[00:03:46]: [WW_EVENT_RESULT] passed=2 failed=0 build=747465
+[00:04:16]: [WW3_ENGINE_PASS] real spoilage getter observes fridge multiplier without consuming food
+[00:04:16]: [WW3_ENGINE_PASS] native recharge cooldown sewing and timer details
+[00:04:16]: [WW3_ENGINE_PASS] plant stress details read recorded state without invoking stress tests
+[00:04:16]: [WW3_ENGINE_PASS] display day agrees with native clock cycle plus one
+[00:04:16]: [WW3_ENGINE_PASS] native cooked dish is identified from the stewer state
+[00:04:16]: [WW3_ENGINE_PASS] original pitchfork and watering can expose agricultural modes
+[00:04:16]: [WW3_ENGINE_FAIL] native agricultural plan tills one explicit tile and consumes a tool use [string "cannot OLDFILEACCESSMETHOD @../mods/wildwis..."]:135: [string "cannot OLDFILEACCESSMETHOD @../mods/wildwis..."]:130: assertion failed!
+[00:04:16]: [WW3_ENGINE_FAIL] native twiggy tree exclusion protects its nearby drop entity count [string "cannot OLDFILEACCESSMETHOD @../mods/wildwis..."]:141: assertion failed!
+[00:04:16]: [WW3_ENGINE_PASS] native container transfer frees a drying slot before hanging new meat
+[00:04:16]: [WW3_ENGINE_PASS] drying queue leaves still-drying items untouched
+[00:04:16]: [WW3_ENGINE_PASS] ordinary chests and players cannot enter rack or gifting automation
+[00:04:16]: [WW3_ENGINE_PASS] burning native twigs remain separate
+[00:04:16]: [WW3_ENGINE_PASS] native bundle display respects independent content permission
+[00:04:16]: [WW3_ENGINE_PASS] native mount badge percentages and scale render into real Widgets
+[00:04:16]: [WW3_ENGINE_PASS] native drying rack reports product and pause without advancing its timer
+[00:04:16]: [WW3_ENGINE_PASS] native seasoned food preserves the dish and spice drawable layers
+[00:04:16]: [WW3_ENGINE_PASS] native map wheel keeps its opening coordinates and deletes only own ping
+[00:04:16]: [WW3_ENGINE_PASS] sign display RPC enforces distance and supported container type
+[00:04:16]: [WW3_ENGINE_RESULT] passed=16 failed=2 build=747465 no_graphics=true no_remote_players=true
+[00:05:11]: [WW3_ENGINE_PASS] real spoilage getter observes fridge multiplier without consuming food
+[00:05:11]: [WW3_ENGINE_PASS] native recharge cooldown sewing and timer details
+[00:05:11]: [WW3_ENGINE_PASS] plant stress details read recorded state without invoking stress tests
+[00:05:11]: [WW3_ENGINE_PASS] display day agrees with native clock cycle plus one
+[00:05:11]: [WW3_ENGINE_PASS] native cooked dish is identified from the stewer state
+[00:05:11]: [WW3_ENGINE_PASS] original pitchfork and watering can expose agricultural modes
+[00:05:11]: [WW3_ENGINE_PASS] native agricultural plan tills one explicit tile and consumes a tool use
+[00:05:11]: [WW3_ENGINE_PASS] native container transfer frees a drying slot before hanging new meat
+[00:05:11]: [WW3_ENGINE_PASS] drying queue leaves still-drying items untouched
+[00:05:11]: [WW3_ENGINE_PASS] ordinary chests and players cannot enter rack or gifting automation
+[00:05:11]: [WW3_ENGINE_PASS] burning native twigs remain separate
+[00:05:11]: [WW3_ENGINE_PASS] native bundle display respects independent content permission
+[00:05:11]: [WW3_ENGINE_PASS] native mount badge percentages and scale render into real Widgets
+[00:05:11]: [WW3_ENGINE_PASS] native drying rack reports product and pause without advancing its timer
+[00:05:11]: [WW3_ENGINE_PASS] native seasoned food preserves the dish and spice drawable layers
+[00:05:11]: [WW3_ENGINE_PASS] native map wheel keeps its opening coordinates and deletes only own ping
+[00:05:11]: [WW3_ENGINE_PASS] sign display RPC enforces distance and supported container type
+[00:05:11]: [WW3_ENGINE_RESULT] passed=17 failed=0 build=747465 no_graphics=true no_remote_players=true
+[00:05:17]: [WW_EVENT_PASS] real lootdropper events land and merge with count conservation
+[00:05:17]: [WW_EVENT_PASS] manual DropItem remains protected after landing
+[00:05:17]: [WW_EVENT_PASS] twiggy tree's real landed drops preserve the native entity count
+[00:05:17]: [WW_EVENT_RESULT] passed=3 failed=0 build=747465
+[00:06:53]: [WW_LOAD] count=100 conserved=true stacks=3 samples=200 p50_ms=0.0170 p95_ms=0.1970 p99_ms=2.1750 elapsed=20.00 pending=0
+[00:07:13]: [WW_LOAD] count=500 conserved=true stacks=13 samples=200 p50_ms=0.0190 p95_ms=2.1230 p99_ms=2.1520 elapsed=20.00 pending=0
+[00:07:33]: [WW_LOAD] count=1000 conserved=true stacks=26 samples=200 p50_ms=0.0340 p95_ms=2.1440 p99_ms=2.3100 elapsed=20.00 pending=0
+[00:07:33]: [WW_LOAD_COMPLETE]
+[00:08:56]: [WW_UI_PASS] native HUD constructor and update
+[00:08:56]: [WW_UI_PASS] all native menu pages in Chinese and English
+[00:08:56]: [WW_UI_PASS] native general key callback receives key and down
+[00:08:56]: [WW_UI_PASS] native menu edits module settings without changing server defaults
+[00:08:56]: [WW_UI_PASS] native mod configuration screen exposes all scalar options including container signs
+[00:08:56]: [WW_UI_PASS] native batch outline has no pointer-following component
+[00:08:56]: [WW_UI_PASS] WW-U01 hover text follows replacement owner and is removed with HUD
+[00:08:56]: [WW_UI_RESULT] passed=7 failed=0 build=747465
+
+FINAL LOCAL CHECK
+
+> wildwise-dev@0.3.0 check
+> npm run format:check && npm run lint && npm test && npm run test:research && python3 tools/package.py --check
+
+
+> wildwise-dev@0.3.0 format:check
+> stylua --check modmain.lua modinfo.lua scripts tests
+
+
+> wildwise-dev@0.3.0 lint
+> luacheck modmain.lua modinfo.lua scripts tests
+
+Checking modmain.lua                              OK
+Checking modinfo.lua                              OK
+Checking scripts/components/wildwise_world.lua    OK
+Checking scripts/wildwise/core/config.lua         OK
+Checking scripts/wildwise/core/hooks.lua          OK
+Checking scripts/wildwise/core/lifetime.lua       OK
+Checking scripts/wildwise/core/lru.lua            OK
+Checking scripts/wildwise/core/map_transfer.lua   OK
+Checking scripts/wildwise/core/protocol.lua       OK
+Checking scripts/wildwise/core/util.lua           OK
+Checking scripts/wildwise/runtime/actions.lua     OK
+Checking scripts/wildwise/runtime/bootstrap.lua   OK
+Checking scripts/wildwise/runtime/client.lua      OK
+Checking scripts/wildwise/runtime/context.lua     OK
+Checking scripts/wildwise/runtime/input.lua       OK
+Checking scripts/wildwise/runtime/items.lua       OK
+Checking scripts/wildwise/runtime/signs.lua       OK
+Checking scripts/wildwise/services/containers.lua OK
+Checking scripts/wildwise/services/details.lua    OK
+Checking scripts/wildwise/services/facts.lua      OK
+Checking scripts/wildwise/services/health.lua     OK
+Checking scripts/wildwise/services/items.lua      OK
+Checking scripts/wildwise/services/map.lua        OK
+Checking scripts/wildwise/services/observer.lua   OK
+Checking scripts/wildwise/services/planner.lua    OK
+Checking scripts/wildwise/services/queue.lua      OK
+Checking scripts/wildwise/services/recipes.lua    OK
+Checking scripts/wildwise/services/signs.lua      OK
+Checking scripts/wildwise/ui/format.lua           OK
+Checking scripts/wildwise/ui/hud.lua              OK
+Checking scripts/wildwise/ui/map.lua              OK
+Checking scripts/wildwise/ui/menu.lua             OK
+Checking scripts/wildwise/ui/strings.lua          OK
+Checking tests/capabilities_spec.lua              OK
+Checking tests/config_spec.lua                    OK
+Checking tests/core_spec.lua                      OK
+Checking tests/engine_appearance.lua              OK
+Checking tests/engine_capabilities.lua            OK
+Checking tests/engine_client_smoke.lua            OK
+Checking tests/engine_events.lua                  OK
+Checking tests/engine_load.lua                    OK
+Checking tests/engine_regression.lua              OK
+Checking tests/engine_restore.lua                 OK
+Checking tests/engine_signs_smoke.lua             OK
+Checking tests/engine_smoke.lua                   OK
+Checking tests/engine_ui_smoke.lua                OK
+Checking tests/engine_workshop.lua                OK
+Checking tests/harness.lua                        OK
+Checking tests/regression_spec.lua                OK
+Checking tests/run.lua                            OK
+Checking tests/services_spec.lua                  OK
+Checking tests/workshop_spec.lua                  OK
+
+Total: 0 warnings / 0 errors in 52 files
+
+> wildwise-dev@0.3.0 test
+> lua5.1 tests/run.lua
+
+PASS LRU evicts least recently read entity
+PASS LRU stays bounded across 10000 entities
+PASS lifetime releases listeners and tasks once
+PASS hooks preserve nil returns and later wrappers
+PASS protocol round trip carries version session and fields
+PASS protocol rejects executable cyclic nonfinite oversized payloads
+PASS rate budget resists bursts and reverse clock
+PASS diff sends deletion rather than false zero
+PASS conservative defaults and mode policies
+PASS conflicts disable only overlapping modules using workshop IDs
+PASS modinfo loads in the real restricted shape
+PASS native configuration choices map to the same structured fields and defaults
+PASS disabled modules false permissions and zero thresholds survive configuration loading
+PASS invalid public values fall back and old or private keys cannot configure services
+PASS module settings copies cannot mutate defaults another client or server permissions
+PASS nested personal settings round trip without importing server rules or flat legacy keys
+PASS module conflicts preserve sibling settings and only disable the requested feature
+PASS structured server settings fit the welcome RPC and preserve disabled flags
+PASS both README configuration examples cover exactly the native defaults
+PASS hostility follows actual targets and changed follower ownership
+PASS health bar priority limit visibility and exact linger
+PASS new drops merge into older eligible stacks
+PASS manual loaded and unknown targets stay protected
+PASS no merging across boat and shore
+PASS landing and active queue reservation block pickup and merging
+PASS partial stacks conserve count and skins
+PASS pickup selects nearest eligible receiver with stable userid tie
+PASS item work budget and queue bound resist burst
+PASS marker validates type coordinates owner limit and expiry
+PASS pair identity persists and reconnect does not shuffle numbers
+PASS changed destination invalidates old pair and preserves monotonic ID
+PASS unsupported saves are preserved without silent reset
+PASS exploration records only supplied authorized points and deduplicates
+PASS queue preserves order deduplicates and respects capacity
+PASS one executor awaits one result and cancellation ignores stale callbacks
+PASS no-progress retries once then skips
+PASS focus pause never resumes automatically
+PASS destroyed targets are skipped and merged targets redirected
+PASS grid uses serpentine order bounds and reprojects moving platforms
+PASS observer shares facts but isolates viewer food effects and cleans up
+PASS observer rejects distance limit and expires abandoned subscriptions
+PASS cooking returns all highest priority candidates without random choice
+PASS idle cancellation and repeated pause do not send extra movement
+PASS observer revokes data when target stops being visible
+PASS farm grid aligns nine points inside one native tile
+PASS UI has both languages for every information field and stop reason
+PASS malformed saved pair is retained intact instead of half migrating
+PASS item spatial index releases removed targets and respects CPU budget
+PASS default signs register only ordinary storage chests and cargo holds
+PASS container switches opt pets and food storage in while allowing chests to opt out
+PASS the signs master switch and mod conflicts override every container switch
+PASS unknown container types and missing type switches never enable signs
+PASS WW-M01 saved pair coordinates and IDs must be valid before loading
+PASS WW-M02 map load and save snapshots do not alias active data
+PASS WW-X01 information and health subscriptions never grant another player's private map
+PASS WW-C01 malformed personal settings cannot break scale grids or bindings
+PASS WW-O01 broken information component cannot stop other observations
+PASS WW-O02 hover immediately expands an existing health-only observation
+PASS WW-Q01 destroyed platform never falls back to the last world point
+PASS WW-Q02 Shift building placement and manual attacks reach native controls
+PASS WW-M03 large map chunks respect protocol budgets and commit atomically
+PASS WW-O03 broken health getter and nil mounts do not crash or invent stats
+PASS WW-O04 observation never invokes unknown food modifiers or changes damage
+PASS WW-I01 loaded opt-in marks restored items only and preserves explicit drops
+PASS WW-I02 falling debris and protected targets never consume a safe ground stack
+PASS WW-I03 pickup permission cannot enable stacking of a disabled source
+PASS WW-S01 bundled skins and spices resolve without spawning the contents
+PASS WW-Q03 released action callbacks cannot complete a later queue task
+PASS WW2-01 picked grass uses its remaining regeneration time
+PASS WW2-02 external regrowth timer receives its entity and is read only
+PASS WW2-03 paused barren and harvest-ready plants have no running countdown
+PASS WW2-04 failed snapshot remains fresh and retries unchanged fields
+PASS WW2-05 failed delta never advances the acknowledged cache
+PASS WW2-06 escaped and multilingual facts fit the actual encoded packet budget
+PASS WW2-07 text limits keep whole UTF-8 codepoints
+PASS WW2-08 health and timer fields reject strings tables and infinities
+PASS WW2-09 cooked meat aliases match native ingredient names and tags
+PASS WW2-10 ingredient requests must contain exactly four dense slots
+PASS WW2-11 invalid ingredient tags fail explicitly without arithmetic errors
+PASS WW2-12 malformed recipe ranking is not reported as a valid dish
+PASS WW2-13 a failing predicate does not silently select a lower priority meal
+PASS WW2-14 recipe predicates cannot corrupt each other's ingredient tables
+PASS WW2-15 ingredient choices include the cursor and exclude removed backpack items
+PASS WW2-16 Shift crafting while a text menu has focus stays native
+PASS WW2-17 finder reads sealed contents without spawning or opening anything
+PASS WW2-18 finder stops on malformed records removed items and exhausted budget
+PASS WW2-19 planar damage and defense use current native getters
+PASS WW2-20 broken farm localization cannot erase container or world information
+PASS WW2-21 pocket container search follows the current public master reference
+PASS WW2-22 repeated component failures log once per reader
+PASS WW2-23 food affinity is queried with the current viewer without eating
+PASS WW2-24 information never invokes preserver callbacks to guess wall-clock expiry
+PASS WW2-25 cyclic UI data is rejected before invoking a JSON encoder
+PASS WW2-26 mounted work cannot repeatedly equip a tool to force a missing native action
+PASS WW2-27 Woby uses the inherited dryingrack snapshot interface
+PASS WW2-28 max health changes refresh without waiting for damage or eating
+PASS WW2-29 malformed client health fields cannot reach healthbar arithmetic
+PASS WW2-30 cooking responses cannot overwrite a newer ingredient selection
+PASS WW2-31 portable cooker selection is included in each explicit query
+PASS WW3-21 recipe weights and base times are visible with localized dish names
+PASS WW3-22 invalid saved mount appearance cannot break the native HUD
+PASS WW3-01 zero source radii inherit existing server settings
+PASS WW3-02 source radii do not leak through the shared spatial index
+PASS WW3-03 burning and smoldering objects cannot merge from either end
+PASS WW3-04 stack and pickup exclusion tags apply independently
+PASS WW3-05 ash manure and seed filters are independent per operation
+PASS WW3-06 natural twiggy drops retain entity counts and manual drops remain explicit
+PASS WW3-07 automation cannot target players or arbitrary activation containers
+PASS WW3-08 selecting an allowed secondary action preserves the desired action
+PASS WW3-09 agricultural plans choose native tool and tile modes
+PASS WW3-10 plan checks native terrain without modifying the map
+PASS WW3-11 source flags and public config do not override saved personal choices
+PASS WW3-12 information permissions and personal toggles suppress exact groups
+PASS WW3-13 truncation is explicit and time units preserve a game day
+PASS WW3-14 timers preserve paused remaining values without mutating components
+PASS WW3-15 spoilage estimates follow ground fridge wetness and local modifiers
+PASS WW3-16 unknown preservation callbacks and acid rain produce no misleading estimate
+PASS WW3-17 completed validation does not submit an extra native action
+PASS WW3-18 a completion hook can enqueue bounded follow-up work
+PASS WW3-19 sign skin uses only the stored item's linked native skin
+PASS WW3-20 disabling bundled content shows the wrapper's own native inventory image
+
+121 passed, 0 failed
+
+> wildwise-dev@0.3.0 test:research
+> python3 -m unittest discover -s tests -p 'test_workshop_collect.py'
+
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 0.017s
+
+OK
+Package check: 57 UTF-8 files; Lua syntax valid

@@ -6,6 +6,7 @@ local Widget = require("widgets/widget")
 local Text = require("widgets/text")
 local Templates = require("widgets/redux/templates")
 local Format = require("wildwise/ui/format")
+local U = require("wildwise/core/util")
 -- 创建引擎生命周期对象，资源归属当前实例并在移除时释放。
 local Menu = G.Class(Screen, function(self, client)
     Screen._ctor(self, "WildwiseMenu")
@@ -54,6 +55,9 @@ function Menu:choice(key, values, y, permission)
         end
     end
     local module = (permission or key):match("^[^.]+")
+    if permission and type(c.config[module]) == "table" and c.config[module].enabled == false then
+        reason = c:L("restricted")
+    end
     if c.conflicts and c.conflicts[module] then
         reason = c:L("conflict") .. ": " .. c.conflicts[module]
     end
@@ -120,11 +124,12 @@ function Menu:refresh()
         elseif self.page == 2 then
             self:choice("healthbars.limit", { 4, 8, 12, 16, 20 }, 145)
             self:choice("healthbars.scale", { 0.75, 1, 1.25, 1.5 }, 103)
-            self:readonly("info.container_contents", 61)
-            self:readonly("info.attack_range", 19)
-            self:readonly("info.world_events", -23)
+            self:choice("healthbars.linger_seconds", { 0, 1, 2, 3, 5 }, 61, "healthbars.enabled")
+            self:readonly("info.container_contents", 19)
+            self:readonly("info.attack_range", -23)
+            self:readonly("info.world_events", -65)
             local fields = c.cache:peek(c.player)
-            self:line(Format.lines(fields, { info = { preset = "detailed" } }, c.lang, true, false), -115):SetSize(18)
+            self:line(Format.lines(fields, c.settings, c.lang, true, false, G.STRINGS.NAMES), -115):SetSize(18)
         elseif self.page == 3 then
             c.recipe_cooker = c.recipe_cooker or (c.player.prefab == "warly" and "portablecookpot" or "cookpot")
             local cooker = self.content:AddChild(Templates.StandardButton(function()
@@ -140,29 +145,44 @@ function Menu:refresh()
                 if not c.recipe_slots[slot] then
                     c.recipe_slots[slot] = choices[1]
                 end
-                local button = self.content:AddChild(Templates.StandardButton(function()
-                    local current = 0
-                    for j, name in ipairs(choices) do
-                        if name == c.recipe_slots[slot] then
-                            current = j
-                        end
-                    end
-                    c.recipe_slots[slot] = choices[current % math.max(1, #choices) + 1]
-                    c:clear_recipe_results()
-                    self:refresh()
-                end, slot .. ": " .. (c.recipe_slots[slot] or c:L("unknown")), { 450, 36 }))
+                local button = self.content:AddChild(
+                    Templates.StandardButton(
+                        function()
+                            local current = 0
+                            for j, name in ipairs(choices) do
+                                if name == c.recipe_slots[slot] then
+                                    current = j
+                                end
+                            end
+                            c.recipe_slots[slot] = choices[current % math.max(1, #choices) + 1]
+                            c:clear_recipe_results()
+                            self:refresh()
+                        end,
+                        slot
+                            .. ": "
+                            .. (
+                                G.STRINGS.NAMES[(c.recipe_slots[slot] or ""):upper()]
+                                or c.recipe_slots[slot]
+                                or c:L("unknown")
+                            ),
+                        { 450, 36 }
+                    )
+                )
                 button:SetPosition(0, 108 - (slot - 1) * 43)
             end
             local query = self.content:AddChild(Templates.StandardButton(function()
                 c:query_recipes()
             end, c:L("query"), { 200, 36 }))
             query:SetPosition(0, -68)
-            local results = {}
-            for _, result in ipairs(c.recipe_results and c.recipe_results.results or {}) do
-                results[#results + 1] = G.STRINGS.NAMES[result.name:upper()] or result.name
-            end
+            local results = Format.recipes(
+                c.recipe_results and c.recipe_results.results,
+                c.lang,
+                c.settings.info,
+                G.STRINGS.NAMES,
+                G.TUNING.BASE_COOK_TIME
+            )
             local reason = c.recipe_results and c.recipe_results.reason
-            self:line(reason and reason ~= "" and c:L(reason) or table.concat(results, " / "), -120)
+            self:line(reason and reason ~= "" and c:L(reason) or results, -120):SetSize(18)
         elseif self.page == 4 then
             local keys = { "combat", "food", "equipment", "progress", "farm", "follower", "container", "world" }
             for i, category in ipairs(keys) do
@@ -180,70 +200,148 @@ function Menu:refresh()
                 )
                 button:SetPosition(0, 145 - (i - 1) * 42)
             end
+        elseif self.page == 5 then
+            self:choice(
+                "beefalo.offset_x",
+                { -300, -200, -100, -50, -25, 0, 25, 50, 100, 200, 300 },
+                145,
+                "beefalo.enabled"
+            )
+            self:choice("beefalo.offset_y", { -200, -100, -50, -25, 0, 25, 50, 100, 200 }, 103, "beefalo.enabled")
+            self:choice("beefalo.hunger_threshold", { 0, 5, 15, 25 }, 61, "beefalo.enabled")
+            self:choice("beefalo.show_hunger", { true, false }, 19, "beefalo.show_hunger")
+            self:choice("beefalo.scale", { 0.75, 1, 1.25, 1.5 }, -23, "beefalo.enabled")
+            self:choice("beefalo.layout", { "badges", "compact" }, -65, "beefalo.enabled")
+            self:choice("beefalo.background", { 0, 0.35, 0.65, 0.82, 1 }, -107, "beefalo.enabled")
+        elseif self.page == 6 then
+            for i, key in ipairs({
+                "combat",
+                "food_values",
+                "perishable",
+                "equipment",
+                "progress",
+                "farm",
+                "follower",
+                "cooldowns",
+            }) do
+                self:choice("info." .. key, { true, false }, 145 - (i - 1) * 42, "info." .. key)
+            end
         else
-            self:choice("beefalo.offset_x", { -300, -200, -100, 0, 100, 200, 300 }, 145, "beefalo.enabled")
-            self:choice("beefalo.offset_y", { -200, -100, 0, 100, 200 }, 97, "beefalo.enabled")
-            self:choice("beefalo.hunger_threshold", { 0, 5, 15, 25 }, 49, "beefalo.enabled")
+            self:choice("info.timers", { true, false }, 145, "info.timers")
+            self:choice("info.max_lines", { 4, 8, 10, 15, 20, 25 }, 103)
+            self:choice("info.inspect_lines", { 10, 15, 20, 25, 35 }, 61)
+            self:choice("info.time_style", { "clock", "seconds", "days", "both" }, 19)
+            self:choice("info.temperature_units", { "game", "celsius", "fahrenheit" }, -23)
         end
     elseif self.tab == "maps" then
-        self:choice("map.share_position", { true, false }, 145, "map.enabled")
-        self:choice("map.share_exploration", { true, false }, 103, "map.enabled")
-        self:choice("map.indicators", { "scoreboard", "always", "off" }, 61, "map.enabled")
-        self:choice("map.ping_kind", { "location", "danger", "resource", "rally" }, 19, "map.enabled")
-        local roster = {}
-        for _, record in ipairs(c.map.players or {}) do
-            if record.shard ~= c.shard then
-                roster[#roster + 1] = record.name .. " · " .. record.shard
-            end
-        end
-        self:line(table.concat(roster, "\n"), -65)
-        local clear = self.content:AddChild(Templates.StandardButton(function()
-            for _, ping in ipairs(c.map.pings or {}) do
-                if ping.owner == c.player.userid then
-                    c:send("delete_ping", nil, { id = ping.id })
+        if self.page == 1 then
+            self:choice("map.share_position", { true, false }, 145, "map.enabled")
+            self:choice("map.share_exploration", { true, false }, 103, "map.enabled")
+            self:choice("map.indicators", { "scoreboard", "always", "off" }, 61, "map.enabled")
+            self:choice("map.ping_kind", { "location", "danger", "resource", "rally" }, 19, "map.enabled")
+            local roster = {}
+            for _, record in ipairs(c.map.players or {}) do
+                if record.shard ~= c.shard then
+                    roster[#roster + 1] = record.name .. " · " .. record.shard
                 end
             end
-        end, c:L("clear"), { 180, 36 }))
-        clear:SetPosition(-135, -150)
-        local user = G.TheNet:GetClientTableForUser(c.player.userid or "")
-        if user and user.admin then
-            local all = self.content:AddChild(Templates.StandardButton(function()
-                c:send("delete_ping", nil, { id = 0 })
-            end, c:L("clear_all"), { 340, 36 }))
-            all:SetPosition(165, -150)
+            self:line(table.concat(roster, "\n"), -65)
+            local clear = self.content:AddChild(Templates.StandardButton(function()
+                for _, ping in ipairs(c.map.pings or {}) do
+                    if ping.owner == c.player.userid then
+                        c:send("delete_ping", nil, { id = ping.id })
+                    end
+                end
+            end, c:L("clear"), { 180, 36 }))
+            clear:SetPosition(-135, -150)
+            local user = G.TheNet:GetClientTableForUser(c.player.userid or "")
+            if user and user.admin then
+                local all = self.content:AddChild(Templates.StandardButton(function()
+                    c:send("delete_ping", nil, { id = 0 })
+                end, c:L("clear_all"), { 340, 36 }))
+                all:SetPosition(165, -150)
+            end
+        else
+            self:choice("map.show_players", { true, false }, 145, "map.enabled")
+            self:choice("map.show_pings", { true, false }, 103, "map.pings")
+            self:choice("map.show_fires", { true, false }, 61, "map.signal_fires")
+            self:choice("map.show_wormholes", { true, false }, 19, "map.wormholes")
+            self:line(c:L("map_controls"), -60)
         end
     elseif self.tab == "items" then
-        self:choice("items.pickup", { false, true }, 145, "items.pickup_allowed")
-        self:readonly("items.stack_world", 95)
-        self:readonly("items.stack_manual", 45)
-        self:readonly("items.stack_loaded", -5)
-        self:readonly("signs.enabled", -55)
-        local find = self.content:AddChild(Templates.StandardButton(function()
-            if c.last_hover then
-                c:send("find", nil, { prefab = c.last_hover.prefab })
-                self:close()
+        if self.page == 1 then
+            self:choice("items.pickup", { false, true }, 145, "items.pickup_allowed")
+            self:readonly("items.stack_world", 95)
+            self:readonly("items.stack_manual", 45)
+            self:readonly("items.stack_loaded", -5)
+            self:readonly("signs.enabled", -55)
+            local find = self.content:AddChild(Templates.StandardButton(function()
+                if c.last_hover then
+                    c:send("find", nil, { prefab = c.last_hover.prefab })
+                    self:close()
+                end
+            end, c:L("find"), { 250, 36 }))
+            find:SetPosition(0, -115)
+            if not c.config.info.container_contents then
+                find:Disable()
+                find:SetTooltip(c:L("restricted"))
             end
-        end, c:L("find"), { 250, 36 }))
-        find:SetPosition(0, -115)
-        if not c.config.info.container_contents then
-            find:Disable()
-            find:SetTooltip(c:L("restricted"))
+        elseif self.page == 2 then
+            for i, key in ipairs({
+                "items.radius",
+                "items.world_radius",
+                "items.manual_radius",
+                "items.pickup_radius",
+                "signs.bundle_contents",
+                "signs.body_skins",
+                "signs.scale",
+            }) do
+                self:readonly(key, 145 - (i - 1) * 42)
+            end
+            local target = c.last_hover
+            local toggle = self.content:AddChild(Templates.StandardButton(function()
+                c:send("toggle_sign", target, {})
+                self:close()
+            end, c:L("toggle_sign"), { 320, 36 }))
+            toggle:SetPosition(-55, -155)
+            if not U.valid(target) or not require("wildwise/services/signs").enabled(target.prefab, c.config.signs) then
+                toggle:Disable()
+                toggle:SetTooltip(c:L("hover_sign_target"))
+            else
+                toggle:SetTooltip(G.STRINGS.NAMES[target.prefab:upper()] or target.prefab)
+            end
+        else
+            for i, group in ipairs({ "world", "manual", "pickup" }) do
+                self:line(c:L("items." .. group .. "_filters") .. " · " .. c:L("server_rule"), 150 - (i - 1) * 100)
+                local labels = {}
+                for _, key in ipairs({ "ash", "poop", "seeds" }) do
+                    labels[#labels + 1] = c:L(key) .. ": " .. c:L(c.config.items[group .. "_" .. key] and "on" or "off")
+                end
+                self:line(table.concat(labels, " / "), 110 - (i - 1) * 100)
+            end
         end
     elseif self.tab == "queue" then
-        self:line(c:L(c.queue.state) .. " · " .. #c.queue.tasks .. " / " .. c.config.queue.limit, 145)
-        self:line(c:L(c.queue.reason), 103)
-        self:choice("queue.farm_grid", { 2, 3, 4 }, 61, "queue.enabled")
-        for i, key in ipairs({ "menu_key", "queue.modifier_key", "beefalo.toggle_key" }) do
-            local id = key
-            local button = self.content:AddChild(Templates.StandardButton(function()
-                self.binding = id
-                self:line(c:L("rebind"), -165)
-            end, c:L(id) .. ": " .. Config.get(c.settings, id), { 450, 36 }))
-            button:SetPosition(0, 20 - (i - 1) * 44)
+        if self.page == 1 then
+            self:line(c:L(c.queue.state) .. " · " .. #c.queue.tasks .. " / " .. c.config.queue.limit, 145)
+            self:line(c:L(c.queue.reason), 103)
+            self:choice("queue.farm_grid", { 2, 3, 4 }, 61, "queue.enabled")
+            for i, key in ipairs({ "menu_key", "queue.modifier_key", "beefalo.toggle_key", "queue.last_recipe_key" }) do
+                local id = key
+                local button = self.content:AddChild(Templates.StandardButton(function()
+                    self.binding = id
+                    self:line(c:L("rebind"), -165)
+                end, c:L(id) .. ": " .. Config.get(c.settings, id), { 450, 36 }))
+                button:SetPosition(0, 20 - (i - 1) * 44)
+            end
+        else
+            self:choice("queue.collect_after_work", { false, true }, 145, "queue.enabled")
+            self:choice("queue.double_click_speed", { 0.2, 0.25, 0.35, 0.5, 0.75 }, 103, "queue.enabled")
+            self:choice("queue.double_click_range", { 5, 10, 15, 20, 25 }, 61, "queue.enabled")
+            self:line(c:L("bounded_farming"), -30)
         end
     else
         local diag = c.diagnostics or {}
-        self:line("Wildwise 0.2.1 · " .. (c.shard or "…"), 145)
+        self:line("Wildwise 0.3.0 · " .. (c.shard or "…"), 145)
         self:line("Cache " .. c.cache.size .. "/256 · " .. "RPC bytes " .. (diag.bytes or 0), 95)
         self:line("Observers " .. (diag.observations or 0), 45)
         local conflicts = {}
@@ -256,18 +354,35 @@ function Menu:refresh()
             -155
         )
     end
-    if self.tab == "info" then
+    local pages = ({ info = 7, maps = 2, items = 3, queue = 2 })[self.tab]
+    if pages then
         local more = self.content:AddChild(Templates.StandardButton(function()
-            self.page = self.page % 5 + 1
+            self.page = self.page % pages + 1
             self:refresh()
-        end, c:L("more") .. " " .. self.page .. "/5", { 110, 36 }))
+        end, c:L("more") .. " " .. self.page .. "/" .. pages, { 110, 36 }))
         more:SetPosition(305, -160)
     end
+    self.focus_buttons = {}
+    for _, child in pairs(self.content.children or {}) do
+        if child.onclick and child.IsEnabled and child:IsEnabled() then
+            self.focus_buttons[#self.focus_buttons + 1] = child
+        end
+    end
+    table.sort(self.focus_buttons, function(a, b)
+        local pa, pb = a:GetPosition(), b:GetPosition()
+        return pa.y == pb.y and pa.x < pb.x or pa.y > pb.y
+    end)
     -- 使用原版焦点导航，Esc 返回；进入菜单即暂停，关闭菜单不擅自恢复自动执行。
     for i, button in ipairs(self.focus_buttons) do
         button:SetFocusChangeDir(G.MOVE_DOWN, self.focus_buttons[i + 1] or self.close_button)
         button:SetFocusChangeDir(G.MOVE_UP, self.focus_buttons[i - 1] or self.tabs[1])
     end
+    for i, tab in ipairs(self.tabs) do
+        tab:SetFocusChangeDir(G.MOVE_DOWN, self.focus_buttons[1] or self.close_button)
+        tab:SetFocusChangeDir(G.MOVE_LEFT, self.tabs[i - 1] or self.tabs[#self.tabs])
+        tab:SetFocusChangeDir(G.MOVE_RIGHT, self.tabs[i + 1] or self.tabs[1])
+    end
+    self.close_button:SetFocusChangeDir(G.MOVE_UP, self.focus_buttons[#self.focus_buttons] or self.tabs[1])
 end
 
 -- 处理重新绑定的按键；其它键交回原生 Screen。

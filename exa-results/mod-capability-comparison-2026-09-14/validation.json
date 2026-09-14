@@ -1,0 +1,16 @@
+{
+  "featureRows": 193,
+  "configurationRows": 232,
+  "actionRows": 76,
+  "wildwiseAllowedActions": 40,
+  "wildwiseSchemaFields": 61,
+  "personalLeaves": 32,
+  "insightDescriptorFilesExcludingExamples": 289,
+  "allFeatureSourcePathsExist": true,
+  "configExtractionSucceeded": true,
+  "sourceOnlyNoRuntimeTesting": true,
+  "markdownTablesValidated": 40,
+  "localMarkdownLinksValidated": 759,
+  "sourceLuaHashesRechecked": 457,
+  "trackedWorkingTreeUnchanged": true
+}

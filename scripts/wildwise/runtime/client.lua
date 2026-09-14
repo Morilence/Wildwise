@@ -397,13 +397,18 @@ function Client:plan(a, b)
     self:clear_preview()
     local G, inv = self.G, self.player.replica.inventory
     local active, tool = inv:GetActiveItem(), inv:GetEquippedItem(G.EQUIPSLOTS.HANDS)
-    local till = not active and tool and tool:HasTag("TILL_tool")
-    if not active and not till then
+    local action = Actions.plan_mode(active, tool)
+    local till = action == "TILL"
+    if not action then
         return
     end
     local item = active and active.replica.inventoryitem
-    local spacing = till and (4 / self.settings.queue.farm_grid) or math.max(0.5, item:DeploySpacingRadius())
-    local action = till and "TILL" or "DEPLOY"
+    local spacing = till and (4 / self.settings.queue.farm_grid)
+        or (item and math.max(0.5, item:DeploySpacingRadius()) or 4)
+    local tile = action == "TERRAFORM" or action == "POUR_WATER_GROUNDTILE" or action == "DEPLOY_TILEARRIVE"
+    if tile then
+        spacing = 4
+    end
     if active and active:HasTag("groundtile") then
         spacing = 4
     end
@@ -415,9 +420,9 @@ function Client:plan(a, b)
     local ox, oz
     if till then
         ox, oz = cx - 2 + spacing / 2, cz - 2 + spacing / 2
-    elseif active:HasTag("groundtile") then
+    elseif tile or (active and active:HasTag("groundtile")) then
         ox, oz = cx, cz
-    elseif active:HasTag("wallbuilder") then
+    elseif active and active:HasTag("wallbuilder") then
         ox, oz = 0.5, 0.5
     end
     if ox then
@@ -432,10 +437,7 @@ function Client:plan(a, b)
         if not point or (active and not U.valid(active)) then
             return false
         end
-        if till then
-            return G.TheWorld.Map:CanTillSoilAtPoint(point.x, 0, point.z)
-        end
-        return item:CanDeploy(G.Vector3(point.x, 0, point.z), nil, self.player)
+        return Actions.plan_valid(action, point, self.player, active, G)
     end
     local points, reason = Planner.grid(a, b, spacing, self.config.queue.limit, validate, U.platform(self.player))
     if not points then

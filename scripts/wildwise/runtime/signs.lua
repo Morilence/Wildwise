@@ -4,11 +4,13 @@ local U = require("wildwise/core/util")
 local M = {}
 
 -- 为受支持容器挂载一个辅助牌生命周期；重复挂载复用同一实例。
-function M.attach(inst, G)
+function M.attach(inst, G, settings)
     if inst._wildwise_sign_scope and not inst._wildwise_sign_scope.closed then
         return inst._wildwise_sign_scope
     end
     local scope, sign, scheduled = Lifetime.new(), nil, false
+    settings = settings or {}
+    local last_skin, last_skin_id
     local watched, item_scope, last_image, dirty
     inst._wildwise_sign_scope = scope
 
@@ -32,14 +34,14 @@ function M.attach(inst, G)
                 item_scope:listen(inst, "onremove", dirty, item)
             end
         end
-        if not item then
+        if not item or inst._wildwise_sign_hidden then
             if U.valid(sign) then
                 sign:Remove()
                 sign = nil
             end
             return
         end
-        local ok, name, atlas, bg, bgatlas = pcall(Signs.image, item, G)
+        local ok, name, atlas, bg, bgatlas = pcall(Signs.image, item, G, settings)
         if not ok or not name or not atlas then
             if U.valid(sign) then
                 sign:Remove()
@@ -47,13 +49,19 @@ function M.attach(inst, G)
             end
             return
         end
+        local skin, skin_id = Signs.skin(container, settings)
+        if U.valid(sign) and (skin ~= last_skin or skin_id ~= last_skin_id) then
+            sign:Remove()
+            sign = nil
+        end
         if not U.valid(sign) then
             last_image = nil
-            sign = G.SpawnPrefab("minisign")
+            sign = G.SpawnPrefab("minisign", skin, skin_id)
             if not sign then
                 return
             end
             -- 复用原版资源与 drawable 的网络同步；辅助牌不可收获，也不进入存档。
+            last_skin, last_skin_id = skin, skin_id
             sign.persists = false
             sign:AddTag("NOCLICK")
             sign:AddTag("FX")
@@ -64,7 +72,8 @@ function M.attach(inst, G)
             end
             sign.entity:SetParent(inst.entity)
             sign.Transform:SetPosition(0, 0, 0.7)
-            sign.Transform:SetScale(0.65, 0.65, 0.65)
+            local scale = settings.scale or 0.65
+            sign.Transform:SetScale(scale, scale, scale)
         end
         -- 图集缺失时只跳过本牌，绝不包装全局 RegisterPrefabs 或收集其它模组资源。
         local signature = table.concat({ name, atlas, bg or "", bgatlas or "" }, "\0")
@@ -86,7 +95,7 @@ function M.attach(inst, G)
         scheduled = true
         inst:DoTaskInTime(0, update)
     end
-    for _, event in ipairs({ "onclose", "itemget", "itemlose" }) do
+    for _, event in ipairs({ "onclose", "itemget", "itemlose", "wildwise_sign_refresh" }) do
         scope:listen(inst, event, dirty)
     end
     scope:listen(inst, "onremove", function()

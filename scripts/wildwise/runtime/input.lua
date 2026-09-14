@@ -23,6 +23,10 @@ function M.attach(client, G)
                 point = point,
                 action = action.action.id,
                 material = active and active.prefab,
+                rack = target
+                        and Actions.racks[target.prefab]
+                        and (action.action.id == "RUMMAGE" or action.action.id == "STORE")
+                    or nil,
             })
         end
     end
@@ -65,7 +69,7 @@ function M.attach(client, G)
         local finish, screen = G.TheInput:GetWorldPosition(), G.TheInput:GetScreenPosition()
         local dragged = (screen.x - selected.screen.x) ^ 2 + (screen.y - selected.screen.y) ^ 2 > 100
         local tool = player.replica.inventory:GetEquippedItem(G.EQUIPSLOTS.HANDS)
-        if dragged and right and (player.replica.inventory:GetActiveItem() or (tool and tool:HasTag("TILL_tool"))) then
+        if dragged and right and Actions.plan_mode(player.replica.inventory:GetActiveItem(), tool) then
             client:plan(selected.point, finish)
             return true
         end
@@ -105,9 +109,20 @@ function M.attach(client, G)
                 return false
             end
             local now = G.GetTime()
-            if last_click and now - last_click.at <= 0.35 and last_click.prefab == selected.target.prefab then
+            if
+                last_click
+                and now - last_click.at <= (client.settings.queue.double_click_speed or 0.35)
+                and last_click.prefab == selected.target.prefab
+            then
                 local x, y, z = selected.target.Transform:GetWorldPosition()
-                local targets = G.TheSim:FindEntities(x, y, z, 15, nil, { "INLIMBO", "FX", "NOCLICK" })
+                local targets = G.TheSim:FindEntities(
+                    x,
+                    y,
+                    z,
+                    client.settings.queue.double_click_range or 15,
+                    nil,
+                    { "INLIMBO", "FX", "NOCLICK" }
+                )
                 for _, target in ipairs(Planner.nearest(targets, player:GetPosition())) do
                     if target.prefab == selected.target.prefab then
                         add(target, right, target:GetPosition())
@@ -166,7 +181,20 @@ function M.attach(client, G)
                 client:toggle_menu()
             end
         elseif key == client.settings.beefalo.toggle_key and client:input_ready() then
-            client.settings.beefalo.visible = not client.settings.beefalo.visible
+            client:set("beefalo.visible", not client.settings.beefalo.visible)
+        elseif
+            key == client.settings.queue.last_recipe_key
+            and client:input_ready()
+            and client.config.queue.enabled
+        then
+            if client.last_recipe then
+                client.queue:add({
+                    recipe = client.last_recipe.name,
+                    key = "recipe:" .. client.last_recipe.name,
+                    skin = client.last_recipe.skin,
+                    remaining = 1,
+                })
+            end
         end
     end)
     scope:add(function()
@@ -176,6 +204,9 @@ function M.attach(client, G)
     if builder then
         client.adapter.set_recipe_original(builder.MakeRecipeFromMenu)
         Hooks.wrap(scope, builder, "MakeRecipeFromMenu", function(original, self, recipe, skin, ...)
+            if type(recipe) == "table" and not recipe.placer then
+                client.last_recipe = { name = recipe.name, skin = skin }
+            end
             if
                 client.config.queue.enabled
                 and client:input_ready()

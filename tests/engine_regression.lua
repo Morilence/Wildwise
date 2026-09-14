@@ -68,7 +68,9 @@ test("WW-O05 new dryingrack snapshot and queue do not toggle container", functio
         end
     end
     assert(rummage, "native rack action changed")
-    assert(Actions.pick(viewer, rack, rack:GetPosition(), false) == nil, "queue must not loop RUMMAGE")
+    local picked = Actions.pick(viewer, rack, rack:GetPosition(), false)
+    assert(picked and picked.action.id == "RUMMAGE", "rack workflow must discover the native opening action")
+    assert(not rack.replica.container:IsOpenedBy(viewer), "discovery must not open the rack")
 end)
 
 test("WW-H01 removing a parasite target releases combined subscriptions", function()

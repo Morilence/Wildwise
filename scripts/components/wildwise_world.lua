@@ -33,6 +33,15 @@ local World = G.Class(function(self, inst)
                 return self.players[player] and self.players[player].pickup
             end,
             clock = os.clock,
+            near_twiggy = function(item)
+                local x, y, z = item.Transform:GetWorldPosition()
+                for _, tree in ipairs(G.TheSim:FindEntities(x, y, z, 8, { "tree" }, { "INLIMBO", "FX" })) do
+                    if tree.build == "twiggy" then
+                        return true
+                    end
+                end
+                return false
+            end,
             result = function(old, result, target)
                 for player in pairs(self.players) do
                     if U.valid(player) and U.valid(old) then
@@ -246,7 +255,7 @@ function World:Request(player, target, bytes)
             local preference = data.key == "map.share_position" and "position" or "exploration"
             self.map:set_preference(player.userid, preference, data.value)
         end
-    elseif msg.kind == "ping" and self.config.map.enabled then
+    elseif msg.kind == "ping" and self.config.map.enabled and self.config.map.pings ~= false then
         local x, z = data.x, data.z
         -- 只允许已探索地点，不接受 prefab、任意实体生成或其它世界坐标。
         if U.finite(x) and U.finite(z) and player.CanSeePointOnMiniMap and player:CanSeePointOnMiniMap(x, 0, z) then
@@ -258,6 +267,27 @@ function World:Request(player, target, bytes)
     elseif msg.kind == "delete_ping" then
         local client = G.TheNet:GetClientTableForUser(player.userid)
         self.map:delete_ping(player.userid, data.id, client and client.admin)
+    elseif msg.kind == "toggle_sign" then
+        local signs = require("wildwise/services/signs")
+        if
+            U.valid(target)
+            and signs.enabled(target.prefab, self.config.signs)
+            and not player:HasTag("playerghost")
+            and U.sameplatform(player, target)
+            and player:GetDistanceSqToInst(target) <= 36
+            and (not G.CanEntitySeeTarget or G.CanEntitySeeTarget(player, target))
+            and target._wildwise_sign_scope
+            and not target:HasTag("burnt")
+        then
+            target._wildwise_sign_hidden = not target._wildwise_sign_hidden
+            target:PushEvent("wildwise_sign_refresh")
+            self:Send(
+                player,
+                nil,
+                "notice",
+                { reason = target._wildwise_sign_hidden and "sign_hidden" or "sign_shown" }
+            )
+        end
     elseif msg.kind == "recipes" and self.config.info.enabled then
         if not U.finite(data.request) or data.request < 1 or data.request % 1 ~= 0 then
             return
@@ -400,13 +430,15 @@ function World:MapUpdate(now)
     end
     local pings = {}
     for _, ping in pairs(self.map.pings) do
-        pings[#pings + 1] = ping
+        if self.config.map.pings ~= false then
+            pings[#pings + 1] = ping
+        end
     end
     local fires = {}
     for fire in pairs(self.fires) do
         if not U.valid(fire) or not fire.components.fueled or fire.components.fueled:IsEmpty() then
             self.fires[fire] = nil
-        else
+        elseif self.config.map.signal_fires ~= false then
             local x, _, z = fire.Transform:GetWorldPosition()
             fires[#fires + 1] = { x = x, z = z, prefab = fire.prefab }
         end

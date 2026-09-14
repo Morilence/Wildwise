@@ -4,7 +4,7 @@
 
 **Wildwise is a convenience mod for Don't Starve Together.** It combines information, shared exploration, item handling, queued actions, storage signs and beefalo status under one set of server permissions and personal settings. It uses native game UI and assets, with English / Simplified Chinese and keyboard / mouse support.
 
-**0.2.1 is a development build.** On 2026-09-14 we verified the latest official **public branch: game 747465, Steam build 24700372**, and ran tests on that dedicated server. The newer updatebeta branch has not been validated. [Version evidence](docs/evidence/current-engine.json) · [Test results and limits](docs/testing.md)
+**0.3.0 is a development build.** On 2026-09-14 we verified the latest official **public branch: game 747465, Steam build 24700372**, and ran tests on that dedicated server. The newer updatebeta branch has not been validated. [Version evidence](docs/evidence/current-engine.json) · [Test results and limits](docs/testing.md)
 
 ## For players
 
@@ -18,7 +18,18 @@
 | Storage signs | Shows the first occupied slot on chests, scaled chests and ancient boat cargo holds by default. Optional Chester, Hutch, ice box, salt box and tin fishin' bin support. Bundles can show their first item; empty storage clears the image. |
 | Beefalo panel | Health, domestication, obedience, tendency, saddle uses, hunger and the native buck timer while riding. Toggle with B. Woby is not assigned beefalo-specific statistics. |
 
-Four-ingredient cooking queries use native recipes. Container contents / matching-item lookup, world event details and attack-range values require host permission and default to off. Base damage is not final damage against a particular target. Unknown custom food callbacks are not executed to predict effects.
+Four-ingredient cooking queries use native recipes. Container contents / matching-item lookup, world event details and attack-range values require host permission and default to off. Base damage is not final damage against a particular target. Unknown custom food callbacks are not executed to predict effects. Spoilage separates the base budget from an estimate assuming the current environment stays unchanged; unknown preservers, extra acid-rain spoilage and paused processing are identified without guessing. Cooking candidates show weighted probability and base cooking time.
+
+### Appearance and independent controls
+
+- F7 provides separate information groups, time / temperature units and line limits with truncation hints. Server restrictions still control which data can be received.
+- Information page 5 offers native mount badges or compact text, separate scaling, fine position offsets, background opacity and hunger visibility. Health / hunger show current and maximum values; badges normalize against the maximum. B saves visibility.
+- Storage signs retain native inventory images, item skins, spice layers and bundle-size icons. A stored native `minisign_item` supplies its linked sign skin; removing it restores the default. Hosts control sign skins, bundle contents and sign scale separately.
+- Hover a nearby supported container, open F7 and go to Items page 2 to toggle that container's sign for this server session. Restart restores it. The server requires visibility, the same platform and a distance of at most six world units; contents are unchanged.
+- World / manual-drop stacking and pickup have independent radii; 0 inherits the previous `items_radius`. Nine ash / manure / seed switches default off. Native twiggy-tree drops, burning / smoldering items and operation-specific exclusion tags are protected.
+- Player / ping / fire / wormhole icons have individual personal switches. Hosts can disable pings, signal fires and wormholes separately. Hiding icons does not withdraw already shared exploration.
+
+Actual skin rendering, resolution layouts and the Combined Status combination still require graphical-client acceptance. Native Widgets, image data and entity lifecycles have been checked without graphics.
 
 ### Get started
 
@@ -36,23 +47,25 @@ Position and exploration sharing default to allowed in Survival / Endless and of
 | Game inspect modifier | Expand hover details |
 | Shift + click / double-click | Add one target / nearby actionable targets of the same type |
 | Shift + left drag | Select an area of targets |
-| Material on cursor or hoe equipped, Shift + right drag | Preview a placement plan, then choose Execute plan |
+| Deployable material / fertilizer held, or hoe / pitchfork / watering can equipped, Shift + right drag | Preview deployment / tilling / turf digging / soil watering, then Execute plan |
 | Shift + click a non-structure recipe | Repeat crafting |
 | Movement, ordinary click or attack | Take control and cancel remaining tasks |
 | Queue panel | Pause, resume or clear |
-| Alt + map primary action | Place the selected marker type |
-| B | Toggle beefalo panel; key can be rebound |
+| Alt + map left-click | Open the four-way marker picker; choose a type to send, right-click / Esc to cancel |
+| Alt + map right-click | Delete your nearby marker |
+| C | Craft the last non-structure recipe used in this session once; rebindable |
+| B | Toggle and save beefalo panel visibility; rebindable |
 
 Farms support 2×2 / 3×3 / 4×4 layouts; walls and turf follow native alignment. Ordinary building placement retains the game's Shift grid controls. Chat, map, menu or window focus loss pauses the queue; returning requires explicit resume. Primary actions follow game bindings; the queue modifier can be changed.
 
-**The new multi-slot drying rack must currently be opened and emptied manually.** Wildwise reads its drying progress but does not queue its RUMMAGE container toggle, avoiding an open / close loop. Queues do not automate combat, target selection or dodging. Full controller support is not available.
+**Drying racks support opening, collecting finished items and rehanging held ingredients.** Still-drying items stay in their slots. One native transfer is requested at a time, with a maximum of 24 transfers per rack; full inventory, missing materials or five seconds without progress pause the workflow. Optional collection after work queues legal drops within four world units of an actual work point, under the existing queue limit. Combat, enemy selection and dodging are not automated. Full controller operation still needs real-client validation.
 
 ## For hosts and server owners
 
 Wildwise is a server-enabled mod that **all clients must load**. Reference mods are not required. Distribution currently uses manually installed GitHub build artifacts; it has not been published to Steam Workshop.
 
 1. Download `Wildwise-mod` from a successful [GitHub Actions](https://github.com/Morilence/Wildwise/actions) build, or build from source below.
-2. Extract the artifact, then extract its `Wildwise-0.2.1.zip` into the game's `mods` directory. The result must be `mods/Wildwise/modinfo.lua`, without an extra enclosing directory.
+2. Extract the artifact, then extract its `Wildwise-0.3.0.zip` into the game's `mods` directory. The result must be `mods/Wildwise/modinfo.lua`, without an extra enclosing directory.
 3. Enable it under **Server Mods** and distribute the same files to every player. Install and enable the same version on both Master and Caves.
 4. Restart the relevant shard after server configuration changes. Check active settings and disabled-feature reasons in F7.
 
@@ -66,74 +79,90 @@ Only new drops stack by default; manual / restored items need separate host opt-
 
 ### Complete modoverrides.lua example
 
-All **38 values below are defaults**, checked against the native configuration. Common settings come first; module options use flat prefixes such as `beefalo_hunger_threshold`. Apply to `Master/modoverrides.lua` and also `Caves/modoverrides.lua` if used.
+All **74 values below are defaults**, checked against the native configuration. Common settings come first; module options use flat prefixes such as `beefalo_hunger_threshold`. Apply to `Master/modoverrides.lua` and also `Caves/modoverrides.lua` if used.
 
 <details>
 <summary>Expand the complete copyable configuration</summary>
 
 ```lua
 return {
-    ["Wildwise"] = {
-        enabled = true, -- Enable the entire mod: true / false
+    Wildwise = {
+        enabled = true,
         configuration_options = {
-            -- General settings
-            language = "auto",                  -- "auto" follows the game / "zh" Simplified Chinese / "en" English
-            ui_scale = 1,                       -- HUD scale multiplier: 0.75 / 1 / 1.25 / 1.5
-            menu_key = 288,                     -- Menu key: 287 = F6 / 288 = F7 / 289 = F8
-            diagnostics = false,                -- Reader diagnostics: true / false; log the first failure per category
-
-            -- Information
-            info_enabled = true,                -- Item, creature and world information; true / false
-            info_container_contents = false,    -- Allow content queries and matching-item lookup; true / false
-            info_world_events = false,          -- Allow world event details; true / false
-            info_attack_range = false,          -- Allow attack range values; true / false
-            info_font_size = 22,                -- Information font size: 18 / 22 / 26 / 30
-
-            -- Combat health bars
-            healthbars_enabled = true,          -- Combat health bars; true / false
-            healthbars_limit = 12,              -- Maximum visible bars: 4 / 8 / 12 / 16 / 20
-            healthbars_linger_seconds = 2,      -- Seconds to keep bars after combat: 0 / 1 / 2 / 3 / 5
-            healthbars_scale = 1,               -- Bar scale multiplier: 0.75 / 1 / 1.25 / 1.5
-            healthbars_numbers = true,          -- Show health numbers: true / false
-            -- "self": yourself; "followers": yourself and your followers
-            -- "nearby": nearby players; "nearby_followers": nearby players and followers
-            healthbars_hostile_scope = "self",  -- Which combat targets qualify for health bars
-
-            -- Map collaboration
-            map_enabled = true,                 -- Map collaboration; true / false
-            -- Sharing rules: "auto" / "on" / "off"
-            -- "auto": enabled in Survival/Endless; disabled in Wilderness or PvP
-            -- "on": allow sharing, respecting personal switches; "off": prohibit sharing
-            map_share_position = "auto",        -- Position sharing
-            map_share_exploration = "auto",     -- Exploration sharing
-
-            -- Item handling
-            items_enabled = true,               -- Automatic stacking and pickup service; true / false
-            items_stack_world = true,           -- Stack newly dropped items; true / false
-            items_stack_manual = false,         -- Stack items deliberately dropped by players; true / false
-            items_stack_loaded = false,         -- Stack ground items restored from a save; true / false
-            items_pickup_allowed = false,       -- Let players enable auto pickup under F7 → Items; true / false
-            items_pickup_existing = true,       -- Pick up only item types already carried; false removes this condition; true / false
-            items_radius = 4,                   -- Stacking/pickup radius in game units: 2 / 4 / 6 / 8
-
-            -- Action queues
-            queue_enabled = true,               -- Action queues and batch placement; true / false
-            queue_farm_grid = 3,                -- Farm layout per tile: 2 = 2×2 / 3 = 3×3 / 4 = 4×4
-
-            -- Smart storage signs
-            signs_enabled = true,               -- Smart storage signs; true / false
-            signs_treasurechest = true,          -- Chests; true / false
-            signs_dragonflychest = true,         -- Scaled chests; true / false
-            signs_boat_ancient_container = true, -- Ancient boat cargo holds; true / false
-            signs_chester = false,               -- Chester; true / false
-            signs_hutch = false,                 -- Hutch; true / false
-            signs_icebox = false,                -- Ice boxes; true / false
-            signs_saltbox = false,               -- Salt boxes; true / false
-            signs_fish_box = false,              -- Tin fishin' bins; true / false
-
-            -- Beefalo status panel
-            beefalo_enabled = true,             -- Beefalo status panel; true / false
-            beefalo_hunger_threshold = 15,      -- Hunger display activation threshold, in hunger points: 0 / 5 / 15 / 25
+            language = "auto",
+            ui_scale = 1,
+            menu_key = 288,
+            diagnostics = false,
+            info_enabled = true,
+            info_container_contents = false,
+            info_world_events = false,
+            info_attack_range = false,
+            info_font_size = 22,
+            healthbars_enabled = true,
+            healthbars_limit = 12,
+            healthbars_linger_seconds = 2,
+            healthbars_scale = 1,
+            healthbars_numbers = true,
+            healthbars_hostile_scope = "self",
+            map_enabled = true,
+            map_share_position = "auto",
+            map_share_exploration = "auto",
+            items_enabled = true,
+            items_stack_world = true,
+            items_stack_manual = false,
+            items_stack_loaded = false,
+            items_pickup_allowed = false,
+            items_pickup_existing = true,
+            items_radius = 4,
+            queue_enabled = true,
+            queue_farm_grid = 3,
+            signs_enabled = true,
+            signs_treasurechest = true,
+            signs_dragonflychest = true,
+            signs_boat_ancient_container = true,
+            signs_chester = false,
+            signs_hutch = false,
+            signs_icebox = false,
+            signs_saltbox = false,
+            signs_fish_box = false,
+            beefalo_enabled = true,
+            beefalo_hunger_threshold = 15,
+            info_combat = true,
+            info_food_values = true,
+            info_perishable = true,
+            info_equipment = true,
+            info_progress = true,
+            info_farm = true,
+            info_follower = true,
+            info_cooldowns = true,
+            info_timers = true,
+            info_max_lines = 10,
+            info_inspect_lines = 25,
+            info_time_style = "clock",
+            info_temperature_units = "game",
+            map_wormholes = true,
+            map_pings = true,
+            map_signal_fires = true,
+            items_world_radius = 0,
+            items_manual_radius = 0,
+            items_pickup_radius = 0,
+            items_world_ash = false,
+            items_world_poop = false,
+            items_world_seeds = false,
+            items_manual_ash = false,
+            items_manual_poop = false,
+            items_manual_seeds = false,
+            items_pickup_ash = false,
+            items_pickup_poop = false,
+            items_pickup_seeds = false,
+            queue_collect_after_work = false,
+            queue_double_click_speed = 0.35,
+            queue_double_click_range = 15,
+            signs_bundle_contents = true,
+            signs_body_skins = true,
+            signs_scale = 0.65,
+            beefalo_show_hunger = true,
+            beefalo_scale = 1,
         },
     },
 }
@@ -174,14 +203,15 @@ npm run check
 npm run package
 ```
 
-Pinned StyLua uses Lua 5.1, four spaces, separated function declarations and expanded bodies. `check` runs formatting, static analysis, 99 pure Lua tests, 7 collector fixture tests, package allowlisting and Lua compilation. Packaging writes `dist/Wildwise-0.2.1.zip` and its SHA-256. Test code, development dependencies, reference sources and game assets are excluded.
+Pinned StyLua uses Lua 5.1, four spaces, separated function declarations and expanded bodies. `check` runs formatting, static analysis, 121 pure Lua tests, 7 collector fixture tests, package allowlisting and Lua compilation. Packaging writes `dist/Wildwise-0.3.0.zip` and its SHA-256. Test code, development dependencies, reference sources and game assets are excluded.
 
-This follow-up adds 34 native engine checks. Earlier native automated checks cover 26 entity tests, 9 new regressions, 7 headless UI tests, 8 container types, 2 asynchronous drop tests, 1 host-path contract and 2 save-restore / unwrap checks. **These do not certify graphics, real multiplayer, Master/Caves travel or comparative performance.** See the [test report](docs/testing.md) for scope, load measurements and reproduction commands.
+This version passed **111 native engine / headless UI contract checks**: 85 existing checks, 17 capability checks, 6 appearance lifecycle checks and 3 asynchronous drop checks. The skin asset entry uses a stub in the lifecycle tests; actual skin rendering remains unverified. Earlier save-restore / unwrap checks remain historical evidence. **These do not certify graphics, real multiplayer, Master/Caves travel or comparative performance.** See the [test report](docs/testing.md) for scope, load measurements and reproduction commands.
 
 ## Documentation and remaining limits
 
 - [Feature coverage](docs/features.md): implementation and remaining in-game checks.
 - [Three-year Workshop review](docs/workshop-issues.md): 35 mods, 3,588 recent unique comments, 74 scenarios, dispositions and regression mappings.
+- [0.3.0 implementation record](docs/implementation-2026-09-14.md): capability additions, skin support, configuration changes and remaining acceptance work (Chinese).
 - [Manual regression cases](docs/manual-regressions.md): pending real-player, cave, graphical and sustained-load scenarios.
 - [Source and mechanism research](docs/research.md): adopted designs, native interfaces and licensing boundaries.
 

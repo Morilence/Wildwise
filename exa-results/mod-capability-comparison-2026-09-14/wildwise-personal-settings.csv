@@ -1,0 +1,33 @@
+﻿个人字段,初始值,存在保存字段,有公开操作入口,边界
+map.ping_kind,location,✅,✅,F7 可设置，持久化到 wildwise_client_v2；不越过服主许可。
+map.share_exploration,true,✅,✅,F7 可切换，服务端按 userid 保存；welcome 采用当前世界返回值，不简单跨服沿用本地值。
+map.indicators,scoreboard,✅,✅,F7 可设置，持久化到 wildwise_client_v2；不越过服主许可。
+map.share_position,true,✅,✅,F7 可切换，服务端按 userid 保存；welcome 采用当前世界返回值，不简单跨服沿用本地值。
+menu_key,288,✅,✅,F7 重绑定任意引擎键码；restore允许0～512整数，菜单未提供明确禁用选项。
+queue.farm_grid,3,✅,✅,F7 可设置，持久化到 wildwise_client_v2；不越过服主许可。
+queue.modifier_key,304,✅,✅,F7 重绑定任意引擎键码；restore允许0～512整数，菜单未提供明确禁用选项。
+items.pickup,false,✅,✅,F7 可设置，持久化到 wildwise_client_v2；不越过服主许可。
+ui_scale,1,✅,✅,F7 可设置，持久化到 wildwise_client_v2；不越过服主许可。
+healthbars.enabled,true,✅,✅,F7 可设置，持久化到 wildwise_client_v2；不越过服主许可。
+healthbars.numbers,true,✅,✅,F7 可设置，持久化到 wildwise_client_v2；不越过服主许可。
+healthbars.limit,12,✅,✅,F7 可设置，持久化到 wildwise_client_v2；不越过服主许可。
+healthbars.scale,1,✅,✅,F7 可设置，持久化到 wildwise_client_v2；不越过服主许可。
+healthbars.hostile_scope,self,✅,✅,F7 可设置，持久化到 wildwise_client_v2；不越过服主许可。
+healthbars.linger_seconds,2,✅,❌,有偏好字段/恢复/实际使用，但 F7 未提供入口；初始继承服主值。
+beefalo.visible,true,✅,✅,F7 保存；B 热键只改内存，后续其他设置保存可能一并持久化。
+beefalo.offset_x,0,✅,✅,F7 -300/-200/-100/0/100/200/300；restore只接受绝对值≤600。
+beefalo.toggle_key,98,✅,✅,F7 重绑定任意引擎键码；restore允许0～512整数，菜单未提供明确禁用选项。
+beefalo.offset_y,0,✅,✅,F7 -200/-100/0/100/200；restore只接受绝对值≤600。
+beefalo.hunger_threshold,15,✅,✅,F7 可设置，持久化到 wildwise_client_v2；不越过服主许可。
+info.font_size,22,✅,✅,F7 可设置，持久化到 wildwise_client_v2；不越过服主许可。
+info.preset,standard,✅,✅,F7 可设置，持久化到 wildwise_client_v2；不越过服主许可。
+info.categories.equipment,true,✅,✅,F7 可设置，持久化到 wildwise_client_v2；不越过服主许可。
+info.categories.world,true,✅,✅,F7 可设置，持久化到 wildwise_client_v2；不越过服主许可。
+info.categories.combat,true,✅,✅,F7 可设置，持久化到 wildwise_client_v2；不越过服主许可。
+info.categories.food,true,✅,✅,F7 可设置，持久化到 wildwise_client_v2；不越过服主许可。
+info.categories.progress,true,✅,✅,F7 可设置，持久化到 wildwise_client_v2；不越过服主许可。
+info.categories.farm,true,✅,✅,F7 可设置，持久化到 wildwise_client_v2；不越过服主许可。
+info.categories.follower,true,✅,✅,F7 可设置，持久化到 wildwise_client_v2；不越过服主许可。
+info.categories.container,true,✅,✅,F7 可设置，持久化到 wildwise_client_v2；不越过服主许可。
+language,auto,✅,✅,F7 可设置，持久化到 wildwise_client_v2；不越过服主许可。
+first_tip_seen,false,✅,❌,首次提示内部标志；不是公开配置，首次welcome后写入。

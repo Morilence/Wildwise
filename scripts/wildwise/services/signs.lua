@@ -29,12 +29,17 @@ function M.first(container)
 end
 
 -- 解析原生图标、皮肤和调味层，不生成临时物品或注册外部资产。
-function M.image(item, G)
+function M.image(item, G, settings)
     if not U.valid(item) then
         return nil
     end
     local c = item.components
-    if c.unwrappable and c.unwrappable.itemdata and c.unwrappable.itemdata[1] then
+    if
+        (not settings or settings.bundle_contents ~= false)
+        and c.unwrappable
+        and c.unwrappable.itemdata
+        and c.unwrappable.itemdata[1]
+    then
         local record = c.unwrappable.itemdata[1]
         if type(record) ~= "table" or type(record.prefab) ~= "string" then
             return nil
@@ -81,5 +86,18 @@ function M.image(item, G)
         return name, atlas, item.inv_image_bg.image:gsub("%.tex$", ""), item.inv_image_bg.atlas
     end
     return name, atlas
+end
+
+-- 只沿用容器里实际小木牌物品的原生关联皮肤，不构造皮肤名称或解锁资格。
+function M.skin(container, settings)
+    if settings and settings.body_skins == false then
+        return nil
+    end
+    for slot = 1, math.min(container.numslots or 0, 80) do
+        local item = container:GetItemInSlot(slot)
+        if U.valid(item) and item.prefab == "minisign_item" and type(item.linked_skinname) == "string" then
+            return item.linked_skinname, item.skin_id
+        end
+    end
 end
 return M

@@ -56,7 +56,7 @@ test("all native menu pages in Chinese and English", function()
         client.lang = lang
         for _, tab in ipairs({ "info", "maps", "items", "queue", "diagnostics" }) do
             menu.tab = tab
-            for page = 1, (tab == "info" and 5 or 1) do
+            for page = 1, (({ info = 7, maps = 2, items = 3, queue = 2 })[tab] or 1) do
                 menu.page = page
                 menu:refresh()
             end
@@ -91,7 +91,7 @@ test("native mod configuration screen exposes all scalar options including conta
     cleanup[#cleanup + 1] = screen
     assert(#screen.options == #Config.fields, "native configuration option count changed")
     assert(screen.options[1].name == "language", "general settings are not first")
-    assert(screen.options[#screen.options].name == "beefalo_hunger_threshold", "beefalo field is not exposed")
+    assert(screen.options[#screen.options].name == "beefalo_scale", "new appearance settings are missing")
     local names = {}
     for _, option in ipairs(screen.options) do
         names[option.name] = true

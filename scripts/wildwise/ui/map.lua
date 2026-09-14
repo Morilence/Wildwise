@@ -1,6 +1,7 @@
 local Widget = require("widgets/widget")
 local Text = require("widgets/text")
 local Image = require("widgets/image")
+local Templates = require("widgets/redux/templates")
 local Hooks = require("wildwise/core/hooks")
 local Lifetime = require("wildwise/core/lifetime")
 local U = require("wildwise/core/util")
@@ -25,6 +26,39 @@ function M.attach(screen, client, G)
     root:SetHAnchor(G.ANCHOR_MIDDLE)
     root:SetVAnchor(G.ANCHOR_MIDDLE)
     local markers = {}
+    -- 固定在地图中央的四向选择器，保存打开时的世界坐标，避免选按钮时坐标漂移。
+    local wheel = root:AddChild(Widget("WildwisePingWheel"))
+    wheel.buttons = {}
+    local wheel_bg = wheel:AddChild(Image("images/global.xml", "square.tex"))
+    wheel_bg:SetSize(425, 220)
+    wheel_bg:SetTint(0.07, 0.06, 0.05, 0.94)
+    wheel.title = wheel:AddChild(Text(G.UIFONT, 20, client:L("select_ping")))
+    for i, entry in ipairs({
+        { "location", 0, 72 },
+        { "danger", 125, 0 },
+        { "resource", 0, -72 },
+        { "rally", -125, 0 },
+    }) do
+        local kind = entry[1]
+        local button = wheel:AddChild(Templates.StandardButton(function()
+            if wheel.point then
+                client:send("ping", nil, { kind = kind, x = wheel.point.x, z = wheel.point.z })
+                client:set("map.ping_kind", kind)
+            end
+            wheel:Hide()
+            wheel.point = nil
+        end, client:L(kind), { 155, 40 }))
+        button:SetPosition(entry[2], entry[3])
+        wheel.buttons[i] = button
+    end
+    for i, button in ipairs(wheel.buttons) do
+        button:SetFocusChangeDir(G.MOVE_RIGHT, wheel.buttons[i % 4 + 1])
+        button:SetFocusChangeDir(G.MOVE_DOWN, wheel.buttons[i % 4 + 1])
+        button:SetFocusChangeDir(G.MOVE_LEFT, wheel.buttons[(i + 2) % 4 + 1])
+        button:SetFocusChangeDir(G.MOVE_UP, wheel.buttons[(i + 2) % 4 + 1])
+    end
+    wheel:Hide()
+    scope.wheel = wheel
 
     local function make(i)
         if markers[i] then
@@ -56,12 +90,21 @@ function M.attach(screen, client, G)
                 widget:Show()
             end
             for _, player in ipairs(client.map.players or {}) do
-                if player.shard == client.shard and player.x and not U.muted(G, player.userid) then
+                if
+                    client.settings.map.show_players ~= false
+                    and player.shard == client.shard
+                    and player.x
+                    and not U.muted(G, player.userid)
+                then
                     draw(player.x, player.z, player.name, palette[2])
                 end
             end
             for _, ping in ipairs(client.map.pings or {}) do
-                if not U.muted(G, ping.owner) then
+                if
+                    client.config.map.pings ~= false
+                    and client.settings.map.show_pings ~= false
+                    and not U.muted(G, ping.owner)
+                then
                     draw(ping.x, ping.z, client:L(ping.kind), ping.kind == "danger" and palette[5] or palette[1])
                 end
             end
@@ -69,7 +112,9 @@ function M.attach(screen, client, G)
                 for _, endpoint in ipairs({ pair.a, pair.b }) do
                     -- 配对已知不代表目的地已探索；每个端点仍独立遵守迷雾。
                     if
-                        U.finite(endpoint.x)
+                        client.settings.map.show_wormholes ~= false
+                        and client.config.map.wormholes ~= false
+                        and U.finite(endpoint.x)
                         and U.finite(endpoint.z)
                         and client.player:CanSeePointOnMiniMap(endpoint.x, 0, endpoint.z)
                     then
@@ -84,7 +129,9 @@ function M.attach(screen, client, G)
                 end
             end
             for _, fire in ipairs(client.map.fires or {}) do
-                draw(fire.x, fire.z, client:L("signal_fire"), palette[1])
+                if client.config.map.signal_fires ~= false and client.settings.map.show_fires ~= false then
+                    draw(fire.x, fire.z, client:L("signal_fire"), palette[1])
+                end
             end
         end
         for i = count + 1, #markers do
@@ -92,10 +139,42 @@ function M.attach(screen, client, G)
         end
     end)
     Hooks.wrap(scope, screen, "OnControl", function(original, self, control, down, ...)
-        if client.config.map.enabled and control == G.CONTROL_PRIMARY and G.TheInput:IsKeyDown(G.KEY_LALT) then
+        if wheel.shown then
+            if control == G.CONTROL_CANCEL or control == G.CONTROL_SECONDARY then
+                if not down then
+                    wheel:Hide()
+                    wheel.point = nil
+                end
+                return true
+            end
+            wheel:OnControl(control, down)
+            return true
+        end
+        if
+            client.config.map.enabled
+            and client.config.map.pings ~= false
+            and G.TheInput:IsKeyDown(G.KEY_LALT)
+            and (control == G.CONTROL_PRIMARY or control == G.CONTROL_SECONDARY)
+        then
             if down then
                 local x, _, z = self:GetWorldPositionAtCursor()
-                client:send("ping", nil, { kind = client.settings.map.ping_kind, x = x, z = z })
+                if control == G.CONTROL_PRIMARY then
+                    wheel.point = { x = x, z = z }
+                    wheel:Show()
+                    wheel.buttons[1]:SetFocus()
+                else
+                    -- 删除距鼠标最近的自己标记，不能越权删除其他玩家标记。
+                    local nearest, distance = nil, 12 * 12
+                    for _, ping in ipairs(client.map.pings or {}) do
+                        local d = (ping.x - x) ^ 2 + (ping.z - z) ^ 2
+                        if ping.owner == client.player.userid and d < distance then
+                            nearest, distance = ping, d
+                        end
+                    end
+                    if nearest then
+                        client:send("delete_ping", nil, { id = nearest.id })
+                    end
+                end
             end
             return true
         end
@@ -107,5 +186,6 @@ function M.attach(screen, client, G)
     scope:add(function()
         root:Kill()
     end)
+    return scope
 end
 return M

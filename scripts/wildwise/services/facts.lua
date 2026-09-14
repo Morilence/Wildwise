@@ -1,6 +1,7 @@
 local U = require("wildwise/core/util")
 local Recipes = require("wildwise/services/recipes")
 local Containers = require("wildwise/services/containers")
+local Details = require("wildwise/services/details")
 local M = {}
 M.schema = {}
 
@@ -68,6 +69,7 @@ for _, id in ipairs({
     "domesticated",
     "ride_time",
     "saddle_uses",
+    "saddle_name",
 }) do
     define(id, "beefalo", (id == "domestication" or id == "obedience") and "%" or (id == "ride_time" and "s" or ""), 1)
 end
@@ -78,7 +80,6 @@ for _, id in ipairs({
     "phase",
     "temperature",
     "wetness",
-    "naughtiness",
     "hunger_rate",
     "sanity_rate",
     "world_events",
@@ -86,7 +87,38 @@ for _, id in ipairs({
     define(id, "world", "", 2)
 end
 
+for _, field in ipairs({
+    { "perish_estimate", "food", "s", 2 },
+    { "perish_state", "food", "", 2 },
+    { "recharge", "equipment", "%" },
+    { "cooldown_time", "equipment", "s" },
+    { "item_moisture", "equipment", "%" },
+    { "item_temperature", "equipment" },
+    { "sew_value", "equipment", "s", 2 },
+    { "repair_health", "equipment", "", 2 },
+    { "repair_uses", "equipment", "", 2 },
+    { "repair_freshness", "equipment", "%", 2 },
+    { "repair_work", "equipment", "", 2 },
+    { "repair_percent", "equipment", "%", 2 },
+    { "cook_product", "progress" },
+    { "dry_product", "progress" },
+    { "process_state", "progress" },
+    { "timers", "progress", "", 2 },
+    { "stress_points", "farm", "", 2 },
+    { "stress_max", "farm", "", 2 },
+    { "stress_sources", "farm", "", 2 },
+}) do
+    define(unpack(field))
+end
+
 local text_fields = {
+    saddle_name = true,
+    perish_state = true,
+    cook_product = true,
+    dry_product = true,
+    process_state = true,
+    timers = true,
+    stress_sources = true,
     food_type = true,
     ingredients = true,
     insulation_type = true,
@@ -249,6 +281,46 @@ register("equipment", function(out, entity)
     end
 end)
 
+register("details", function(out, entity, context)
+    local c = entity.components or {}
+    if c.perishable then
+        local estimate, state = Details.perish(entity, context.G)
+        put(out, "perish_estimate", estimate)
+        put(out, "perish_state", state)
+    end
+    if c.rechargeable then
+        put(out, "recharge", percent(U.call(c.rechargeable, "GetPercent")))
+        put(out, "cooldown_time", U.call(c.rechargeable, "GetTimeToCharge"))
+    elseif c.cooldown then
+        put(out, "cooldown_time", U.call(c.cooldown, "GetTimeToCharged"))
+    end
+    if c.inventoryitem then
+        put(out, "item_moisture", U.call(entity, "GetMoisture"))
+    end
+    put(out, "item_temperature", U.call(c.temperature, "GetCurrent"))
+    if c.sewing then
+        put(out, "sew_value", c.sewing.repair_value)
+    end
+    if c.repairer then
+        for key, field in pairs({
+            repair_health = "healthrepairvalue",
+            repair_uses = "finiteusesrepairvalue",
+            repair_work = "workrepairvalue",
+        }) do
+            if (c.repairer[field] or 0) > 0 then
+                put(out, key, c.repairer[field])
+            end
+        end
+        if (c.repairer.perishrepairpercent or 0) > 0 then
+            put(out, "repair_freshness", percent(c.repairer.perishrepairpercent))
+        end
+        if (c.repairer.healthrepairpercent or 0) > 0 then
+            put(out, "repair_percent", percent(c.repairer.healthrepairpercent))
+        end
+    end
+    put(out, "timers", Details.timers(entity, context.now))
+end)
+
 register("progress", function(out, entity, context)
     local c = entity.components or {}
     local now = context.now
@@ -264,8 +336,20 @@ register("progress", function(out, entity, context)
     if c.stewer and c.stewer:IsCooking() then
         put(out, "cook_time", c.stewer:GetTimeToCook())
     end
+    if c.stewer and c.stewer.product then
+        put(out, "cook_product", c.stewer.product)
+        put(out, "process_state", c.stewer:IsCooking() and "cooking" or "ready_to_harvest")
+    end
     if c.dryer and c.dryer:IsDrying() then
         put(out, "dry_time", c.dryer:GetTimeToDry())
+    end
+    if c.dryer and c.dryer.product then
+        put(out, "dry_product", c.dryer.product)
+        put(
+            out,
+            "process_state",
+            not c.dryer.ingredient and "ready_to_harvest" or (U.call(c.dryer, "IsPaused") and "paused" or "drying")
+        )
     end
     local dryingrack = c.dryingrack or c.wobyrack
     if dryingrack then
@@ -277,6 +361,26 @@ register("progress", function(out, entity, context)
             end
         end
         put(out, "dry_time", remaining)
+        if remaining then
+            put(out, "process_state", dryingrack.dryingpaused and "paused" or "drying")
+        end
+        local rack_container = U.call(dryingrack, "GetContainer")
+        if rack_container then
+            local products = {}
+            for slot = 1, math.min(rack_container.numslots or 0, 12) do
+                local item = rack_container:GetItemInSlot(slot)
+                if U.valid(item) then
+                    local product = U.call(item.components.dryable, "GetProduct") or item.prefab
+                    products[#products + 1] = product
+                end
+            end
+            if #products > 0 then
+                put(out, "dry_product", table.concat(products, ","))
+                if not remaining then
+                    put(out, "process_state", "ready_to_harvest")
+                end
+            end
+        end
     end
     if c.growable then
         put(out, "stage", c.growable:GetStage())
@@ -305,6 +409,18 @@ end)
 register("farm", function(out, entity, context)
     local c = entity.components or {}
     local G = context.G
+    if c.farmplantstress then
+        put(out, "stress_points", c.farmplantstress.stress_points)
+        put(out, "stress_max", c.farmplantstress.max_stress_points)
+        -- 展示已经记录的本阶段压力源，不调用可能带副作用的未知测试函数。
+        local sources = {}
+        for _, key in ipairs(U.sortedkeys(c.farmplantstress.stressors or {})) do
+            if c.farmplantstress.stressors[key] then
+                sources[#sources + 1] = key
+            end
+        end
+        put(out, "stress_sources", #sources > 0 and table.concat(sources, ",") or "none")
+    end
     if c.fertilizer then
         local values = c.fertilizer.nutrients
         if values then
@@ -351,6 +467,7 @@ register("beefalo", function(out, entity, context)
         end
         local saddle = c.rideable.saddle
         if U.valid(saddle) then
+            put(out, "saddle_name", saddle.prefab)
             put(out, "saddle_uses", U.call(saddle.components.finiteuses, "GetUses"))
         end
         -- 直接读原版踢落任务的剩余时间；顺从度变化可能重置任务，不自行复刻公式。
@@ -447,7 +564,8 @@ register_viewer("world", function(out, entity, viewer, context)
             { "temperature", "temperature" },
             { "wetness", "wetness" },
         }) do
-            put(out, pair[2], state[pair[1]])
+            local value = state[pair[1]]
+            put(out, pair[2], pair[2] == "day" and U.finite(value) and value + 1 or value)
         end
         -- 当前 kramped 属于世界且把每个玩家的计数保存在私有闭包中；
         -- 没有结构化只读接口时不展示猜测值，也不替换原版惩罚机制。
@@ -474,6 +592,24 @@ register_viewer("world", function(out, entity, viewer, context)
     end
 end)
 
+-- 服务器许可和个人显示使用同一分组；不能用大类开关绕过较细的禁用项。
+function M.group(key)
+    if key == "recharge" or key == "cooldown_time" then
+        return "cooldowns"
+    end
+    if key == "timers" then
+        return "timers"
+    end
+    if key == "freshness" or key:match("^perish_") then
+        return "perishable"
+    end
+    local schema = M.schema[key]
+    if not schema then
+        return nil
+    end
+    return schema.category == "food" and "food_values" or schema.category
+end
+
 -- 查看者数据独立计算；失败时省略估值，不伪造零值或复用别人的角色数据。
 -- 计算当前查看者专属信息，避免角色饮食差异污染公共缓存。
 function M.viewer(entity, viewer, context)
@@ -494,9 +630,15 @@ function M.filter(fields, mask, config)
         local schema = M.schema[key]
         local full = mask ~= "health" and config.info.enabled
         local mount = mask == "beefalo" and config.beefalo.enabled
+        local group = M.group(key)
         if
             schema
             and ((key == "health" or key == "health_max") or full or (mount and schema.category == "beefalo"))
+            and (
+                not full
+                or config.info[group] ~= false
+                or (mount and (schema.category == "beefalo" or key == "health" or key == "health_max"))
+            )
         then
             out[key] = value
         end

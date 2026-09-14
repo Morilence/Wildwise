@@ -38,8 +38,15 @@ for _, id in ipairs({
     "RAISE_SAIL",
     "LOWER_ANCHOR",
     "RAISE_ANCHOR",
-    "ROW_FAIL",
-    "GIVEALLTOPLAYER",
+    "COOK",
+    "FILL",
+    "FILL_OCEAN",
+    "SEW",
+    "SCYTHE",
+    "CAST_NET",
+    "REPAIR_LEAK",
+    "PLANTREGISTRY_RESEARCH",
+    "RUMMAGE",
     "ADDCOMPOSTABLE",
     "EMPTY_CONTAINER",
     "PICKUP_CHESTER",
@@ -55,17 +62,98 @@ local tools = {
     DIG = "DIG_tool",
     NET = "NET_tool",
     TILL = "TILL_tool",
+    TERRAFORM = "terraformer",
+    POUR_WATER_GROUNDTILE = "wateringcan",
+    SCYTHE = "SCYTHE_tool",
 }
 
+M.racks = { meatrack = true, meatrack_hermit = true, meatrack_hermit_multi = true }
+
+function M.tool(item, id)
+    if not U.valid(item) then
+        return false
+    end
+    if id == "TERRAFORM" then
+        return item.prefab == "pitchfork" or item.prefab == "goldenpitchfork"
+    end
+    if id == "TILL" and item.HasActionComponent then
+        return item:HasActionComponent("farmtiller")
+    end
+    return tools[id] ~= nil and item:HasTag(tools[id])
+end
+
+function M.plan_mode(active, tool)
+    if active then
+        return active:HasTag("tile_deploy") and "DEPLOY_TILEARRIVE" or "DEPLOY"
+    end
+    for _, id in ipairs({ "TILL", "TERRAFORM", "POUR_WATER_GROUNDTILE" }) do
+        if M.tool(tool, id) then
+            return id
+        end
+    end
+end
+
+function M.plan_valid(id, point, player, active, G)
+    if not point then
+        return false
+    end
+    local map = G.TheWorld.Map
+    if id == "TILL" then
+        return map:CanTillSoilAtPoint(point.x, 0, point.z)
+    end
+    if id == "TERRAFORM" then
+        return map:CanTerraformAtPoint(point.x, 0, point.z)
+    end
+    if id == "POUR_WATER_GROUNDTILE" then
+        return map:IsFarmableSoilAtPoint(point.x, 0, point.z)
+    end
+    local inv = U.valid(active) and active.replica.inventoryitem
+    return inv and inv:CanDeploy(G.Vector3(point.x, 0, point.z), nil, player) or false
+end
+
+-- 目标级约束复用于选取和执行，不把玩家、传送器、火焰或任意容器当作批量任务。
+function M.accepts(player, id, target)
+    if not M.allowed[id] then
+        return false
+    end
+    if target and (not U.valid(target) or target:HasTag("INLIMBO") or target:HasTag("playerghost")) then
+        return false
+    end
+    if target and target:HasTag("player") and not (id == "HEAL" and target == player) then
+        return false
+    end
+    if id == "ACTIVATE" then
+        return target ~= nil and target.prefab == "dirtpile"
+    end
+    if id == "RUMMAGE" then
+        return target ~= nil and M.racks[target.prefab] == true
+    end
+    if id == "STORE" then
+        return target ~= nil and (M.racks[target.prefab] or target:HasTag("_container")) == true
+    end
+    if id == "PICKUP" and target then
+        local c = target.components or {}
+        return not (
+            target:HasTag("fire")
+            or target:HasTag("no_autopickup")
+            or target:HasTag("penguin_egg")
+            or target:HasTag("heavy")
+            or (c.bait and c.bait.trap)
+            or U.call(c.burnable, "IsBurning")
+        )
+    end
+    return true
+end
+
 -- 从原版动作选择器中选取白名单动作；不推断或生成战斗动作。
-function M.pick(player, target, point, right)
+function M.pick(player, target, point, right, wanted)
     local picker = player.components.playeractionpicker
     if not picker then
         return
     end
     local choices = right and picker:GetRightClickActions(point, target) or picker:GetLeftClickActions(point, target)
     for _, action in ipairs(choices or {}) do
-        if M.allowed[action.action.id] then
+        if (not wanted or action.action.id == wanted) and M.accepts(player, action.action.id, target) then
             return action
         end
     end
@@ -160,6 +248,78 @@ function M.create(client, G)
         return out
     end
 
+    -- 只收集本队列实际工作点附近的合法掉落，有限半径/数量且仍走原版拾取。
+    function adapter.finished(task)
+        if not task.did_work or not client.settings.queue.collect_after_work or not task.point or not G.TheSim then
+            return
+        end
+        local candidates = G.TheSim:FindEntities(
+            task.point.x,
+            0,
+            task.point.z,
+            4,
+            { "_inventoryitem" },
+            { "INLIMBO", "FX", "NOCLICK", "fire" }
+        )
+        local targets = {}
+        for _, target in ipairs(candidates) do
+            if
+                M.accepts(player, "PICKUP", target)
+                and U.sameplatform(player, target)
+                and target.entity:IsVisible()
+                and (not G.CanEntitySeeTarget or G.CanEntitySeeTarget(player, target))
+            then
+                targets[#targets + 1] = target
+                if #targets >= 40 then
+                    break
+                end
+            end
+        end
+        for _, target in ipairs(Planner.nearest(targets, player:GetPosition())) do
+            client.queue:add({ target = target, key = target, action = "PICKUP", right = false })
+        end
+    end
+
+    -- 肉架取槽复用原版容器转移；一次只发一笔，等待槽位同步后再继续。
+    local function prepare_rack(task, inv, point)
+        local container = task.target.replica and task.target.replica.container
+        if not container or U.call(container, "CanBeOpened") == false then
+            return "pause", "container_unavailable"
+        end
+        if not container:IsOpenedBy(player) then
+            task.right = false
+            task.action, task.buffered, task.point =
+                "RUMMAGE", G.BufferedAction(player, task.target, G.ACTIONS.RUMMAGE), point
+            return "ready"
+        end
+        if task.transfer then
+            local old, current = task.transfer, container:GetItemInSlot(task.transfer.slot)
+            if current == old.item and (U.call(current.replica.stackable, "StackSize") or 1) == old.count then
+                return "wait"
+            end
+            task.transfer = nil
+        end
+        for slot = 1, math.min(container:GetNumSlots(), 12) do
+            local item = container:GetItemInSlot(slot)
+            if U.valid(item) and not item:HasTag("dryable") then
+                if inv:IsFull() and (not inv:GetOverflowContainer() or inv:GetOverflowContainer():IsFull()) then
+                    return "pause", "inventory_full"
+                end
+                task.transfers = (task.transfers or 0) + 1
+                if task.transfers > 24 then
+                    return "pause", "queue_limit"
+                end
+                task.transfer = { slot = slot, item = item, count = U.call(item.replica.stackable, "StackSize") or 1 }
+                container:MoveItemFromAllOfSlot(slot, player)
+                return "wait"
+            end
+        end
+        if not task.material or container:IsFull() then
+            return "done"
+        end
+        task.action = "STORE"
+    end
+
     -- 执行前复查目标、平台、材料、工具和容量，返回 ready/wait/pause/skip。
     function adapter.validate(task)
         local pc, inv = player.components.playercontroller, player.replica.inventory
@@ -196,6 +356,14 @@ function M.create(client, G)
             return "skip"
         end
         point = G.Vector3(point.x, point.y or 0, point.z)
+        if task.rack then
+            local status, reason = prepare_rack(task, inv, point)
+            if status then
+                return status, reason
+            end
+        elseif not M.accepts(player, task.action, task.target) then
+            return "skip"
+        end
         -- 空格已满仍可向同类未满堆叠补入；否则暂停，避免不断提交注定失败的拾取。
         if task.action == "PICKUP" and task.target and inv:IsFull() then
             local overflow, capacity = inv:GetOverflowContainer(), false
@@ -228,23 +396,32 @@ function M.create(client, G)
             end
             return "pause", "materials_empty"
         end
-        if task.plan and task.action == "TILL" then
-            if not G.TheWorld.Map:CanTillSoilAtPoint(point.x, 0, point.z) then
-                return "skip"
+        local action
+        if task.plan then
+            local tool = inv:GetEquippedItem(G.EQUIPSLOTS.HANDS)
+            if M.plan_mode(active, tool) == task.action then
+                if not M.plan_valid(task.action, point, player, active, G) then
+                    return "skip"
+                end
+                action = G.BufferedAction(player, nil, G.ACTIONS[task.action], active or tool, point)
+                task.right = true
             end
-        elseif task.plan and active and task.action == "DEPLOY" then
-            if not active.replica.inventoryitem:CanDeploy(point, nil, player) then
-                return "skip"
+        else
+            action = M.pick(player, task.target, point, task.right, task.action)
+            if not action and task.rack then
+                action = M.pick(player, task.target, point, not task.right, task.action)
+                if action then
+                    task.right = not task.right
+                end
             end
         end
-        local action = M.pick(player, task.target, point, task.right)
         if (not action or action.action.id ~= task.action) and task.action and tools[task.action] then
             if U.call(player.replica.rider, "IsRiding") then
                 return "pause", "unsupported_state"
             end
             for _, entry in ipairs(inventory_items()) do
                 local item = entry.item
-                if U.valid(item) and item:HasTag(tools[task.action]) then
+                if M.tool(item, task.action) then
                     G.SendRPCToServer(G.RPC.ControllerUseItemOnSelfFromInvTile, G.ACTIONS.EQUIP.code, item)
                     return "wait"
                 end
@@ -333,11 +510,18 @@ function M.create(client, G)
         pending[data.token] = nil
         local task = record.task
         if data.result == "success" then
+            task.steps = (task.steps or 0) + 1
+            if M.repeated[task.action] then
+                task.did_work = true
+            end
             if task.recipe then
                 task.remaining = task.remaining - 1
                 record.callback(task.remaining > 0 and "progress" or "done")
             else
-                record.callback(M.repeated[task.action] and "progress" or "done")
+                record.callback(
+                    (M.repeated[task.action] or task.rack) and task.steps < client.config.queue.limit and "progress"
+                        or "done"
+                )
             end
         else
             record.callback("retry", "action_failed")

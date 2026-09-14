@@ -51,8 +51,53 @@ function Items:cell(item)
         x, z = lx, lz
     end
     return (item.prefab or "") .. ":" .. (item.skinname or "") .. ":" .. tostring(platform or "land"),
-        math.floor(x / self.config.items.radius),
-        math.floor(z / self.config.items.radius)
+        math.floor(x / self:cellsize()),
+        math.floor(z / self:cellsize())
+end
+
+-- 零值沿用旧版统一半径；已存在的服务器配置无需迁移即可保留原范围。
+function Items:radius(source)
+    local value = self.config.items[(source == "loaded" and "world" or source) .. "_radius"]
+    return value and value > 0 and value or self.config.items.radius
+end
+
+function Items:cellsize()
+    return math.max(self:radius("world"), self:radius("manual"))
+end
+
+-- 每次操作分别检查类别和兼容标签；禁止合堆不等于禁止拾取。
+function Items:operation_allowed(item, operation, now)
+    local record = self.known[item]
+    if not record then
+        return false
+    end
+    local source = record.source == "loaded" and "world" or record.source
+    local group = operation == "pickup" and "pickup" or source
+    if operation == "pickup" then
+        if record.source ~= "world" or not self.config.items.pickup_allowed or item:HasTag("no_autopickup") then
+            return false
+        end
+    elseif
+        not self:stackallowed(record.source) or item:HasTag(source == "manual" and "no_autostack_m" or "no_autostack_w")
+    then
+        return false
+    end
+    local category = item.prefab == "ash" and "ash"
+        or item.prefab == "poop" and "poop"
+        or (item.prefab == "seeds" or (item.prefab or ""):match("_seeds$")) and "seeds"
+    if category and self.config.items[group .. "_" .. category] == false then
+        return false
+    end
+    -- 树枝树按八单位内实体个数决定产出；自然落枝合堆会改变生产概率。
+    if operation == "stack" and source == "world" and item.prefab == "twigs" and self.env.near_twiggy then
+        if record.tree_checked_at ~= now then
+            record.tree_checked_at, record.near_twiggy = now, self.env.near_twiggy(item)
+        end
+        if record.near_twiggy then
+            return false
+        end
+    end
+    return true
 end
 
 -- 将未满的合法堆叠登记为合并目标。
@@ -77,7 +122,11 @@ function Items:neighbors(item)
     for dx = -1, 1 do
         for dz = -1, 1 do
             for target in pairs(self.index[prefix .. ":" .. (x + dx) .. ":" .. (z + dz)] or {}) do
-                if target ~= item and U.valid(target) and U.distance(item, target) <= self.config.items.radius ^ 2 then
+                if
+                    target ~= item
+                    and U.valid(target)
+                    and U.distance(item, target) <= self:radius(self.known[item].source) ^ 2
+                then
                     out[#out + 1] = target
                 end
             end
@@ -165,6 +214,9 @@ function Items:eligible(item, now)
         or item:HasTag("falling")
         or item:HasTag("small_livestock")
         or item:HasTag("no_autostack_all")
+        or item:HasTag("fire")
+        or U.call(c.burnable, "IsBurning")
+        or U.call(c.burnable, "IsSmoldering")
         or item:HasTag("penguin_egg")
         or c.locomotor
         or c.trap
@@ -195,7 +247,7 @@ function Items:process(item, now)
         return
     end
     local cfg, c = self.config, item.components
-    if cfg.items.pickup_allowed and self.known[item].source == "world" then
+    if self:operation_allowed(item, "pickup", now) then
         local players = {}
         for _, player in ipairs(self.env.players()) do
             local inv = U.valid(player) and player.components and player.components.inventory
@@ -204,7 +256,7 @@ function Items:process(item, now)
                 and self.env.pickup(player)
                 and not player:HasTag("playerghost")
                 and U.sameplatform(player, item)
-                and U.distance(player, item) <= cfg.items.radius ^ 2
+                and U.distance(player, item) <= self:radius("pickup") ^ 2
                 and (not cfg.items.pickup_existing or inv:Has(item.prefab, 1, true))
                 and inv:CanAcceptCount(item, c.stackable:StackSize()) > 0
             then
@@ -245,8 +297,7 @@ function Items:process(item, now)
     if not self:eligible(item, now) then
         return
     end
-    local source = self.known[item].source
-    if not self:stackallowed(source) then
+    if not self:operation_allowed(item, "stack", now) then
         return
     end
     local neighbors = self:neighbors(item)
@@ -258,7 +309,7 @@ function Items:process(item, now)
         if
             target ~= item
             and self:eligible(target, now)
-            and self:stackallowed(self.known[target].source)
+            and self:operation_allowed(target, "stack", now)
             and self.known[target].order < self.known[item].order
             and U.sameplatform(item, target)
             and item.prefab == target.prefab

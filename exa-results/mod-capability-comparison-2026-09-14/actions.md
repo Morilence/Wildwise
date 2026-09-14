@@ -1,0 +1,90 @@
+# ActionQueue RB3 4.3 与 Wildwise：动作入口逐项对照
+
+原版 RB3 于本轮通过 SteamCMD 下载 `2873533916`，不再以非官方衍生版推断。✅ 表示存在白名单/专门提交入口，**不代表所有目标都能做、不代表有区域布点入口、不代表多人已验收**。例如 Wildwise 的 `TERRAFORM` 在白名单中，但铲地皮拖框流程没有接入。
+
+RB3 与 Wildwise 共出现 76 种动作入口；Wildwise 原始白名单 40 项，另有非建筑 BUILD 路径。没有把工具分类/无延迟分类里出现的动作误当可点击动作。
+
+| 动作 | 含义 | RB3 | Wildwise | RB3 入口 | Wildwise 入口 | 边界 | 评估 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| ACTIVATE | 激活设施 | ✅ | ✅ | leftclick（目标条件） | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 RB3 限 dirtpile/winona_catapult；Wildwise 是通用动作白名单。 | 保留/验收 |
+| ADDCOMPOSTABLE | 添加堆肥 | ✅ | ✅ | leftclick（目标条件） | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| ADDFUEL | 添加燃料 | ✅ | ✅ | leftclick | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| ADDWETFUEL | 添加潮湿燃料 | ✅ | ✅ | leftclick | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| ADD_CARD_TO_DECK | 加卡入牌堆 | ✅ | ❌ | leftclick | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 范围外或按需，逐目标检查副作用 |
+| ATTACK | 攻击（RB3仅墙） | ✅ | ❌ | allclick（目标条件） | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 RB3 目标限定 wall；没有敌人战斗 AI。 | 范围外或按需，逐目标检查副作用 |
+| BOTTLE | 装瓶 | ✅ | ❌ | leftclick | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 范围外或按需，逐目标检查副作用 |
+| BUILD | 制造/建筑 | ✅ | ✅ | RepeatRecipe/建筑布点 | 独立制作路径 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 Wildwise 仅无 placer 配方；RB3 另有建筑布点。 | 保留/验收 |
+| CASTSPELL | 施放法术 | ✅ | ❌ | rightclick | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 范围外或按需，逐目标检查副作用 |
+| CHECKTRAP | 检查陷阱 | ✅ | ✅ | leftclick | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| CHOP | 砍伐 | ✅ | ✅ | allclick | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| COMBINESTACK | 合并堆叠 | ✅ | ❌ | leftclick | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 范围外或按需，逐目标检查副作用 |
+| COOK | 直接烹烤 | ✅ | ❌ | leftclick,rightclick | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 优先补原版非战斗日常动作 |
+| DECORATEVASE | 装饰花瓶 | ✅ | ❌ | leftclick | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 范围外或按需，逐目标检查副作用 |
+| DEPLOY | 部署物品 | ✅ | ✅ | DeployActiveItem/建筑部署 | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| DEPLOY_TILEARRIVE | 部署到地块 | ✅ | ✅ | rightclick | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| DIG | 挖掘 | ✅ | ✅ | leftclick,rightclick | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| DISMANTLE | 拆卸 | ✅ | ❌ | rightclick | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 范围外或按需，逐目标检查副作用 |
+| DRAW | 绘制 | ✅ | ✅ | leftclick | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| DRAW_FROM_DECK | 从牌堆抽牌 | ✅ | ❌ | rightclick | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 范围外或按需，逐目标检查副作用 |
+| DROP | 丢放 | ✅ | ❌ | DropActiveItem | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 范围外或按需，逐目标检查副作用 |
+| DRY | 晾晒 | ✅ | ✅ | leftclick | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| EAT | 食用 | ✅ | ❌ | allclick | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 范围外或按需，逐目标检查副作用 |
+| EMPTY_CONTAINER | 倒空容器 | ❌ | ✅ | 未注册 | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| ERASE_PAPER | 擦除纸张 | ✅ | ❌ | leftclick | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 优先补原版非战斗日常动作 |
+| FEED | 喂养 | ✅ | ✅ | leftclick（目标条件） | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| FEEDPLAYER | 喂其他玩家 | ✅ | ❌ | rightclick | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 范围外或按需，逐目标检查副作用 |
+| FERTILIZE | 施肥 | ✅ | ✅ | leftclick | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 Wildwise 白名单不代表土地区域布点闭环。 | 保留/验收 |
+| FILL | 灌装 | ✅ | ❌ | leftclick | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 优先补原版非战斗日常动作 |
+| FISH | 抛竿 | ✅ | ❌ | StartAutoFisher | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 RB3 为普通鱼竿/池塘循环，带延迟补偿限制。 | 范围外或按需，逐目标检查副作用 |
+| GIVE | 给予 | ✅ | ✅ | leftclick | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| GIVEALLTOPLAYER | 交给玩家全部 | ❌ | ✅ | 未注册 | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| HAMMER | 锤拆 | ✅ | ✅ | rightclick | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| HARVEST | 收获设施产物 | ✅ | ✅ | leftclick（目标条件） | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| HAUNT | 作祟 | ✅ | ❌ | leftclick | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 范围外或按需，逐目标检查副作用 |
+| HEAL | 治疗 | ✅ | ✅ | leftclick（目标条件） | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| INTERACT_WITH | 照料/交互 | ✅ | ✅ | leftclick,rightclick（目标条件） | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| LOWER_ANCHOR | 下锚 | ❌ | ✅ | 未注册 | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| LOWER_SAIL | 降帆 | ❌ | ✅ | 未注册 | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| LOWER_SAIL_BOOST | 降帆加速 | ✅ | ❌ | leftclick | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 范围外或按需，逐目标检查副作用 |
+| MINE | 挖矿 | ✅ | ✅ | allclick | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| NABBAG | 拾荒袋收集 | ✅ | ❌ | rightclick（目标条件） | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 范围外或按需，逐目标检查副作用 |
+| NET | 捕网 | ✅ | ✅ | allclick | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| OCEAN_TRAWLER_LOWER | 放下海网 | ✅ | ❌ | rightclick | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 优先补原版非战斗日常动作 |
+| OCEAN_TRAWLER_RAISE | 提起海网 | ✅ | ❌ | rightclick | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 优先补原版非战斗日常动作 |
+| PICK | 采摘 | ✅ | ✅ | leftclick（目标条件）,rightclick（目标条件） | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| PICKUP | 拾取 | ✅ | ✅ | leftclick（目标条件）,rightclick（目标条件） | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| PICKUP_CHESTER | 拿取切斯特 | ❌ | ✅ | 未注册 | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| PLANT | 种植 | ✅ | ✅ | leftclick | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| PLANTREGISTRY_RESEARCH | 植物图鉴研究 | ✅ | ❌ | leftclick（目标条件） | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 优先补原版非战斗日常动作 |
+| PLANTSOIL | 农田种植 | ✅ | ✅ | leftclick | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| POUR_WATER | 浇水 | ✅ | ✅ | rightclick | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 Wildwise 白名单不代表土地区域布点闭环。 | 保留/验收 |
+| POUR_WATER_GROUNDTILE | 土块浇水 | ✅ | ✅ | WaterAtPoint | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 Wildwise 白名单不代表土地区域布点闭环。 | 保留/验收 |
+| RAISE_ANCHOR | 起锚 | ❌ | ✅ | 未注册 | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| RAISE_SAIL | 升帆 | ✅ | ✅ | leftclick | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| READ | 阅读书籍 | ✅ | ❌ | leftclick（目标条件） | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 范围外或按需，逐目标检查副作用 |
+| REEL | 收竿 | ✅ | ❌ | StartAutoFisher | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 RB3 为普通鱼竿/池塘循环，带延迟补偿限制。 | 范围外或按需，逐目标检查副作用 |
+| REMOVELUNARBUILDUP | 清理月亮堆积 | ✅ | ❌ | leftclick | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 范围外或按需，逐目标检查副作用 |
+| REPAIR | 修理 | ✅ | ✅ | rightclick | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| REPAIR_LEAK | 修补漏水 | ✅ | ❌ | leftclick | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 优先补原版非战斗日常动作 |
+| RESETMINE | 重置陷阱 | ✅ | ✅ | rightclick | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| ROW_FAIL | 划船失败动作 | ❌ | ✅ | 未注册 | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 Wildwise 虽列入白名单，但这是失败动作，不能算成功划船能力。 | 保留/验收 |
+| RUMMAGE | 打开/取肉架内容 | ✅ | ❌ | leftclick（目标条件） | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 RB3 仅特定肉架，客户端路径有移槽 RPC；主机分支仍需分别验收。 | 优先补原版非战斗日常动作 |
+| SCYTHE | 镰刀收割 | ✅ | ❌ | rightclick | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 优先补原版非战斗日常动作 |
+| SEW | 缝补 | ✅ | ❌ | leftclick | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 优先补原版非战斗日常动作 |
+| SHAVE | 剃毛 | ✅ | ❌ | leftclick（目标条件） | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 范围外或按需，逐目标检查副作用 |
+| START_PUSHING | 开始推动 | ✅ | ❌ | rightclick | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 范围外或按需，逐目标检查副作用 |
+| STORE | 存入容器 | ✅ | ✅ | leftclick（目标条件） | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 RB3 特定肉架；Wildwise 无对应收成品再挂肉专用流程。 | 保留/验收 |
+| TAKEITEM | 取出物品 | ✅ | ✅ | leftclick,rightclick | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| TEACH | 学习（RB3限定地图类） | ✅ | ❌ | leftclick（目标条件） | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 范围外或按需，逐目标检查副作用 |
+| TERRAFORM | 铲除地皮 | ✅ | ✅ | TerraformAtPoint | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 Wildwise 白名单不代表土地区域布点闭环。 | 保留/验收 |
+| TILL | 锄地 | ✅ | ✅ | TillAtPoint | M.allowed | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 保留/验收 |
+| TURNOFF | 关闭设施 | ✅ | ❌ | rightclick | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 范围外或按需，逐目标检查副作用 |
+| TURNON | 打开设施 | ✅ | ❌ | rightclick | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 范围外或按需，逐目标检查副作用 |
+| UNWRAP | 拆包 | ✅ | ❌ | rightclick | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 范围外或按需，逐目标检查副作用 |
+| UPGRADE | 升级 | ✅ | ❌ | leftclick | 未注册 | 须原生动作存在且 picker/角色/材料/目标状态允许；✅ 仅表示动作入口。 | 范围外或按需，逐目标检查副作用 |
+
+源码：[Q:scripts/components/actionqueuer.lua](/home/ubuntu/Steam/steamapps/workshop/content/322330/2873533916/scripts/components/actionqueuer.lua)；[W:runtime/actions.lua](/usr/local/src/Wildwise/scripts/wildwise/runtime/actions.lua)；[W:runtime/client.lua](/usr/local/src/Wildwise/scripts/wildwise/runtime/client.lua)；[W:runtime/input.lua](/usr/local/src/Wildwise/scripts/wildwise/runtime/input.lua)。
+
+原版 RB3 的 `ATTACK` 限定墙；`ACTIVATE` 限定 dirtpile/winona_catapult；`HEAL` 限自己或非玩家；`STORE/RUMMAGE` 限定特定肉架。Wildwise 通用 ID 白名单多处没有同等目标条件。支持动作越多并不自动意味着边界设计越好。
+
+RB3 `SendAction` 的主机分支提前走 `DoAction` 返回；肉架取槽 RPC 在后续客户端分支，因此不能把客户端专用适配写成主机/远程都已测试成功。

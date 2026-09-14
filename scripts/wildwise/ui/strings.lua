@@ -65,13 +65,26 @@ M.text = {
     domesticated = { "Domesticated", "已驯化" },
     ride_time = { "Ride time", "骑乘剩余" },
     saddle_uses = { "Saddle uses", "鞍具剩余次数" },
+    saddle_name = { "Saddle", "鞍具" },
     season = { "Season", "季节" },
     season_days = { "Season days left", "本季剩余天数" },
     day = { "Day", "天数" },
     phase = { "Time of day", "时段" },
     temperature = { "Temperature", "温度" },
     wetness = { "World wetness", "世界湿度" },
-    naughtiness = { "Naughtiness", "淘气值" },
+    base_cook_time = { "base time", "基础耗时" },
+    select_ping = { "Choose marker", "选择标记" },
+    ["beefalo.layout"] = { "Mount panel layout", "牛栏布局" },
+    ["beefalo.background"] = { "Mount background opacity", "牛栏背景不透明度" },
+    badges = { "Native badges", "原生徽章" },
+    compact = { "Compact text", "紧凑文字" },
+    toggle_sign = { "Toggle this container's sign (session)", "显示／隐藏此箱木牌（本次运行）" },
+    hover_sign_target = {
+        "Hover a nearby supported container before opening F7",
+        "先指向附近受支持容器，再按 F7",
+    },
+    sign_hidden = { "This container's sign is hidden for this session", "此箱木牌已隐藏，本次运行有效" },
+    sign_shown = { "This container's sign is shown", "此箱木牌已显示" },
     hunger_rate = { "Hunger / s", "饥饿／秒" },
     sanity_rate = { "Sanity rate", "理智变化率" },
     world_events = { "World events", "世界事件" },
@@ -196,6 +209,128 @@ M.text["queue.limit"] = M.text.queue_limit
 M.text["signs.enabled"] = M.text.signs
 M.text["info.world_events"] = M.text.world_events
 M.text.map = M.text.maps
+
+-- 能力补齐的双语文案；具体字段不依赖服务器语言。
+M.text["language"] = { "Language", "语言" }
+M.text["ui_scale"] = { "Interface scale", "界面缩放" }
+M.text["menu_key"] = { "Menu key", "菜单按键" }
+M.text["diagnostics"] = { "Local diagnostic logs", "本地诊断日志" }
+M.text["healthbars.linger_seconds"] = { "Out-of-combat delay", "脱战收起延迟" }
+M.text["items.pickup_allowed"] = { "Allow opt-in auto pickup", "允许玩家开启自动拾取" }
+M.text["items.pickup_existing"] = { "Pickup requires existing item", "拾取要求背包已有同类" }
+M.text["items.radius"] = { "Item radius", "物品处理半径" }
+M.text["signs.treasurechest"] = { "Signs on chests", "木箱小木牌" }
+M.text["signs.dragonflychest"] = { "Signs on scaled chests", "龙鳞宝箱小木牌" }
+M.text["signs.boat_ancient_container"] = { "Signs on cargo holds", "远古船货舱小木牌" }
+M.text["signs.chester"] = { "Signs on Chester", "切斯特小木牌" }
+M.text["signs.hutch"] = { "Signs on Hutch", "哈奇小木牌" }
+M.text["signs.icebox"] = { "Signs on ice boxes", "冰箱小木牌" }
+M.text["signs.saltbox"] = { "Signs on salt boxes", "盐盒小木牌" }
+M.text["signs.fish_box"] = { "Signs on tin fishin' bins", "鱼类储物箱小木牌" }
+M.text["info.combat"] = { "Combat numbers", "战斗数值" }
+M.text["info.food_values"] = { "Food effects", "食物三维" }
+M.text["info.perishable"] = { "Freshness and perish estimates", "鲜度与保鲜估时" }
+M.text["info.equipment"] = { "Equipment details", "装备详情" }
+M.text["info.progress"] = { "Processing and growth", "加工与生长" }
+M.text["info.farm"] = { "Farm details", "农田详情" }
+M.text["info.follower"] = { "Follower details", "随从详情" }
+M.text["info.cooldowns"] = { "Recharge and cooldown", "充能与冷却" }
+M.text["info.timers"] = { "Named entity timers", "已知实体计时器" }
+M.text["info.max_lines"] = { "Normal information lines", "常规信息行数" }
+M.text["info.inspect_lines"] = { "Inspection information lines", "检查信息行数" }
+M.text["info.time_style"] = { "Time display", "时间格式" }
+M.text["info.temperature_units"] = { "Temperature units", "温度单位" }
+M.text["map.wormholes"] = { "Wormhole markers", "虫洞标记" }
+M.text["map.pings"] = { "Allow map pings", "允许地图标记" }
+M.text["map.signal_fires"] = { "Allow signal fires", "允许信号火" }
+M.text["items.world_radius"] = { "World stacking radius", "世界掉落合堆半径" }
+M.text["items.manual_radius"] = { "Manual stacking radius", "玩家丢弃合堆半径" }
+M.text["items.pickup_radius"] = { "Auto pickup radius", "自动拾取半径" }
+M.text["items.world_ash"] = { "World stacking: ash", "世界掉落合堆：灰烬" }
+M.text["items.world_poop"] = { "World stacking: manure", "世界掉落合堆：粪便" }
+M.text["items.world_seeds"] = { "World stacking: seeds", "世界掉落合堆：种子" }
+M.text["items.manual_ash"] = { "Manual stacking: ash", "玩家丢弃合堆：灰烬" }
+M.text["items.manual_poop"] = { "Manual stacking: manure", "玩家丢弃合堆：粪便" }
+M.text["items.manual_seeds"] = { "Manual stacking: seeds", "玩家丢弃合堆：种子" }
+M.text["items.pickup_ash"] = { "Auto pickup: ash", "自动拾取：灰烬" }
+M.text["items.pickup_poop"] = { "Auto pickup: manure", "自动拾取：粪便" }
+M.text["items.pickup_seeds"] = { "Auto pickup: seeds", "自动拾取：种子" }
+M.text["queue.collect_after_work"] = { "Collect after work", "工作后收集" }
+M.text["queue.double_click_speed"] = { "Double click interval", "双击间隔" }
+M.text["queue.double_click_range"] = { "Double click radius", "双击同类半径" }
+M.text["signs.bundle_contents"] = { "Show bundled contents on signs", "木牌显示包裹内容" }
+M.text["signs.body_skins"] = { "Use stored mini sign skins", "使用箱中小木牌皮肤" }
+M.text["signs.scale"] = { "Storage sign scale", "小木牌缩放" }
+M.text["beefalo.show_hunger"] = { "Show mount hunger", "显示坐骑饥饿" }
+M.text["beefalo.scale"] = { "Mount panel scale", "坐骑栏独立缩放" }
+M.text["game_days"] = { "game days", "游戏天" }
+M.text["inspect_more"] = { "… %d more; hold Inspect", "… 还有 %d 项，按住检查键展开" }
+M.text["details_truncated"] =
+    { "… %d more; increase inspection lines in F7", "… 还有 %d 项，可在 F7 增加检查行数" }
+M.text["perish_estimate"] = { "Estimated spoilage time", "预计腐败时间" }
+M.text["perish_state"] = { "Perish estimate basis", "保鲜估算状态" }
+M.text["recharge"] = { "Charge", "充能" }
+M.text["cooldown_time"] = { "Cooldown remaining", "冷却剩余" }
+M.text["item_moisture"] = { "Item wetness", "物品湿度" }
+M.text["item_temperature"] = { "Item temperature", "物品温度" }
+M.text["sew_value"] = { "Sewing fuel restored", "缝补恢复量" }
+M.text["repair_health"] = { "Repair health restored", "修复生命" }
+M.text["repair_uses"] = { "Repair uses restored", "修复使用次数" }
+M.text["repair_work"] = { "Repair work restored", "修复工作量" }
+M.text["repair_freshness"] = { "Freshness restored", "恢复鲜度" }
+M.text["repair_percent"] = { "Health fraction restored", "恢复生命比例" }
+M.text["cook_product"] = { "Cooking product", "烹饪产物" }
+M.text["dry_product"] = { "Drying product", "晾晒产物" }
+M.text["process_state"] = { "Processing state", "加工状态" }
+M.text["timers"] = { "Entity timers", "实体计时" }
+M.text["stress_points"] = { "Accumulated stress", "累计压力" }
+M.text["stress_max"] = { "Recorded maximum stress", "已记录最大压力" }
+M.text["stress_sources"] = { "Recorded stage stressors", "本阶段已记录压力源" }
+M.text["stress_none"] = { "None", "无" }
+M.text["stress_nutrients"] = { "Nutrients", "养分" }
+M.text["stress_moisture"] = { "Water", "水分" }
+M.text["stress_killjoys"] = { "Weeds or debris", "杂草或杂物" }
+M.text["stress_family"] = { "Same species nearby", "同种作物陪伴" }
+M.text["stress_overcrowding"] = { "Overcrowding", "过度拥挤" }
+M.text["stress_happiness"] = { "Tending", "照料" }
+M.text["stress_season"] = { "Season", "季节" }
+M.text["ready_to_harvest"] = { "Ready to harvest", "可收获" }
+M.text["cooking"] = { "Cooking", "烹饪中" }
+M.text["drying"] = { "Drying", "晾晒中" }
+M.text["acid_rain"] = { "Acid rain; estimate unavailable", "酸雨额外腐败，暂不估算" }
+M.text["custom_modifier"] = { "Custom modifier; estimate unavailable", "自定义倍率，暂不估算" }
+M.text["freshening"] = { "Freshness recovering", "正在恢复鲜度" }
+M.text["environment_estimate"] = { "Assumes current environment is unchanged", "假设当前环境保持不变" }
+M.text["regrowth"] = { "Regrowth", "再生" }
+M.text["cooldown"] = { "Cooldown", "冷却" }
+M.text["decay"] = { "Decay", "自然消退" }
+M.text["clock"] = { "Minutes:seconds", "分:秒" }
+M.text["seconds"] = { "Seconds", "秒" }
+M.text["days"] = { "Game days", "游戏天" }
+M.text["both"] = { "Time and game days", "时间与游戏天" }
+M.text["game"] = { "Game units", "游戏值" }
+M.text["celsius"] = { "Celsius", "摄氏度" }
+M.text["fahrenheit"] = { "Fahrenheit", "华氏度" }
+M.text["map.show_players"] = { "Player map icons", "地图玩家图标" }
+M.text["map.show_pings"] = { "Map pings", "地图标记" }
+M.text["map.show_fires"] = { "Signal fire icons", "信号火图标" }
+M.text["map.show_wormholes"] = { "Wormhole icons", "虫洞图标" }
+M.text["map_controls"] = {
+    "Alt+left: marker wheel; Alt+right: delete own marker",
+    "Alt＋左键选择标记；Alt＋右键删除自己的标记",
+}
+M.text["items.world_filters"] = { "World stacking filters", "世界掉落合堆过滤" }
+M.text["items.manual_filters"] = { "Manual stacking filters", "玩家丢弃合堆过滤" }
+M.text["items.pickup_filters"] = { "Auto pickup filters", "自动拾取过滤" }
+M.text["ash"] = { "Ash", "灰烬" }
+M.text["poop"] = { "Manure", "粪便" }
+M.text["seeds"] = { "Seeds", "种子" }
+M.text["queue.last_recipe_key"] = { "Repeat last recipe key", "再次制作上次配方按键" }
+M.text["bounded_farming"] = {
+    "Shift+right drag: preview farm tiles, then confirm. One action per tile.",
+    "Shift＋右键拖框预览农田，确认后每块执行一次。",
+}
+M.text["container_unavailable"] = { "Container unavailable or inaccessible", "容器暂不可用或无访问权限" }
 
 -- 解析语言设置，auto 跟随游戏，未知语言回退英文。
 function M.language(setting, G)

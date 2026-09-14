@@ -53,6 +53,9 @@ function Queue:finish(skipped)
     if #self.tasks == 0 then
         self.state = "idle"
     end
+    if task and self.adapter.finished then
+        self.adapter.finished(task, skipped)
+    end
 end
 
 -- 暂停并使旧回调失效；恢复必须由玩家主动触发。
@@ -135,6 +138,10 @@ function Queue:tick(now)
     end
     local task = self.tasks[1]
     local status, detail = self.adapter.validate(task)
+    if status == "done" then
+        self:finish(false)
+        return
+    end
     if status == "skip" then
         self:finish(true)
         return

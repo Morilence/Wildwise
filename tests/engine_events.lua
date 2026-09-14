@@ -20,6 +20,10 @@ local manual = G.SpawnPrefab("flint")
 player.components.inventory:GiveItem(manual)
 manual = player.components.inventory:DropItem(manual, true, true)
 local expected = world.items.known[manual] and world.items.known[manual].source
+local tree = G.SpawnPrefab("twiggytree")
+tree.Transform:SetPosition(origin.x + 60, 0, origin.z + 60)
+local twig_a = tree.components.lootdropper:SpawnLootPrefab("twigs")
+local twig_b = tree.components.lootdropper:SpawnLootPrefab("twigs")
 G.TheWorld:DoTaskInTime(6, function()
     local passed, failed = 0, 0
     local function test(name_, fn)
@@ -43,7 +47,13 @@ G.TheWorld:DoTaskInTime(6, function()
         assert(world.items.known[manual].source == "manual")
         assert(not world.items:eligible(manual, G.GetTime()))
     end)
-    for _, e in ipairs({ a, b, manual, pig, player }) do
+    test("twiggy tree's real landed drops preserve the native entity count", function()
+        assert(tree.build == "twiggy" and world.items.env.near_twiggy(twig_a))
+        assert(twig_a:IsValid() and twig_b:IsValid())
+        assert(twig_a.components.stackable:StackSize() == 1 and twig_b.components.stackable:StackSize() == 1)
+        assert(not world.items:operation_allowed(twig_a, "stack", G.GetTime()))
+    end)
+    for _, e in ipairs({ a, b, manual, pig, player, twig_a, twig_b, tree }) do
         if e:IsValid() then
             e:Remove()
         end

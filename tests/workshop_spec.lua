@@ -345,7 +345,7 @@ H.test("WW2-20 broken farm localization cannot erase container or world informat
     ctx.G.TheWorld.state.cycles = 42
     ctx.config.info.container_contents = true
     local fields = Facts.viewer(entity, entity, ctx)
-    H.eq(fields.day, 42)
+    H.eq(fields.day, 43)
     assert(fields.contents:find("twigs", 1, true))
     H.eq(fields.stress, nil)
 end)
