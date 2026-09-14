@@ -4,7 +4,7 @@
 
 Wildwise is a convenience mod for **Don't Starve Together**, bringing item and creature information, combat health bars, shared maps, item management, action queues, smart storage signs and a beefalo status panel together. It uses the game's familiar interface style and supports keyboard and mouse, English and Simplified Chinese.
 
-> **0.2.0 is a development build.** Graphical client and real multiplayer validation are still incomplete. See the limitations below and the [test report](docs/testing.md) for details.
+> **0.2.1 is a development build.** Graphical client and real multiplayer validation are still incomplete. See the limitations below and the [test report](docs/testing.md) for details.
 
 ## Features
 
@@ -42,7 +42,7 @@ With material on the cursor or a hoe equipped, `Shift` + right drag creates a pl
 
 ### Smart storage signs
 
-Supported containers, including chests, ice boxes, salt boxes, Chester and Hutch, display an icon for the first occupied slot. Bundles can show their first contained item, and empty containers clear the old icon, making storage easier to identify around your base.
+Chests, scaled chests and ancient boat cargo holds display an icon for the first occupied slot by default. Signs on Chester, Hutch, ice boxes, salt boxes and tin fishin' bins are off by default; enable them individually in the server mod configuration. Each chest type can also be disabled separately. Bundles can show their first contained item, and empty containers clear the old icon, making storage easier to identify around your base.
 
 ### Beefalo status panel
 
@@ -53,7 +53,7 @@ While riding, view health, domestication, obedience, tendency, remaining saddle 
 The host enables Wildwise under **Server Mods**, and **the server and every player need the same version**. The current GitHub distribution requires manual installation.
 
 1. Open [GitHub Actions](https://github.com/Morilence/Wildwise/actions), select a successful build and download `Wildwise-mod` under **Artifacts**.
-2. Extract that download, then extract the enclosed `Wildwise-0.2.0.zip` into the game's `mods` directory. Confirm this file exists:
+2. Extract that download, then extract the enclosed `Wildwise-0.2.1.zip` into the game's `mods` directory. Confirm this file exists:
 
    ```text
    Don't Starve Together/mods/Wildwise/modinfo.lua
@@ -105,7 +105,7 @@ The `F7` menu has five tabs: **Information, Map, Items, Queue and Diagnostics**.
 
 General settings (language, interface scale, menu key and diagnostics) come first, followed by each feature module. DST uses flat native configuration fields, so module options have explicit prefixes such as `beefalo_hunger_threshold`. This example works directly in the native configuration file without an extra script. Old configuration keys are no longer read, and previous local personal settings are not migrated.
 
-This example lists all **30 server mod configuration options**, with their default values and comments explaining their purpose and accepted values. The world creation screen uses the same options. Boolean `true` enables a setting and `false` disables it. Leave booleans and numbers unquoted; keep quotes around strings.
+This example lists all **38 server mod configuration options**, with their default values and comments explaining their purpose and accepted values. The world creation screen uses the same options. Boolean `true` enables a setting and `false` disables it. Leave booleans and numbers unquoted; keep quotes around strings.
 
 Save the configuration in your save cluster's `Master/modoverrides.lua` and, if caves are enabled, configure `Caves/modoverrides.lua` too. For an existing file, merge the `["Wildwise"]` entry into its existing `return` table and keep other mod entries. Edit the existing Wildwise entry if there is one. `Wildwise` must match the manually installed mod's directory name.
 
@@ -160,6 +160,14 @@ return {
 
             -- Smart storage signs
             signs_enabled = true,               -- Smart storage signs; true / false
+            signs_treasurechest = true,          -- Chests; true / false
+            signs_dragonflychest = true,         -- Scaled chests; true / false
+            signs_boat_ancient_container = true, -- Ancient boat cargo holds; true / false
+            signs_chester = false,               -- Chester; true / false
+            signs_hutch = false,                 -- Hutch; true / false
+            signs_icebox = false,                -- Ice boxes; true / false
+            signs_saltbox = false,               -- Salt boxes; true / false
+            signs_fish_box = false,              -- Tin fishin' bins; true / false
 
             -- Beefalo status panel
             beefalo_enabled = true,             -- Beefalo status panel; true / false
@@ -170,6 +178,8 @@ return {
 ```
 
 You can keep only the options you want to override. Omitted options use the game's saved configuration or the mod defaults. Restart the affected worlds after editing. Keep both shards' configurations consistent when you want the same rules on the surface and in the caves.
+
+**Enable signs by container type:** keep `signs_enabled = true` and enable each desired type, for example `signs_chester = true`. Setting `signs_enabled = false` disables signs on every type. These switches are available in both the server mod configuration screen and `modoverrides.lua`; restart the affected worlds to apply changes.
 
 The F7 menu saves personal preferences and does not rewrite `modoverrides.lua`. Server feature switches and permissions remain authoritative: for example, `items_enabled = false` disables item handling, so auto pickup will not run even with `items_pickup_allowed = true`. Display options provide initial personal settings and do not force changes to a player's saved preferences.
 

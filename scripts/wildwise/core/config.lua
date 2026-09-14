@@ -9,7 +9,8 @@ M.defaults = {
     items = { enabled = true, stack_world = true, stack_manual = false, stack_loaded = false,
         pickup_allowed = false, pickup_existing = true, radius = 4, budget = 16 },
     queue = { enabled = true, farm_grid = 3, limit = 200 },
-    signs = { enabled = true },
+    signs = { enabled = true, treasurechest = true, dragonflychest = true, boat_ancient_container = true,
+        chester = false, hutch = false, icebox = false, saltbox = false, fish_box = false },
     beefalo = { enabled = true, hunger_threshold = 15 },
     observation = { radius = 40, limit = 24 },
 }
@@ -28,7 +29,9 @@ M.fields = {
     { "map.share_exploration", { "auto", "on", "off" } },
     { "items.enabled" }, { "items.stack_world" }, { "items.stack_manual" }, { "items.stack_loaded" },
     { "items.pickup_allowed" }, { "items.pickup_existing" }, { "items.radius", { 2, 4, 6, 8 } },
-    { "queue.enabled" }, { "queue.farm_grid", { 2, 3, 4 } }, { "signs.enabled" },
+    { "queue.enabled" }, { "queue.farm_grid", { 2, 3, 4 } },
+    { "signs.enabled" }, { "signs.treasurechest" }, { "signs.dragonflychest" }, { "signs.boat_ancient_container" },
+    { "signs.chester" }, { "signs.hutch" }, { "signs.icebox" }, { "signs.saltbox" }, { "signs.fish_box" },
     { "beefalo.enabled" }, { "beefalo.hunger_threshold", { 0, 5, 15, 25 } },
 }
 

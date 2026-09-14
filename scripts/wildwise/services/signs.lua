@@ -2,6 +2,10 @@ local U = require("wildwise/core/util")
 local M = {}
 M.supported = { treasurechest = true, dragonflychest = true, icebox = true, saltbox = true,
     chester = true, hutch = true, fish_box = true, boat_ancient_container = true }
+function M.enabled(prefab, settings)
+    -- 总开关与类型开关同时生效；白名单外的容器不能仅靠添加配置就挂载辅助牌。
+    return settings.enabled == true and M.supported[prefab] == true and settings[prefab] == true
+end
 -- 优先取最前面的有效格子；不解包、不生成临时物品，避免触发食物/皮肤的游戏回调。
 function M.first(container)
     for slot = 1, container.numslots do

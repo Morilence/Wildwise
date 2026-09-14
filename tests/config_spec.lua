@@ -16,7 +16,7 @@ end
 
 H.test("native configuration choices map to the same structured fields and defaults", function()
     local native = native_options()
-    H.eq(#Config.fields, 30)
+    H.eq(#Config.fields, 38)
     for _, field in ipairs(Config.fields) do
         local path, name = field[1], field[1]:gsub("%.", "_")
         local option = assert(native[name], "missing native field: " .. name)

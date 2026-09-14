@@ -15,9 +15,11 @@
 
 ## 配置边界
 
-配置分为原生入口、运行时规则和个人偏好。`modinfo.lua` 的 30 个公开选项保持 DST 要求的平铺标量，例如 `beefalo_hunger_threshold`；`core/config.load` 将其转换为 `config.beefalo.hunger_threshold`。语言、HUD 缩放、菜单按键和诊断项在根节点，其余归入 `info`、`healthbars`、`map`、`items`、`queue`、`signs`、`beefalo`，模块内部不重复前缀。非法类型或枚举值回退默认值并在启动时记录字段名。预算、观察范围等内部常量不通过原生配置暴露。
+配置分为原生入口、运行时规则和个人偏好。`modinfo.lua` 的 38 个公开选项保持 DST 要求的平铺标量，例如 `beefalo_hunger_threshold`；`core/config.load` 将其转换为 `config.beefalo.hunger_threshold`。语言、HUD 缩放、菜单按键和诊断项在根节点，其余归入 `info`、`healthbars`、`map`、`items`、`queue`、`signs`、`beefalo`，模块内部不重复前缀。非法类型或枚举值回退默认值并在启动时记录字段名。预算、观察范围等内部常量不通过原生配置暴露。
 
 `Config.settings` 单独构造个人偏好，模块表深拷贝，不与服务器规则或其他客户端共享可变引用。F7 使用 `beefalo.hunger_threshold` 这样的模块路径读写和发送个人偏好；服务器仍检查自身权限。个人设置存入 `wildwise_client_v2`，不读取或迁移旧平铺键。地图共享开关由当前世界保存并在握手时同步，本地偏好加载不会覆盖它们。
+
+小木牌在 `signs` 下按容器 prefab 分别配置，例如 `signs.chester` 对应原生键 `signs_chester`；模块总开关与类型开关同时生效。仅为开启的类型注册 prefab 回调，关闭的容器不挂载监听或辅助牌。木箱、龙鳞宝箱和远古船货舱默认开启，其余已支持类型默认关闭。
 
 `tests/config_spec.lua` 核对原生选项、内部路径、全部可选值及两份 README 的默认示例，也验证关闭项、零阈值、非法输入、嵌套对象隔离与 RPC 编解码。
 

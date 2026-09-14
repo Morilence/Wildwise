@@ -4,7 +4,7 @@
 
 Wildwise 是《**饥荒联机版**》的综合便利模组，将物品与生物信息、战斗血条、协作地图、自动整理、行为队列、智能小木牌和牛状态栏整合在一起。沿用游戏原有的界面风格，支持键鼠操作、简体中文和英文。
 
-> 当前为 **0.2.0 开发版**，尚未完成图形客户端及真实多人联机验证。已知限制见下文，详细验证情况见[测试报告](docs/testing.md)。
+> 当前为 **0.2.1 开发版**，尚未完成图形客户端及真实多人联机验证。已知限制见下文，详细验证情况见[测试报告](docs/testing.md)。
 
 ## 功能介绍
 
@@ -42,7 +42,7 @@ Wildwise 是《**饥荒联机版**》的综合便利模组，将物品与生物�
 
 ### 智能小木牌
 
-为箱子、冰箱、盐盒、切斯特和哈奇等支持的容器显示内容图标，以第一格非空物品为准。包裹可显示内部首件物品，容器清空后不保留旧图标，方便辨认基地里的储物位置。
+默认为木箱、龙鳞宝箱和远古船货舱显示内容图标，以第一格非空物品为准。切斯特、哈奇、冰箱、盐盒和鱼类储物箱默认不显示，可在服务器模组配置中分别开启；各类储物箱也可单独关闭。包裹可显示内部首件物品，容器清空后不保留旧图标，方便辨认基地里的储物位置。
 
 ### 牛状态栏
 
@@ -53,7 +53,7 @@ Wildwise 是《**饥荒联机版**》的综合便利模组，将物品与生物�
 Wildwise 由房主在“服务器模组”中启用，**服务器和每位玩家都需要安装相同版本**。当前通过 GitHub 分发，需要手动安装。
 
 1. 打开 [GitHub Actions](https://github.com/Morilence/Wildwise/actions)，选择一次成功的构建，在 **Artifacts** 中下载 `Wildwise-mod`。
-2. 解压下载的构建产物，再将里面的 `Wildwise-0.2.0.zip` 解压到游戏的 `mods` 目录，确认文件位置为：
+2. 解压下载的构建产物，再将里面的 `Wildwise-0.2.1.zip` 解压到游戏的 `mods` 目录，确认文件位置为：
 
    ```text
    Don't Starve Together/mods/Wildwise/modinfo.lua
@@ -105,7 +105,7 @@ Wildwise 由房主在“服务器模组”中启用，**服务器和每位玩家
 
 通用项（语言、界面缩放、菜单按键、诊断）放在最前，其余按功能模块排列。DST 原生配置使用平铺字段，因此模块项带有明确前缀，例如 `beefalo_hunger_threshold`。本节代码可直接用于原生配置文件，无需额外脚本。旧配置字段不再读取，旧版的本地个人设置不会自动迁移。
 
-下面列出全部 **30 个服务器模组配置项**，赋值均为默认值，注释说明用途和可选值。建房界面的 Wildwise 配置也使用这些选项。布尔值 `true` 表示开启、`false` 表示关闭；布尔值和数字不加引号，字符串保留引号。
+下面列出全部 **38 个服务器模组配置项**，赋值均为默认值，注释说明用途和可选值。建房界面的 Wildwise 配置也使用这些选项。布尔值 `true` 表示开启、`false` 表示关闭；布尔值和数字不加引号，字符串保留引号。
 
 将配置写入存档集群的 `Master/modoverrides.lua`；有洞穴时，同样配置 `Caves/modoverrides.lua`。已有文件时，把 `["Wildwise"]` 条目合并到原来的 `return` 表中，保留其他模组条目；如果已存在 Wildwise 条目，直接修改它。`Wildwise` 必须与手动安装的模组目录名一致。
 
@@ -160,6 +160,14 @@ return {
 
             -- 智能小木牌
             signs_enabled = true,               -- 智能小木牌；true / false
+            signs_treasurechest = true,          -- 木箱；true / false
+            signs_dragonflychest = true,         -- 龙鳞宝箱；true / false
+            signs_boat_ancient_container = true, -- 远古船货舱；true / false
+            signs_chester = false,               -- 切斯特；true / false
+            signs_hutch = false,                 -- 哈奇；true / false
+            signs_icebox = false,                -- 冰箱；true / false
+            signs_saltbox = false,               -- 盐盒；true / false
+            signs_fish_box = false,              -- 鱼类储物箱；true / false
 
             -- 牛状态栏
             beefalo_enabled = true,             -- 牛状态栏；true / false
@@ -170,6 +178,8 @@ return {
 ```
 
 可只保留需要覆盖的配置项；未写出的项沿用游戏已保存的配置或模组默认值。修改后重启对应世界；地上与洞穴需要相同规则时，在两处保持相同配置。
+
+**按容器开启小木牌：**保留 `signs_enabled = true`，再把需要展示的类型设为 `true`，例如 `signs_chester = true`。`signs_enabled = false` 会关闭所有类型。类型开关在服务器模组配置界面与 `modoverrides.lua` 中均可修改，重启对应世界后生效。
 
 F7 菜单保存玩家个人偏好，不会改写 `modoverrides.lua`。服务器功能开关和权限始终生效，例如 `items_enabled = false` 会停用物品整理，即使 `items_pickup_allowed = true` 也不会自动拾取。显示相关配置提供个人设置的初始值，不会强制覆盖玩家已保存的偏好。
 

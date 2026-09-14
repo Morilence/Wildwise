@@ -152,7 +152,7 @@ function Menu:refresh()
         end
     else
         local diag = c.diagnostics or {}
-        self:line("Wildwise 0.2.0 · " .. (c.shard or "…"), 145)
+        self:line("Wildwise 0.2.1 · " .. (c.shard or "…"), 145)
         self:line("Cache " .. c.cache.size .. "/256 · " .. "RPC bytes " .. (diag.bytes or 0), 95)
         self:line("Observers " .. (diag.observations or 0), 45)
         local conflicts = {}; for key, value in pairs(c.conflicts or {}) do conflicts[#conflicts + 1] = c:L(key) .. ": " .. value end

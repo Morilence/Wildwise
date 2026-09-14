@@ -1,5 +1,6 @@
 local H = require("tests/harness")
 local Config = require("wildwise/core/config")
+local Signs = require("wildwise/services/signs")
 local Health = require("wildwise/services/health")
 local Items = require("wildwise/services/items")
 local Map = require("wildwise/services/map")
@@ -218,4 +219,50 @@ H.test("item spatial index releases removed targets and respects CPU budget", fu
     for i = 2, 10 do service:mark(H.item(i, i * 10), "world", 1) end
     local before = service.processed; service:tick(2)
     H.eq(service.processed - before, 1); assert(service.tail >= service.head)
+end)
+
+local function sign_hooks(cfg, mods)
+    local Context = require("wildwise/runtime/context")
+    local old_g, old_config, old_api, old_conflicts = Context.G, Context.config, Context.api, Context.conflicts
+    local registered, noop = {}, function() end
+    local api = { AddPrefabPostInit = function(prefab) registered[prefab] = true end,
+        AddComponentPostInit = noop, AddPlayerPostInit = noop, AddModRPCHandler = noop,
+        AddClientModRPCHandler = noop, AddShardModRPCHandler = noop }
+    local G = { KnownModIndex = { GetModsToLoad = function() return mods or {} end },
+        TheNet = { IsDedicated = function() return true end } }
+    local ok, message = pcall(require("wildwise/runtime/bootstrap").register, api, G, cfg)
+    Context.G, Context.config, Context.api, Context.conflicts = old_g, old_config, old_api, old_conflicts
+    assert(ok, message)
+    return registered
+end
+H.test("default signs register only ordinary storage chests and cargo holds", function()
+    local cfg = config()
+    local hooks = sign_hooks(cfg)
+    local expected = { treasurechest = true, dragonflychest = true, boat_ancient_container = true }
+    for prefab in pairs(Signs.supported) do
+        H.eq(Signs.enabled(prefab, cfg.signs), expected[prefab] == true)
+        H.eq(hooks[prefab] == true, expected[prefab] == true)
+    end
+end)
+H.test("container switches opt pets and food storage in while allowing chests to opt out", function()
+    local input = { signs_treasurechest = false, signs_chester = true, signs_hutch = true,
+        signs_icebox = true, signs_saltbox = true, signs_fish_box = true }
+    local hooks = sign_hooks(Config.load(function(key) return input[key] end))
+    H.eq(hooks.treasurechest, nil)
+    for _, prefab in ipairs({ "chester", "hutch", "icebox", "saltbox", "fish_box", "dragonflychest" }) do
+        H.eq(hooks[prefab], true)
+    end
+end)
+H.test("the signs master switch and mod conflicts override every container switch", function()
+    local cfg = config()
+    for prefab in pairs(Signs.supported) do cfg.signs[prefab] = true end
+    cfg.signs.enabled = false
+    local disabled = sign_hooks(Config.copy(cfg))
+    cfg.signs.enabled = true
+    local conflict = sign_hooks(cfg, { "workshop-1595631294" })
+    for prefab in pairs(Signs.supported) do H.eq(disabled[prefab], nil); H.eq(conflict[prefab], nil) end
+end)
+H.test("unknown container types and missing type switches never enable signs", function()
+    H.eq(Signs.enabled("unknown_chest", { enabled = true, unknown_chest = true }), false)
+    H.eq(Signs.enabled("treasurechest", { enabled = true }), false)
 end)

@@ -51,13 +51,18 @@ test("native menu edits module settings without changing server defaults", funct
     assert(client.settings.beefalo.hunger_threshold == 5, "menu did not use native threshold choices")
     assert(client.config.beefalo.hunger_threshold == original, "personal edit mutated server rules")
 end)
-test("native mod configuration screen exposes all 30 scalar options", function()
+test("native mod configuration screen exposes all scalar options including container signs", function()
     local modname = G.KnownModIndex:GetModActualName("Wildwise")
     local screen = require("screens/redux/modconfigurationscreen")(modname, false)
     cleanup[#cleanup + 1] = screen
-    assert(#screen.options == 30, "native configuration option count changed")
+    assert(#screen.options == #Config.fields, "native configuration option count changed")
     assert(screen.options[1].name == "language", "general settings are not first")
-    assert(screen.options[30].name == "beefalo_hunger_threshold", "beefalo field is not exposed")
+    assert(screen.options[#screen.options].name == "beefalo_hunger_threshold", "beefalo field is not exposed")
+    local names = {}
+    for _, option in ipairs(screen.options) do names[option.name] = true end
+    for prefab in pairs(require("wildwise/services/signs").supported) do
+        assert(names["signs_" .. prefab], "missing container switch: " .. prefab)
+    end
 end)
 test("native batch outline has no pointer-following component", function()
     local preview = G.SpawnPrefab("axisalignedplacement_outline")

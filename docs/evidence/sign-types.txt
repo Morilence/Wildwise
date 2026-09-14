@@ -1,0 +1,30 @@
+Wildwise 0.2.1 sign type regression; DST dedicated server 747465; offline LAN; no graphical client.
+
+Defaults
+[00:00:51]: [WW_UI_PASS] native HUD constructor and update
+[00:00:51]: [WW_UI_PASS] all native menu pages in Chinese and English
+[00:00:51]: [WW_UI_PASS] native general key callback receives key and down
+[00:00:51]: [WW_UI_PASS] native menu edits module settings without changing server defaults
+[00:00:51]: [WW_UI_PASS] native mod configuration screen exposes all scalar options including container signs
+[00:00:51]: [WW_UI_PASS] native batch outline has no pointer-following component
+[00:00:51]: [WW_UI_RESULT] passed=6 failed=0 build=747465
+[00:00:52]: [WW_SIGN_PASS] saltbox expected=false
+[00:00:52]: [WW_SIGN_PASS] hutch expected=false
+[00:00:52]: [WW_SIGN_PASS] treasurechest expected=true
+[00:00:52]: [WW_SIGN_PASS] dragonflychest expected=true
+[00:00:52]: [WW_SIGN_PASS] boat_ancient_container expected=true
+[00:00:52]: [WW_SIGN_PASS] icebox expected=false
+[00:00:52]: [WW_SIGN_PASS] fish_box expected=false
+[00:00:52]: [WW_SIGN_PASS] chester expected=false
+[00:00:52]: [WW_SIGN_RESULT] passed=8 failed=0 build=747465
+
+Overrides: treasurechest=false; chester/hutch/icebox/saltbox/fish_box=true
+[00:00:56]: [WW_SIGN_PASS] saltbox expected=true
+[00:00:56]: [WW_SIGN_PASS] hutch expected=true
+[00:00:56]: [WW_SIGN_PASS] treasurechest expected=false
+[00:00:56]: [WW_SIGN_PASS] dragonflychest expected=true
+[00:00:56]: [WW_SIGN_PASS] boat_ancient_container expected=true
+[00:00:56]: [WW_SIGN_PASS] icebox expected=true
+[00:00:56]: [WW_SIGN_PASS] fish_box expected=true
+[00:00:56]: [WW_SIGN_PASS] chester expected=true
+[00:00:56]: [WW_SIGN_RESULT] passed=8 failed=0 build=747465

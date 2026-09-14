@@ -1,7 +1,7 @@
 name = "Wildwise"
 description = "Unified insight, combat bars, shared maps, item handling, action queues, smart storage signs and beefalo status.\n统一信息、血条、协作地图、物品整理、行为队列、智能小木牌与牛状态。"
 author = "Morilence"
-version = "0.2.0"
+version = "0.2.1"
 api_version = 10
 dst_compatible = true
 all_clients_require_mod = true
@@ -76,6 +76,14 @@ configuration_options = {
 
     -- 木牌 / Signs
     option("signs_enabled", "Smart storage signs", "智能小木牌", true),
+    option("signs_treasurechest", "Signs on chests", "木箱小木牌", true),
+    option("signs_dragonflychest", "Signs on scaled chests", "龙鳞宝箱小木牌", true),
+    option("signs_boat_ancient_container", "Signs on cargo holds", "远古船货舱小木牌", true),
+    option("signs_chester", "Signs on Chester", "切斯特小木牌", false),
+    option("signs_hutch", "Signs on Hutch", "哈奇小木牌", false),
+    option("signs_icebox", "Signs on ice boxes", "冰箱小木牌", false),
+    option("signs_saltbox", "Signs on salt boxes", "盐盒小木牌", false),
+    option("signs_fish_box", "Signs on tin fishin' bins", "鱼类储物箱小木牌", false),
 
     -- 牛状态 / Beefalo
     option("beefalo_enabled", "Beefalo status", "牛状态栏", true),

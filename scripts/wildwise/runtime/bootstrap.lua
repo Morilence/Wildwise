@@ -64,10 +64,15 @@ function M.register(api, G, config)
         end)
     end
     if config.signs.enabled then
-        for prefab in pairs(require("wildwise/services/signs").supported) do
-            api.AddPrefabPostInit(prefab, function(inst)
-                if G.TheWorld.ismastersim then require("wildwise/runtime/signs").attach(inst, G) end
-            end)
+        local Signs = require("wildwise/services/signs")
+        for prefab in pairs(Signs.supported) do
+            -- 关闭类型在注册阶段退出，避免为宠物或冷藏容器创建无用监听／辅助实体。
+            -- 辅助牌本身不持久化，修改配置并重启世界后不会留下旧牌。
+            if Signs.enabled(prefab, config.signs) then
+                api.AddPrefabPostInit(prefab, function(inst)
+                    if G.TheWorld.ismastersim then require("wildwise/runtime/signs").attach(inst, G) end
+                end)
+            end
         end
     end
     if config.map.enabled and config.map.wormholes ~= false then
