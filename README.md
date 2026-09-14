@@ -62,11 +62,7 @@ The host enables Wildwise under **Server Mods**, and **the server and every play
 3. Enable Wildwise under **Server Mods** when creating the world, adjust its settings and start the world.
 4. In game, click the **Wildwise** HUD button or press `F7` to open settings.
 
-For a dedicated server, add this entry to the returned table in each shard's `modoverrides.lua`. Use the same version for Master and Caves:
-
-```lua
-["Wildwise"] = { enabled = true },
-```
+For a dedicated server, use the [complete modoverrides.lua example](#modoverrideslua-example) below. Install the same version on Master and Caves and configure each shard.
 
 ## Controls
 
@@ -104,6 +100,72 @@ The `F7` menu has five tabs: **Information, Map, Items, Queue and Diagnostics**.
 **Enable auto pickup:** the host first enables **Allow opt-in auto pickup** in the server mod configuration and restarts the world. Each player can then enable **Auto pickup** under `F7 → Items`.
 
 **Adjust sharing:** use `F7 → Map` to control your position and exploration sharing separately. Turning sharing off stops future contributions; exploration already learned by teammates cannot be withdrawn. Options disabled by server rules or an overlapping mod show the reason.
+
+### modoverrides.lua example
+
+This example lists all **30 server mod configuration options**, with their default values and comments explaining their purpose and accepted values. The world creation screen uses the same options. Boolean `true` enables a setting and `false` disables it. Leave booleans and numbers unquoted; keep quotes around strings.
+
+Save the configuration in your save cluster's `Master/modoverrides.lua` and, if caves are enabled, configure `Caves/modoverrides.lua` too. For an existing file, merge the `["Wildwise"]` entry into its existing `return` table and keep other mod entries. Edit the existing Wildwise entry if there is one. `Wildwise` must match the manually installed mod's directory name.
+
+```lua
+return {
+    ["Wildwise"] = {
+        enabled = true, -- Enable the entire mod: true / false
+        configuration_options = {
+            -- Feature switches: each accepts true / false
+            info = true,       -- Item, creature and world information
+            healthbars = true, -- Combat health bars
+            maps = true,       -- Map collaboration
+            items = true,      -- Automatic stacking and pickup service
+            queue = true,      -- Action queues and batch placement
+            signs = true,      -- Smart storage signs
+            beefalo = true,    -- Beefalo status panel
+
+            -- Information permissions: each accepts true / false
+            containers = false,   -- Allow content queries and matching-item lookup
+            world_events = false, -- Allow world event details
+            ranges = false,       -- Allow attack range values
+
+            -- Sharing rules: "auto" / "on" / "off"
+            -- "auto": enabled in Survival/Endless; disabled in Wilderness or PvP
+            -- "on": allow sharing, respecting personal switches; "off": prohibit sharing
+            sharing = "auto",     -- Position sharing
+            exploration = "auto", -- Exploration sharing
+
+            -- Item handling: the next five switches each accept true / false
+            stack_world = true,     -- Stack newly dropped items
+            stack_manual = false,   -- Stack items deliberately dropped by players
+            stack_loaded = false,   -- Stack ground items restored from a save
+            pickup_allowed = false, -- Let players enable auto pickup under F7 → Items
+            pickup_existing = true, -- Pick up only item types already carried; false removes this condition
+            item_radius = 4,        -- Stacking/pickup radius in game units: 2 / 4 / 6 / 8
+
+            -- Health bar defaults; personal display options can be adjusted under F7
+            bar_limit = 12,   -- Maximum visible bars: 4 / 8 / 12 / 16 / 20
+            combat_linger = 2, -- Seconds to keep bars after combat: 0 / 1 / 2 / 3 / 5
+            bar_scale = 1,    -- Bar scale multiplier: 0.75 / 1 / 1.25 / 1.5
+            bar_numbers = true, -- Show health numbers: true / false
+            -- "self": yourself; "followers": yourself and your followers
+            -- "nearby": nearby players; "nearby_followers": nearby players and followers
+            hostile_scope = "self",
+
+            -- Initial personal settings; saved personal preferences can override these
+            hunger_threshold = 15, -- Hunger display activation threshold, in hunger points: 0 / 5 / 15 / 25
+            font_size = 22,        -- Information font size: 18 / 22 / 26 / 30
+            ui_scale = 1,          -- HUD scale multiplier: 0.75 / 1 / 1.25 / 1.5
+            grid = 3,              -- Farm layout per tile: 2 = 2×2 / 3 = 3×3 / 4 = 4×4
+            language = "auto",     -- "auto" follows the game / "zh" Simplified Chinese / "en" English
+            menu_key = 288,        -- Menu key: 287 = F6 / 288 = F7 / 289 = F8
+
+            diagnostics = false, -- Reserved diagnostic logging switch: true / false; currently has no effect on log output
+        },
+    },
+}
+```
+
+You can keep only the options you want to override. Omitted options use the game's saved configuration or the mod defaults. Restart the affected worlds after editing. Keep both shards' configurations consistent when you want the same rules on the surface and in the caves.
+
+The F7 menu saves personal preferences and does not rewrite `modoverrides.lua`. Server feature switches and permissions remain authoritative: for example, `items = false` disables item handling, so auto pickup will not run even with `pickup_allowed = true`. Display options provide initial personal settings and do not force changes to a player's saved preferences.
 
 ## Compatibility and limitations
 
