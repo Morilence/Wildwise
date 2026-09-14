@@ -4,7 +4,7 @@
 
 ## 环境与证据
 
-用户机器原先未安装游戏。本轮通过 SteamCMD 匿名下载官方 DST Dedicated Server App 343050，取得游戏版本 **747465**，在单独的临时存储目录创建小型生存世界，绑定回环地址、离线 LAN，仅运行开发测试。没有登录用户的游戏账号、使用私人存档或安装图形客户端。
+测试机器原先未安装游戏。测试通过 SteamCMD 匿名下载官方 DST Dedicated Server App 343050，取得游戏版本 **747465**，在单独的临时存储目录创建小型生存世界，绑定回环地址、离线 LAN，仅运行开发测试。测试使用独立存档，未登录游戏账号或安装图形客户端。
 
 环境是 2 vCPU 的 Intel Xeon E5-2680 v4 KVM 虚拟机，内存约 7.26 GiB，Linux 6.8.0-49，Node 24.18.0，独立测试使用 Lua 5.1。完整参数见 [environment.json](evidence/environment.json)。
 
