@@ -55,7 +55,7 @@ function M.common(entity, context)
     local now, G, cfg = context.now, context.G, context.config
     if c.combat then put(out, "damage", c.combat.defaultdamage) end
     if c.weapon and type(c.weapon.damage) == "number" then put(out, "damage", c.weapon.damage) end
-    if cfg.ranges and c.combat then put(out, "attack_range", c.combat.attackrange) end
+    if cfg.info.attack_range and c.combat then put(out, "attack_range", c.combat.attackrange) end
     if c.armor then
         put(out, "armor", c.armor.condition); put(out, "absorption", percent(c.armor.absorb_percent))
     end
@@ -145,7 +145,7 @@ function M.viewer(entity, viewer, context)
         end
     end
     if c.farmplantstress then put(out, "stress", c.farmplantstress:GetStressDescription(viewer)) end
-    if context.config.containers then
+    if context.config.info.container_contents then
         if c.container and c.container.canbeopened ~= false then put(out, "contents", summary(c.container)) end
         if c.unwrappable and c.unwrappable.itemdata then
             local names = {}
@@ -163,7 +163,7 @@ function M.viewer(entity, viewer, context)
         if vc.kramped then put(out, "naughtiness", vc.kramped.naughtiness) end
         if vc.hunger then put(out, "hunger_rate", vc.hunger.hungerrate) end
         if vc.sanity then put(out, "sanity_rate", vc.sanity.rate) end
-        if context.config.world_events then
+        if context.config.info.world_events then
             local timer = context.G.TheWorld.components.worldsettingstimer
             local events = {}
             for _, key in ipairs(timer and U.sortedkeys(timer.timers) or {}) do
@@ -180,8 +180,8 @@ function M.filter(fields, mask, config)
     local out = {}
     for key, value in pairs(fields) do
         local schema = M.schema[key]
-        local full = mask ~= "health" and config.info
-        local mount = mask == "beefalo" and config.beefalo
+        local full = mask ~= "health" and config.info.enabled
+        local mount = mask == "beefalo" and config.beefalo.enabled
         if schema and ((key == "health" or key == "health_max")
             or full or (mount and schema.category == "beefalo")) then out[key] = value end
     end

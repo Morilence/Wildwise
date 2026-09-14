@@ -4,7 +4,7 @@
 
 Wildwise 是《**饥荒联机版**》的综合便利模组，将物品与生物信息、战斗血条、协作地图、自动整理、行为队列、智能小木牌和牛状态栏整合在一起。沿用游戏原有的界面风格，支持键鼠操作、简体中文和英文。
 
-> 当前为 **0.1.0 开发版**，尚未完成图形客户端及真实多人联机验证。已知限制见下文，详细验证情况见[测试报告](docs/testing.md)。
+> 当前为 **0.2.0 开发版**，尚未完成图形客户端及真实多人联机验证。已知限制见下文，详细验证情况见[测试报告](docs/testing.md)。
 
 ## 功能介绍
 
@@ -53,7 +53,7 @@ Wildwise 是《**饥荒联机版**》的综合便利模组，将物品与生物�
 Wildwise 由房主在“服务器模组”中启用，**服务器和每位玩家都需要安装相同版本**。当前通过 GitHub 分发，需要手动安装。
 
 1. 打开 [GitHub Actions](https://github.com/Morilence/Wildwise/actions)，选择一次成功的构建，在 **Artifacts** 中下载 `Wildwise-mod`。
-2. 解压下载的构建产物，再将里面的 `Wildwise-0.1.0.zip` 解压到游戏的 `mods` 目录，确认文件位置为：
+2. 解压下载的构建产物，再将里面的 `Wildwise-0.2.0.zip` 解压到游戏的 `mods` 目录，确认文件位置为：
 
    ```text
    Don't Starve Together/mods/Wildwise/modinfo.lua
@@ -103,6 +103,8 @@ Wildwise 由房主在“服务器模组”中启用，**服务器和每位玩家
 
 ### modoverrides.lua 配置示例
 
+通用项（语言、界面缩放、菜单按键、诊断）放在最前，其余按功能模块排列。DST 原生配置使用平铺字段，因此模块项带有明确前缀，例如 `beefalo_hunger_threshold`。本节代码可直接用于原生配置文件，无需额外脚本。旧配置字段不再读取，旧版的本地个人设置不会自动迁移。
+
 下面列出全部 **30 个服务器模组配置项**，赋值均为默认值，注释说明用途和可选值。建房界面的 Wildwise 配置也使用这些选项。布尔值 `true` 表示开启、`false` 表示关闭；布尔值和数字不加引号，字符串保留引号。
 
 将配置写入存档集群的 `Master/modoverrides.lua`；有洞穴时，同样配置 `Caves/modoverrides.lua`。已有文件时，把 `["Wildwise"]` 条目合并到原来的 `return` 表中，保留其他模组条目；如果已存在 Wildwise 条目，直接修改它。`Wildwise` 必须与手动安装的模组目录名一致。
@@ -112,52 +114,56 @@ return {
     ["Wildwise"] = {
         enabled = true, -- 是否启用整个模组：true / false
         configuration_options = {
-            -- 功能开关：各项均可填 true / false
-            info = true,       -- 物品、生物与世界信息
-            healthbars = true, -- 战斗血条
-            maps = true,       -- 地图协作
-            items = true,      -- 自动合堆与拾取服务
-            queue = true,      -- 行为队列与批量布点
-            signs = true,      -- 智能小木牌
-            beefalo = true,    -- 牛状态栏
+            -- 通用设置
+            language = "auto",                  -- "auto" 跟随游戏 / "zh" 简体中文 / "en" 英文
+            ui_scale = 1,                       -- HUD 缩放倍数：0.75 / 1 / 1.25 / 1.5
+            menu_key = 288,                     -- 菜单按键：287＝F6 / 288＝F7 / 289＝F8
+            diagnostics = false,                -- 预留诊断日志开关：true / false；当前不影响日志输出
 
-            -- 信息权限：各项均可填 true / false
-            containers = false,   -- 允许容器内容查询与同类物品定位
-            world_events = false, -- 允许世界事件详情
-            ranges = false,       -- 允许攻击范围数值
+            -- 信息洞察
+            info_enabled = true,                -- 物品、生物与世界信息；true / false
+            info_container_contents = false,    -- 允许容器内容查询与同类物品定位；true / false
+            info_world_events = false,          -- 允许世界事件详情；true / false
+            info_attack_range = false,          -- 允许攻击范围数值；true / false
+            info_font_size = 22,                -- 信息字号：18 / 22 / 26 / 30
 
+            -- 战斗血条
+            healthbars_enabled = true,          -- 战斗血条；true / false
+            healthbars_limit = 12,              -- 同时显示的血条数：4 / 8 / 12 / 16 / 20
+            healthbars_linger_seconds = 2,      -- 脱战后保留秒数：0 / 1 / 2 / 3 / 5
+            healthbars_scale = 1,               -- 血条缩放倍数：0.75 / 1 / 1.25 / 1.5
+            healthbars_numbers = true,          -- 显示血量数值：true / false
+            -- "self"：仅自己；"followers"：自己及随从
+            -- "nearby"：附近玩家；"nearby_followers"：附近玩家及随从
+            healthbars_hostile_scope = "self",  -- 血条敌意判定范围
+
+            -- 地图协作
+            map_enabled = true,                 -- 地图协作；true / false
             -- 共享规则："auto" / "on" / "off"
             -- "auto"：生存、无尽模式开启；荒野或 PvP 关闭
             -- "on"：允许共享，仍尊重玩家的个人开关；"off"：禁止共享
-            sharing = "auto",     -- 位置共享
-            exploration = "auto", -- 探索共享
+            map_share_position = "auto",        -- 位置共享
+            map_share_exploration = "auto",     -- 探索共享
 
-            -- 物品整理：下列五个开关均可填 true / false
-            stack_world = true,     -- 合堆新掉落的物品
-            stack_manual = false,   -- 合堆玩家主动丢弃的物品
-            stack_loaded = false,   -- 合堆读档恢复的地面物品
-            pickup_allowed = false, -- 允许玩家在 F7 → 物品中开启自动拾取
-            pickup_existing = true, -- 拾取仅限已携带的同类物品；false 取消此条件
-            item_radius = 4,        -- 合堆／拾取半径（游戏距离单位）：2 / 4 / 6 / 8
+            -- 物品整理
+            items_enabled = true,               -- 自动合堆与拾取服务；true / false
+            items_stack_world = true,           -- 合堆新掉落的物品；true / false
+            items_stack_manual = false,         -- 合堆玩家主动丢弃的物品；true / false
+            items_stack_loaded = false,         -- 合堆读档恢复的地面物品；true / false
+            items_pickup_allowed = false,       -- 允许玩家在 F7 → 物品中开启自动拾取；true / false
+            items_pickup_existing = true,       -- 拾取仅限已携带的同类物品；false 取消此条件；true / false
+            items_radius = 4,                   -- 合堆／拾取半径（游戏距离单位）：2 / 4 / 6 / 8
 
-            -- 血条显示默认值，玩家可在 F7 中调整其中的个人显示项
-            bar_limit = 12,   -- 同时显示的血条数：4 / 8 / 12 / 16 / 20
-            combat_linger = 2, -- 脱战后保留秒数：0 / 1 / 2 / 3 / 5
-            bar_scale = 1,    -- 血条缩放倍数：0.75 / 1 / 1.25 / 1.5
-            bar_numbers = true, -- 显示血量数值：true / false
-            -- "self"：仅自己；"followers"：自己及随从
-            -- "nearby"：附近玩家；"nearby_followers"：附近玩家及随从
-            hostile_scope = "self",
+            -- 行为队列
+            queue_enabled = true,               -- 行为队列与批量布点；true / false
+            queue_farm_grid = 3,                -- 每块农田的布点：2＝2×2 / 3＝3×3 / 4＝4×4
 
-            -- 其他个人设置的初始值，已保存的个人偏好可覆盖这些值
-            hunger_threshold = 15, -- 牛饥饿显示激活阈值（饥饿值）：0 / 5 / 15 / 25
-            font_size = 22,        -- 信息字号：18 / 22 / 26 / 30
-            ui_scale = 1,          -- HUD 缩放倍数：0.75 / 1 / 1.25 / 1.5
-            grid = 3,              -- 每块农田的布点：2＝2×2 / 3＝3×3 / 4＝4×4
-            language = "auto",     -- "auto" 跟随游戏 / "zh" 简体中文 / "en" 英文
-            menu_key = 288,        -- 菜单按键：287＝F6 / 288＝F7 / 289＝F8
+            -- 智能小木牌
+            signs_enabled = true,               -- 智能小木牌；true / false
 
-            diagnostics = false, -- 预留诊断日志开关：true / false；当前不影响日志输出
+            -- 牛状态栏
+            beefalo_enabled = true,             -- 牛状态栏；true / false
+            beefalo_hunger_threshold = 15,      -- 牛饥饿显示激活阈值（饥饿值）：0 / 5 / 15 / 25
         },
     },
 }
@@ -165,7 +171,7 @@ return {
 
 可只保留需要覆盖的配置项；未写出的项沿用游戏已保存的配置或模组默认值。修改后重启对应世界；地上与洞穴需要相同规则时，在两处保持相同配置。
 
-F7 菜单保存玩家个人偏好，不会改写 `modoverrides.lua`。服务器功能开关和权限始终生效，例如 `items = false` 会停用物品整理，即使 `pickup_allowed = true` 也不会自动拾取。显示相关配置提供个人设置的初始值，不会强制覆盖玩家已保存的偏好。
+F7 菜单保存玩家个人偏好，不会改写 `modoverrides.lua`。服务器功能开关和权限始终生效，例如 `items_enabled = false` 会停用物品整理，即使 `items_pickup_allowed = true` 也不会自动拾取。显示相关配置提供个人设置的初始值，不会强制覆盖玩家已保存的偏好。
 
 ## 兼容与限制
 

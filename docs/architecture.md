@@ -13,6 +13,14 @@
 | 新功能 | `services/signs`, `runtime/signs`，facts 的 beefalo 分类 | 原生辅助牌的事件生命周期，牛状态复用观察服务 |
 | 界面 | `ui/*`, `runtime/client`, `runtime/input` | 设置、显示缓存、控件、hover、地图、主动血条、牛状态、预览 |
 
+## 配置边界
+
+配置分为原生入口、运行时规则和个人偏好。`modinfo.lua` 的 30 个公开选项保持 DST 要求的平铺标量，例如 `beefalo_hunger_threshold`；`core/config.load` 将其转换为 `config.beefalo.hunger_threshold`。语言、HUD 缩放、菜单按键和诊断项在根节点，其余归入 `info`、`healthbars`、`map`、`items`、`queue`、`signs`、`beefalo`，模块内部不重复前缀。非法类型或枚举值回退默认值并在启动时记录字段名。预算、观察范围等内部常量不通过原生配置暴露。
+
+`Config.settings` 单独构造个人偏好，模块表深拷贝，不与服务器规则或其他客户端共享可变引用。F7 使用 `beefalo.hunger_threshold` 这样的模块路径读写和发送个人偏好；服务器仍检查自身权限。个人设置存入 `wildwise_client_v2`，不读取或迁移旧平铺键。地图共享开关由当前世界保存并在握手时同步，本地偏好加载不会覆盖它们。
+
+`tests/config_spec.lua` 核对原生选项、内部路径、全部可选值及两份 README 的默认示例，也验证关闭项、零阈值、非法输入、嵌套对象隔离与 RPC 编解码。
+
 ## 观察、通信与权限
 
 客户端按实体合并 hover、血条、菜单及牛状态需求，每两秒续租。服务器每个实体只维护一个 healthdelta 监听；公共事实最多每 500 ms 更新，健康变化在 100 ms 周期内合并。查看者的角色、饮食与食物记忆不共享缓存。没有订阅者即清理记录与监听。

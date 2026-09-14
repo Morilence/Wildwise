@@ -26,7 +26,7 @@ function M.register(api, G, config)
     api.AddPlayerPostInit(function(inst)
         if G.TheWorld.ismastersim then inst:DoTaskInTime(0, function() local s = server(); if s then s:AddPlayer(inst) end end) end
     end)
-    if config.items then
+    if config.items.enabled then
         api.AddComponentPostInit("inventoryitem", function(component)
             if not G.TheWorld.ismastersim then return end
             local inst, scope = component.inst, Lifetime.new()
@@ -49,7 +49,7 @@ function M.register(api, G, config)
                 local s = server(); if s and s.items then s.items:forget(inst) end
                 scope:close()
             end)
-            if config.stack_loaded then inst:DoTaskInTime(0, function()
+            if config.items.stack_loaded then inst:DoTaskInTime(0, function()
                 if not component.owner then mark("loaded") end
             end) end
         end)
@@ -63,14 +63,14 @@ function M.register(api, G, config)
             end)
         end)
     end
-    if config.signs then
+    if config.signs.enabled then
         for prefab in pairs(require("wildwise/services/signs").supported) do
             api.AddPrefabPostInit(prefab, function(inst)
                 if G.TheWorld.ismastersim then require("wildwise/runtime/signs").attach(inst, G) end
             end)
         end
     end
-    if config.maps and config.wormholes ~= false then
+    if config.map.enabled and config.map.wormholes ~= false then
         -- 只处理有双向 target 的原版设施；不会把洞穴出入口当普通虫洞。
         for _, prefab in ipairs({ "wormhole", "tentacle_pillar", "wormhole_limited_1" }) do
             api.AddPrefabPostInit(prefab, function(inst)
@@ -90,7 +90,7 @@ function M.register(api, G, config)
             end)
         end
     end
-    if config.maps then
+    if config.map.enabled then
         for _, prefab in ipairs({ "campfire", "firepit", "coldfire", "coldfirepit" }) do
             api.AddPrefabPostInit(prefab, function(inst)
                 if not G.TheWorld.ismastersim or not inst.components.fueled then return end

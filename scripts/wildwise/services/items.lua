@@ -22,7 +22,7 @@ function Items:cell(item)
         local lx, _, lz = platform.entity:WorldToLocalSpace(x, y, z); x, z = lx, lz
     end
     return (item.prefab or "") .. ":" .. (item.skinname or "") .. ":" .. tostring(platform or "land"),
-        math.floor(x / self.config.item_radius), math.floor(z / self.config.item_radius)
+        math.floor(x / self.config.items.radius), math.floor(z / self.config.items.radius)
 end
 function Items:indexitem(item)
     self:unindex(item)
@@ -38,7 +38,7 @@ function Items:neighbors(item)
     -- 只索引已确认来源的可合堆物，不对千件掉落反复调用整片 FindEntities 并排序。
     for dx = -1, 1 do for dz = -1, 1 do
         for target in pairs(self.index[prefix .. ":" .. (x + dx) .. ":" .. (z + dz)] or {}) do
-            if target ~= item and U.valid(target) and U.distance(item, target) <= self.config.item_radius^2 then out[#out + 1] = target end
+            if target ~= item and U.valid(target) and U.distance(item, target) <= self.config.items.radius^2 then out[#out + 1] = target end
         end
     end end
     return out
@@ -51,10 +51,10 @@ function Items:mark(item, source, now)
     if self:sourceallowed(source) then self:enqueue(item, now + .25) end
 end
 function Items:sourceallowed(source)
-    return (source == "world" and self.config.stack_world)
-        or (source == "manual" and self.config.stack_manual)
-        or (source == "loaded" and self.config.stack_loaded)
-        or (source == "world" and self.config.pickup_allowed)
+    return (source == "world" and self.config.items.stack_world)
+        or (source == "manual" and self.config.items.stack_manual)
+        or (source == "loaded" and self.config.items.stack_loaded)
+        or (source == "world" and self.config.items.pickup_allowed)
 end
 function Items:enqueue(item, at)
     if self.queued[item] then return end
@@ -96,13 +96,13 @@ function Items:process(item, now)
         return
     end
     local cfg, c = self.config, item.components
-    if cfg.pickup_allowed and self.known[item].source == "world" then
+    if cfg.items.pickup_allowed and self.known[item].source == "world" then
         local players = {}
         for _, player in ipairs(self.env.players()) do
             local inv = player.components.inventory
             if U.valid(player) and inv and self.env.pickup(player) and not player:HasTag("playerghost")
-                and U.sameplatform(player, item) and U.distance(player, item) <= cfg.item_radius^2
-                and (not cfg.pickup_existing or inv:Has(item.prefab, 1, true))
+                and U.sameplatform(player, item) and U.distance(player, item) <= cfg.items.radius^2
+                and (not cfg.items.pickup_existing or inv:Has(item.prefab, 1, true))
                 and inv:CanAcceptCount(item, c.stackable:StackSize()) > 0 then players[#players + 1] = player end
         end
         table.sort(players, function(a, b)
@@ -131,8 +131,8 @@ function Items:process(item, now)
     end
     if not self:eligible(item, now) then return end
     local source = self.known[item].source
-    if not ((source == "world" and cfg.stack_world) or (source == "manual" and cfg.stack_manual)
-        or (source == "loaded" and cfg.stack_loaded)) then return end
+    if not ((source == "world" and cfg.items.stack_world) or (source == "manual" and cfg.items.stack_manual)
+        or (source == "loaded" and cfg.items.stack_loaded)) then return end
     local neighbors = self:neighbors(item)
     table.sort(neighbors, function(a, b)
         return (self.known[a] and self.known[a].order or math.huge) < (self.known[b] and self.known[b].order or math.huge)
@@ -149,7 +149,7 @@ function Items:process(item, now)
     if self:eligible(item, now) then self:indexitem(item) end
 end
 function Items:tick(now)
-    local stop = math.min(self.tail, self.head + self.config.item_budget - 1)
+    local stop = math.min(self.tail, self.head + self.config.items.budget - 1)
     local started = self.env.clock and self.env.clock()
     while self.head <= stop do
         -- 数量和 CPU 双预算；保留候选等待后续 tick，不靠丢弃任务换取耗时下降。

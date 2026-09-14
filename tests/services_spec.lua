@@ -1,5 +1,4 @@
 local H = require("tests/harness")
-local U = require("wildwise/core/util")
 local Config = require("wildwise/core/config")
 local Health = require("wildwise/services/health")
 local Items = require("wildwise/services/items")
@@ -8,7 +7,7 @@ local Queue = require("wildwise/services/queue")
 local Planner = require("wildwise/services/planner")
 local Observer = require("wildwise/services/observer")
 local Recipes = require("wildwise/services/recipes")
-local function config() return U.copy(Config.defaults) end
+local function config() return Config.copy(Config.defaults) end
 H.test("hostility follows actual targets and changed follower ownership", function()
     local viewer, friend, pet, enemy = H.entity(1), H.entity(2), H.entity(3), H.entity(4)
     enemy.components.combat = { target = pet }; pet.components.follower = { leader = viewer }
@@ -65,7 +64,7 @@ H.test("partial stacks conserve count and skins", function()
     local d = H.item(3, 2, 4); d.skinname = "skin"; service:mark(d, "world", 1); service:tick(2); assert(d.valid)
 end)
 H.test("pickup selects nearest eligible receiver with stable userid tie", function()
-    local cfg, item, chosen = config(), H.item(5, 0, 4), nil; cfg.pickup_allowed = true
+    local cfg, item, chosen = config(), H.item(5, 0, 4), nil; cfg.items.pickup_allowed = true
     local a, b = H.entity(1, 1), H.entity(2, -1); a.userid, b.userid = "b", "a"
     for _, player in ipairs({ a, b }) do
         player.components.inventory = { Has = function() return true end, CanAcceptCount = function() return 4 end,
@@ -75,7 +74,7 @@ H.test("pickup selects nearest eligible receiver with stable userid tie", functi
     service:mark(item, "world", 0); service:tick(1); H.eq(chosen, b)
 end)
 H.test("item work budget and queue bound resist burst", function()
-    local cfg = config(); cfg.item_budget = 16
+    local cfg = config(); cfg.items.budget = 16
     local service = itemservice(cfg, {})
     for i = 1, 3000 do service:mark(H.item(i, i * 10), "world", 0) end
     assert(service.tail <= 2049); assert(service.dropped > 0)

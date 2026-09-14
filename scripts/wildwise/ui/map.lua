@@ -19,7 +19,7 @@ function M.attach(screen, client, G)
     end
     Hooks.after(scope, screen, "OnUpdate", function()
         local count = 0
-        if client.config.maps then
+        if client.config.map.enabled then
             local function draw(x, z, label, colour, tooltip)
                 if not U.finite(x) or not U.finite(z) then return end
                 count = count + 1; local widget = make(count)
@@ -51,10 +51,10 @@ function M.attach(screen, client, G)
         for i = count + 1, #markers do markers[i]:Hide() end
     end)
     Hooks.wrap(scope, screen, "OnControl", function(original, self, control, down, ...)
-        if client.config.maps and control == G.CONTROL_PRIMARY and G.TheInput:IsKeyDown(G.KEY_LALT) then
+        if client.config.map.enabled and control == G.CONTROL_PRIMARY and G.TheInput:IsKeyDown(G.KEY_LALT) then
             if down then
                 local x, _, z = self:GetWorldPositionAtCursor()
-                client:send("ping", nil, { kind = client.settings.ping_kind, x = x, z = z })
+                client:send("ping", nil, { kind = client.settings.map.ping_kind, x = x, z = z })
             end
             return true
         end

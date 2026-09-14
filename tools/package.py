@@ -47,7 +47,7 @@ def main():
     if args.check:
         return
     args.out_dir.mkdir(parents=True, exist_ok=True)
-    output = args.out_dir / "Wildwise-0.1.0.zip"
+    output = args.out_dir / "Wildwise-0.2.0.zip"
     # 固定时间、权限与排序；相同源码在本地和 CI 得到同一归档内容。
     with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as archive:
         for path in selected:

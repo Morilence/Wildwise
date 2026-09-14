@@ -1,5 +1,6 @@
 package.path = "./scripts/?.lua;./?.lua;" .. package.path
 require("tests/core_spec")
+require("tests/config_spec")
 require("tests/services_spec")
 local H = require("tests/harness")
 io.write(string.format("\n%d passed, %d failed\n", H.passed, H.failed))

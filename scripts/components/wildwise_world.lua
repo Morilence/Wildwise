@@ -17,7 +17,7 @@ local World = G.Class(function(self, inst)
     self.map = Map.new(G.TheShard and G.TheShard:GetShardId() or "1")
     self.observer = Observer.new({ G = G, config = self.config, cooking = require("cooking"), now = G.GetTime() },
         function(player, target, kind, data) self:Send(player, target, kind, data) end)
-    if self.config.items then
+    if self.config.items.enabled then
         self.items = Items.new(self.config, {
             players = function() return G.AllPlayers end,
             pickup = function(player) return self.players[player] and self.players[player].pickup end,
@@ -132,22 +132,23 @@ function World:Request(player, target, bytes)
     if msg.session ~= state.session or msg.seq <= state.seq then return end
     state.seq, state.active_until = msg.seq, now + 10
     if msg.kind == "subscribe" and masks[data.mask] then
-        if ((data.mask == "hover" or data.mask == "menu") and not self.config.info)
-            or (data.mask == "beefalo" and not self.config.beefalo)
-            or (data.mask == "health" and not self.config.healthbars and not self.config.info) then return end
+        if ((data.mask == "hover" or data.mask == "menu") and not self.config.info.enabled)
+            or (data.mask == "beefalo" and not self.config.beefalo.enabled)
+            or (data.mask == "health" and not self.config.healthbars.enabled and not self.config.info.enabled) then return end
         self.observer:subscribe(player, target, data.mask, now)
     elseif msg.kind == "unsubscribe" then self.observer:unsubscribe(player, target)
     elseif msg.kind == "heartbeat" then
         self:Send(player, nil, "heartbeat", { server_time = now, bytes = state.bytes, observations = U.count(self.observer.entities) })
     elseif msg.kind == "preference" then
-        if data.key == "pickup" then state.pickup = self.config.pickup_allowed and data.value == true
-        elseif data.key == "healthbars" then state.healthbars = data.value == true
-        elseif data.key == "hostile_scope" and ({ self = true, followers = true, nearby = true, nearby_followers = true })[data.value] then
+        if data.key == "items.pickup" then state.pickup = self.config.items.pickup_allowed and data.value == true
+        elseif data.key == "healthbars.enabled" then state.healthbars = data.value == true
+        elseif data.key == "healthbars.hostile_scope" and ({ self = true, followers = true, nearby = true, nearby_followers = true })[data.value] then
             state.hostile_scope = data.value
-        elseif data.key == "position" or data.key == "exploration" then
-            self.map:set_preference(player.userid, data.key, data.value)
+        elseif data.key == "map.share_position" or data.key == "map.share_exploration" then
+            local preference = data.key == "map.share_position" and "position" or "exploration"
+            self.map:set_preference(player.userid, preference, data.value)
         end
-    elseif msg.kind == "ping" and self.config.maps then
+    elseif msg.kind == "ping" and self.config.map.enabled then
         local x, z = data.x, data.z
         -- 只允许已探索地点，不接受 prefab、任意实体生成或其它世界坐标。
         if U.finite(x) and U.finite(z) and player.CanSeePointOnMiniMap and player:CanSeePointOnMiniMap(x, 0, z) then
@@ -157,14 +158,14 @@ function World:Request(player, target, bytes)
     elseif msg.kind == "delete_ping" then
         local client = G.TheNet:GetClientTableForUser(player.userid)
         self.map:delete_ping(player.userid, data.id, client and client.admin)
-    elseif msg.kind == "recipes" and self.config.info then
+    elseif msg.kind == "recipes" and self.config.info.enabled then
         local results, reason = require("wildwise/services/recipes").query(require("cooking"),
             data.cooker == "portablecookpot" and "portablecookpot" or "cookpot", data.ingredients)
         self:Send(player, nil, "recipes", { results = results or {}, reason = reason or "" })
-    elseif msg.kind == "find" and self.config.info and self.config.containers then
+    elseif msg.kind == "find" and self.config.info.enabled and self.config.info.container_contents then
         if type(data.prefab) ~= "string" or #data.prefab > 80 then return end
         local x, y, z = player.Transform:GetWorldPosition()
-        local candidates = G.TheSim:FindEntities(x, y, z, self.config.info_radius, nil, { "INLIMBO", "FX" })
+        local candidates = G.TheSim:FindEntities(x, y, z, self.config.observation.radius, nil, { "INLIMBO", "FX" })
         local count = 0
         for _, candidate in ipairs(candidates) do
             local container = candidate.components.container
@@ -177,7 +178,7 @@ function World:Request(player, target, bytes)
                 if count >= 40 then break end
             end
         end
-    elseif msg.kind == "watch_action" and self.config.queue then
+    elseif msg.kind == "watch_action" and self.config.queue.enabled then
         if type(data.token) ~= "string" or #data.token > 48 or not G.ACTIONS[data.action] then return end
         if target and (not U.valid(target) or not target.Transform or U.distance(player, target) > 80^2) then return end
         state.action = { token = data.token, action = data.action, target = target, expires = now + 7 }
@@ -188,12 +189,12 @@ function World:Request(player, target, bytes)
 end
 
 function World:Threats(player, state, now)
-    if not self.config.healthbars or state.healthbars == false then return end
+    if not self.config.healthbars.enabled or state.healthbars == false then return end
     local x, y, z = player.Transform:GetWorldPosition()
-    local nearby = G.TheSim:FindEntities(x, y, z, self.config.info_radius, { "_combat", "_health" }, { "INLIMBO", "FX" })
+    local nearby = G.TheSim:FindEntities(x, y, z, self.config.observation.radius, { "_combat", "_health" }, { "INLIMBO", "FX" })
     local alive = {}
     for _, target in ipairs(nearby) do
-        local hostile, direct = Health.hostility(target, player, state.hostile_scope or self.config.hostile_scope, G.AllPlayers, 30)
+        local hostile, direct = Health.hostility(target, player, state.hostile_scope or self.config.healthbars.hostile_scope, G.AllPlayers, 30)
         if hostile then
             alive[target] = true
             local previous = state.threats[target]
@@ -211,7 +212,7 @@ function World:Threats(player, state, now)
 end
 
 function World:MapUpdate(now)
-    if not self.config.maps or self.map.load_error then return end
+    if not self.config.map.enabled or self.map.load_error then return end
     self.map:expire(now)
     local positions, exploration = Config.share(self.config, G.TheNet:GetServerGameMode(), G.TheNet:GetPVPEnabled())
     local roster = {}
@@ -328,7 +329,7 @@ function World:Tick()
     end
     if now >= self.next_map then
         self.next_map = now + .25; self:MapUpdate(now)
-        if self.config.maps and now > 2 then self:ValidatePairs() end
+        if self.config.map.enabled and now > 2 then self:ValidatePairs() end
     end
 end
 function World:OnSave() return self.map:save() end

@@ -13,14 +13,14 @@ function Observer:authorized(player, target)
     if target == mount or target == player or owner == player then return true end
     -- 在别人的背包中、或不可见的目标不能靠猜实体引用读取；每次更新都复查。
     if owner and (not owner.components.container or not owner.components.container:IsOpenedBy(player)) then return false end
-    if U.distance(player, target) > self.context.config.info_radius^2 then return false end
+    if U.distance(player, target) > self.context.config.observation.radius^2 then return false end
     local visible = self.context.G.CanEntitySeeTarget
     return not visible or visible(player, target)
 end
 function Observer:subscribe(player, target, mask, now)
     if not self:authorized(player, target) then return false end
     local subscriptions = self.players[player] or {}; self.players[player] = subscriptions
-    if not subscriptions[target] and U.count(subscriptions) >= self.context.config.observer_limit then return false end
+    if not subscriptions[target] and U.count(subscriptions) >= self.context.config.observation.limit then return false end
     local record = self.entities[target]
     if not record then
         -- 多人共用实体事实与一个 healthdelta 监听；角色食用效果始终放在各自 sub.view。

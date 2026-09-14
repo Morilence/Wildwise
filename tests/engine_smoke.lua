@@ -1,3 +1,4 @@
+local Config = require("wildwise/core/config")
 -- 仅由开发者在隔离专服控制台 dofile；不会随模组启动运行，也不会进入发布包。
 -- 这些断言使用真实原版实体与组件，不把本测试称作远程客户端/双人验收。
 local G = _G
@@ -20,7 +21,6 @@ local function spawn(prefab, dx, dz)
     return e
 end
 local context = require("wildwise/runtime/context")
-local U = require("wildwise/core/util")
 local Facts = require("wildwise/services/facts")
 local Signs = require("wildwise/services/signs")
 local Observer = require("wildwise/services/observer")
@@ -30,7 +30,7 @@ test("server does not load UI", function() assert(context.client == nil) end)
 local viewer = spawn("wilson", 6, 0)
 -- 存档可能已进入夜晚；用原版夜视能力固定可见性前提，不放宽生产服务的权限判断。
 viewer.components.playervision:ForceNightVision(true)
-local ctx = { G = G, config = U.copy(context.config), cooking = require("cooking"), now = G.GetTime() }
+local ctx = { G = G, config = Config.copy(context.config), cooking = require("cooking"), now = G.GetTime() }
 for _, prefab in ipairs({ "beefalo", "berries", "axe", "armorwood", "strawhat", "icebox", "farm_plant_carrot",
     "meatballs", "raincoat", "lantern", "pigman", "firepit", "saddle_basic", "rope", "bundle" }) do
     test("facts:" .. prefab, function()
@@ -102,7 +102,7 @@ test("native partial inventory pickup preserves leftover stack", function()
         assert(inv:GiveItem(item, slot))
     end
     local item = spawn("flint", 61, 0); item.components.stackable:SetStackSize(5)
-    local cfg = U.copy(context.config); cfg.pickup_allowed = true
+    local cfg = Config.copy(context.config); cfg.items.pickup_allowed = true
     local service = require("wildwise/services/items").new(cfg, {
         players = function() return { receiver } end, pickup = function() return true end,
         neighbors = function() return {} end, result = function() end,

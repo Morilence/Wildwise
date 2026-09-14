@@ -2,7 +2,7 @@ local M = {}
 M.text = {
     no_points = { "No aligned points in selection", "区域内没有对齐的点位" },
     clear_all = { "Clear everyone's markers (admin)", "清空所有人的标记（管理员）" },
-    hunger_threshold = { "Hunger display threshold", "饥饿显示阈值" },
+    ["beefalo.hunger_threshold"] = { "Beefalo hunger threshold", "牛饥饿显示阈值" },
     found = { "Found", "找到" },
     info = { "Information", "信息" }, maps = { "Map", "地图" }, items = { "Items", "物品" },
     queue = { "Queue", "队列" }, diagnostics = { "Diagnostics", "诊断" }, close = { "Close", "关闭" },
@@ -30,15 +30,15 @@ M.text = {
     naughtiness = { "Naughtiness", "淘气值" }, hunger_rate = { "Hunger / s", "饥饿／秒" }, sanity_rate = { "Sanity rate", "理智变化率" },
     world_events = { "World events", "世界事件" }, healthbars = { "Combat bars", "战斗血条" },
     signs = { "Smart storage signs", "智能小木牌" }, beefalo = { "Beefalo status", "牛状态栏" },
-    preset = { "Information preset", "信息预设" }, minimal = { "Minimal", "简洁" }, standard = { "Standard", "标准" }, detailed = { "Detailed", "详细" },
-    bar_limit = { "Bar limit", "血条上限" }, bar_scale = { "Bar scale", "血条缩放" }, bar_numbers = { "Health numbers", "血量数值" },
-    font_size = { "Font size", "字号" }, ui_scale = { "Interface scale", "界面缩放" }, hostile_scope = { "Hostility scope", "敌意范围" },
+    ["info.preset"] = { "Information preset", "信息预设" }, minimal = { "Minimal", "简洁" }, standard = { "Standard", "标准" }, detailed = { "Detailed", "详细" },
+    ["healthbars.limit"] = { "Bar limit", "血条上限" }, ["healthbars.scale"] = { "Bar scale", "血条缩放" }, ["healthbars.numbers"] = { "Health numbers", "血量数值" },
+    ["info.font_size"] = { "Font size", "字号" }, ui_scale = { "Interface scale", "界面缩放" }, ["healthbars.hostile_scope"] = { "Hostility scope", "敌意范围" },
     self = { "Self", "仅自己" }, followers = { "Self and followers", "自己及随从" }, nearby = { "Nearby players", "附近玩家" },
-    nearby_followers = { "Players and followers", "附近玩家及随从" }, position = { "Share my position", "共享我的位置" },
-    exploration = { "Share exploration", "共享探索" }, indicators = { "Off-screen indicators", "屏外指示" },
+    nearby_followers = { "Players and followers", "附近玩家及随从" }, ["map.share_position"] = { "Share my position", "共享我的位置" },
+    ["map.share_exploration"] = { "Share exploration", "共享探索" }, ["map.indicators"] = { "Off-screen indicators", "屏外指示" },
     scoreboard = { "Player list only", "查看玩家列表时" }, always = { "Always", "始终显示" },
-    pickup = { "Auto pickup", "自动拾取" }, stack_world = { "Stack new drops", "新掉落合堆" }, stack_manual = { "Stack manual drops", "主动丢弃物合堆" },
-    stack_loaded = { "Stack loaded items", "读档物品合堆" }, containers = { "Container queries", "容器查询" }, ranges = { "Range hints", "范围提示" },
+    ["items.pickup"] = { "Auto pickup", "自动拾取" }, ["items.stack_world"] = { "Stack new drops", "新掉落合堆" }, ["items.stack_manual"] = { "Stack manual drops", "主动丢弃物合堆" },
+    ["items.stack_loaded"] = { "Stack loaded items", "读档物品合堆" }, ["info.container_contents"] = { "Container queries", "容器查询" }, ["info.attack_range"] = { "Range hints", "范围提示" },
     paused = { "Paused", "已暂停" }, running = { "Running", "执行中" }, idle = { "Idle", "空闲" },
     pause = { "Pause", "暂停" }, resume = { "Resume", "继续" }, clear = { "Clear", "清空" },
     queue_limit = { "Queue limit reached", "已达到队列上限" }, ping_limit = { "Five markers already active", "已存在五个标记" },
@@ -52,17 +52,17 @@ M.text = {
     timeout = { "No progress", "无进展" }, action_failed = { "Action failed", "动作失败" },
     location = { "Location", "位置" }, danger = { "Danger", "危险" }, resource = { "Resource", "资源" }, rally = { "Rally", "集合" },
     signal_fire = { "Signal fire", "信号火" },
-    ping_kind = { "Alt + map click marker", "Alt＋地图点击标记" }, grid = { "Farm grid", "农田布点" },
+    ["map.ping_kind"] = { "Alt + map click marker", "Alt＋地图点击标记" }, ["queue.farm_grid"] = { "Farm grid", "农田布点" },
     server_rule = { "Server rule · restart to change", "服务器规则 · 修改后重启" }, restricted = { "Disabled by server", "服务器未允许" },
     conflict = { "Overlapping mod enabled", "已启用重叠功能模组" },
     first_tip = { "Wildwise is ready. F7 opens settings. Shift-click queues actions.", "Wildwise 已就绪。F7 打开设置，Shift＋点击添加队列。" },
     unknown = { "Unavailable", "暂不可用" }, default = { "Default", "默认" }, rider = { "Rider", "行牛" },
     ornery = { "Ornery", "战牛" }, pudgy = { "Pudgy", "肥牛" },
     execute_plan = { "Execute plan", "执行布点" }, cancel_plan = { "Cancel preview", "取消预览" },
-    enabled_points = { "Valid / total", "有效／总点数" }, menu_key = { "Menu key", "菜单按键" }, queue_key = { "Queue modifier", "队列修饰键" },
-    beefalo_key = { "Beefalo toggle", "牛状态切换键" }, rebind = { "Press a key…", "请按键…" },
-    beefalo_visible = { "Show beefalo status", "显示牛状态" }, beefalo_x = { "Beefalo horizontal offset", "牛状态水平偏移" },
-    beefalo_y = { "Beefalo vertical offset", "牛状态垂直偏移" }, auto = { "Follow game", "跟随游戏" },
+    enabled_points = { "Valid / total", "有效／总点数" }, menu_key = { "Menu key", "菜单按键" }, ["queue.modifier_key"] = { "Queue modifier", "队列修饰键" },
+    ["beefalo.toggle_key"] = { "Beefalo toggle", "牛状态切换键" }, rebind = { "Press a key…", "请按键…" },
+    ["beefalo.visible"] = { "Show beefalo status", "显示牛状态" }, ["beefalo.offset_x"] = { "Beefalo horizontal offset", "牛状态水平偏移" },
+    ["beefalo.offset_y"] = { "Beefalo vertical offset", "牛状态垂直偏移" }, auto = { "Follow game", "跟随游戏" },
     zh = { "简体中文", "简体中文" }, en = { "English", "English" },
     recipes = { "Recipes using hovered food", "包含所选食材的料理" }, find = { "Locate same item", "定位同类物品" },
     recipe_query = { "Four-ingredient recipe query", "四格食材料理查询" }, four_ingredients = { "Choose four ingredients", "请选择四格食材" },
@@ -70,8 +70,18 @@ M.text = {
     more = { "More", "更多" }, back = { "Back", "返回" }, language = { "Language", "语言" },
     combat = { "Combat", "战斗" }, food = { "Food", "食物" }, equipment = { "Equipment", "装备" },
     progress = { "Timers", "加工进度" }, farm = { "Farming", "农业" }, follower = { "Followers", "随从" },
-    container = { "Storage", "容器" }, world = { "World", "世界" }, categories = { "Information categories", "信息类别" },
+    container = { "Storage", "容器" }, world = { "World", "世界" }, ["info.categories"] = { "Information categories", "信息类别" },
 }
+M.text["beefalo.enabled"] = M.text.beefalo
+M.text["healthbars.enabled"] = M.text.healthbars
+M.text["info.enabled"] = M.text.info
+M.text["items.enabled"] = M.text.items
+M.text["map.enabled"] = M.text.maps
+M.text["queue.enabled"] = M.text.queue
+M.text["queue.limit"] = M.text.queue_limit
+M.text["signs.enabled"] = M.text.signs
+M.text["info.world_events"] = M.text.world_events
+M.text.map = M.text.maps
 function M.language(setting, G)
     if setting ~= "auto" then return setting end
     local code = G.LOC and G.LOC.GetLocaleCode() or "en"

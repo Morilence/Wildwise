@@ -1,4 +1,5 @@
 local Context = require("wildwise/runtime/context")
+local Config = require("wildwise/core/config")
 local U = require("wildwise/core/util")
 local LRU = require("wildwise/core/lru")
 local Lifetime = require("wildwise/core/lifetime")
@@ -12,18 +13,15 @@ local Strings = require("wildwise/ui/strings")
 local json = require("json")
 local Client = {}; Client.__index = Client
 function Client.new(controls, G, config)
-    local self = setmetatable({ controls = controls, G = G, player = controls.owner, config = U.copy(config),
-        settings = U.copy(config), scope = Lifetime.new(), cache = LRU.new(256), subscribed = {},
+    local self = setmetatable({ controls = controls, G = G, player = controls.owner, config = Config.copy(config),
+        settings = Config.settings(config), scope = Lifetime.new(), cache = LRU.new(256), subscribed = {},
         threats = {}, visible_bars = {}, seq = 0, received = 0, next_hello = 0, next_heartbeat = 0,
         threat_order = 0, focused = true, previews = {}, map = { players = {}, pings = {}, pairs = {} } }, Client)
-    self.settings.pickup, self.settings.beefalo_visible, self.settings.categories = false, true, {}
-    self.settings.first_tip_seen, self.settings.beefalo_x, self.settings.beefalo_y = false, 0, 0
     self.found = {}
-    self.settings.ping_kind = "location"
     self.nonce = tostring(G.GetTime()) .. ":" .. tostring(math.random(1000000))
     self.lang = Strings.language(self.settings.language, G)
     self.adapter = Actions.create(self, G)
-    self.queue = Queue.new(self.adapter, config.queue_limit)
+    self.queue = Queue.new(self.adapter, config.queue.limit)
     self.hud = controls:AddChild(require("wildwise/ui/hud")(self))
     self.scope:add(function() self.hud:Kill() end)
     self.scope:listen(self.player, "onremove", function() self:close() end)
@@ -33,14 +31,16 @@ function Client.new(controls, G, config)
     end)
     Hooks.after(self.scope, G, "OnFocusGained", function() self.focused = true end)
     require("wildwise/runtime/input").attach(self, G)
-    G.TheSim:GetPersistentString("wildwise_client_v1", function(ok, bytes)
+    -- 新结构使用独立存储键，不读取旧平铺配置。
+    G.TheSim:GetPersistentString("wildwise_client_v2", function(ok, bytes)
         if not ok or self.closed then return end
         local decoded, settings = pcall(json.decode, bytes)
         if not decoded or type(settings) ~= "table" then return end
-        for key, value in pairs(settings) do
-            if self.settings[key] ~= nil and type(value) == type(self.settings[key]) then self.settings[key] = value end
-        end
+        -- 共享开关属于当前世界，由 welcome 同步；本地偏好回调先后顺序不能覆盖它们。
+        if type(settings.map) == "table" then settings.map.share_position, settings.map.share_exploration = nil, nil end
+        Config.restore(self.settings, settings)
         self.lang = Strings.language(self.settings.language, G)
+        self:sync_preferences()
     end)
     return self
 end
@@ -64,11 +64,9 @@ function Client:receive(target, bytes)
         if msg.data.nonce ~= self.nonce then return end
         self.session, self.received = msg.session, msg.seq
         self.config, self.conflicts, self.shard = msg.data.config, msg.data.conflicts, msg.data.shard
-        self.settings.position = msg.data.preferences.position
-        self.settings.exploration = msg.data.preferences.exploration
-        for _, key in ipairs({ "pickup", "hostile_scope", "healthbars" }) do
-            self:send("preference", nil, { key = key, value = self.settings[key] })
-        end
+        self.settings.map.share_position = msg.data.preferences.position
+        self.settings.map.share_exploration = msg.data.preferences.exploration
+        self:sync_preferences()
         if not self.settings.first_tip_seen then
             self.notice, self.notice_until = self:L("first_tip"), self.G.GetTime() + 9
             self.settings.first_tip_seen = true; self:save_settings()
@@ -144,14 +142,14 @@ function Client:tick()
     if self.hover and not self.hover.Transform then self.hover = nil end
     if self.hover then self.last_hover = self.hover end
     local wanted = {}
-    if U.valid(self.hover) and self.config.info then wanted[self.hover] = "hover" end
+    if U.valid(self.hover) and self.config.info.enabled then wanted[self.hover] = "hover" end
     local mount = U.call(self.player.replica.rider, "GetMount")
     self.mount = U.valid(mount) and mount.prefab == "beefalo" and mount or nil
-    if self.mount and self.config.beefalo and self.settings.beefalo_visible then wanted[self.mount] = "beefalo" end
-    if self.menu and self.config.info then wanted[self.player] = "menu" end
+    if self.mount and self.config.beefalo.enabled and self.settings.beefalo.visible then wanted[self.mount] = "beefalo" end
+    if self.menu and self.config.info.enabled then wanted[self.player] = "menu" end
     local sw, sh = G.TheSim:GetScreenSize()
     for target, state in pairs(self.threats) do
-        if not U.valid(target) or now - state.at > self.settings.combat_linger + 3 then self.threats[target] = nil else
+        if not U.valid(target) or now - state.at > self.settings.healthbars.linger_seconds + 3 then self.threats[target] = nil else
             local x, y, z = target.Transform:GetWorldPosition()
             local sx, sy = G.TheSim:GetScreenPos(x, y + 2.2, z)
             state.visible = target.entity:IsVisible() and G.CanEntitySeeTarget(self.player, target) and sx > 50 and sx < sw - 50 and sy > 30 and sy < sh - 30
@@ -159,8 +157,8 @@ function Client:tick()
             local record = self.cache:peek(target); state.dead = record and record.health and record.health <= 0
         end
     end
-    self.selected = self.config.healthbars and self.settings.healthbars and
-        Health.select(self.threats, self.hover, math.min(self.settings.bar_limit, 20), now, self.settings.combat_linger) or {}
+    self.selected = self.config.healthbars.enabled and self.settings.healthbars.enabled and
+        Health.select(self.threats, self.hover, math.min(self.settings.healthbars.limit, 20), now, self.settings.healthbars.linger_seconds) or {}
     for _, target in ipairs(self.selected) do if not wanted[target] then wanted[target] = "health" end end
     -- Hover、主动血条、骑乘 HUD 合并成一个实体订阅，显示入口不各自发请求。
     for target in pairs(self.subscribed) do
@@ -180,12 +178,19 @@ function Client:tick()
     self.queue:tick(now)
 end
 function Client:save_settings()
-    self.G.TheSim:SetPersistentString("wildwise_client_v1", json.encode(self.settings), false)
+    self.G.TheSim:SetPersistentString("wildwise_client_v2", json.encode(self.settings), false)
+end
+function Client:sync_preferences()
+    if not self.session then return end
+    for _, key in ipairs({ "items.pickup", "healthbars.hostile_scope", "healthbars.enabled" }) do
+        self:send("preference", nil, { key = key, value = Config.get(self.settings, key) })
+    end
 end
 function Client:set(key, value)
-    self.settings[key] = value
+    Config.set(self.settings, key, value)
     if key == "language" then self.lang = Strings.language(value, self.G) end
-    if key == "pickup" or key == "position" or key == "exploration" or key == "hostile_scope" or key == "healthbars" then
+    if key == "items.pickup" or key == "map.share_position" or key == "map.share_exploration"
+        or key == "healthbars.hostile_scope" or key == "healthbars.enabled" then
         self:send("preference", nil, { key = key, value = value })
     end
     self:save_settings()
@@ -207,7 +212,7 @@ function Client:plan(a, b)
     local till = not active and tool and tool:HasTag("TILL_tool")
     if not active and not till then return end
     local item = active and active.replica.inventoryitem
-    local spacing = till and (4 / self.settings.grid) or math.max(.5, item:DeploySpacingRadius())
+    local spacing = till and (4 / self.settings.queue.farm_grid) or math.max(.5, item:DeploySpacingRadius())
     local action = till and "TILL" or "DEPLOY"
     if active and active:HasTag("groundtile") then spacing = 4 end
     if active and active:HasTag("wallbuilder") then spacing = 1 end
@@ -226,7 +231,7 @@ function Client:plan(a, b)
         if till then return G.TheWorld.Map:CanTillSoilAtPoint(point.x, 0, point.z) end
         return item:CanDeploy(G.Vector3(point.x, 0, point.z), nil, self.player)
     end
-    local points, reason = Planner.grid(a, b, spacing, self.config.queue_limit, validate, U.platform(self.player))
+    local points, reason = Planner.grid(a, b, spacing, self.config.queue.limit, validate, U.platform(self.player))
     if not points then self.notice, self.notice_until = self:L(reason), G.GetTime() + 5; return end
     self.plan_points, self.plan_action, self.plan_material = points, action, active and active.prefab
     self.plan_validate = validate

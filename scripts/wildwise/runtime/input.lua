@@ -16,9 +16,9 @@ function M.attach(client, G)
         end
     end
     local function selection(right, down)
-        if not client.config.queue or not client:input_ready() then return false end
+        if not client.config.queue.enabled or not client:input_ready() then return false end
         if not start and G.TheInput:GetHUDEntityUnderMouse() then return false end
-        local modifier = G.TheInput:IsKeyDown(client.settings.queue_key)
+        local modifier = G.TheInput:IsKeyDown(client.settings.queue.modifier_key)
         if not modifier and not start then return false end
         if down then
             start = { point = G.TheInput:GetWorldPosition(), screen = G.TheInput:GetScreenPosition(),
@@ -42,7 +42,7 @@ function M.attach(client, G)
                 local x, _, z = target.Transform:GetWorldPosition()
                 if x >= math.min(ax, bx) and x <= math.max(ax, bx) and z >= math.min(az, bz) and z <= math.max(az, bz) then
                     targets[#targets + 1] = target
-                    if #targets >= client.config.queue_limit then break end
+                    if #targets >= client.config.queue.limit then break end
                 end
             end
             for _, target in ipairs(Planner.nearest(targets, player:GetPosition())) do add(target, right, target:GetPosition()) end
@@ -82,8 +82,8 @@ function M.attach(client, G)
         if down or (client.menu and client.menu.binding) then return end
         if key == client.settings.menu_key then
             if client.menu then client.menu:close() elseif client:input_ready() then client:toggle_menu() end
-        elseif key == client.settings.beefalo_key and client:input_ready() then
-            client.settings.beefalo_visible = not client.settings.beefalo_visible
+        elseif key == client.settings.beefalo.toggle_key and client:input_ready() then
+            client.settings.beefalo.visible = not client.settings.beefalo.visible
         end
     end)
     scope:add(function() key_handler:Remove() end)
@@ -91,8 +91,8 @@ function M.attach(client, G)
     if builder then
         client.adapter.set_recipe_original(builder.MakeRecipeFromMenu)
         Hooks.wrap(scope, builder, "MakeRecipeFromMenu", function(original, self, recipe, skin, ...)
-            if client.config.queue and G.TheInput:IsKeyDown(client.settings.queue_key) and not recipe.placer then
-                client.queue:add({ recipe = recipe.name, key = "recipe:" .. recipe.name, skin = skin, remaining = client.config.queue_limit })
+            if client.config.queue.enabled and G.TheInput:IsKeyDown(client.settings.queue.modifier_key) and not recipe.placer then
+                client.queue:add({ recipe = recipe.name, key = "recipe:" .. recipe.name, skin = skin, remaining = client.config.queue.limit })
                 return
             end
             return original(self, recipe, skin, ...)

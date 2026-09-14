@@ -45,14 +45,14 @@ end
 function HUD:update_hover(hoverer)
     local client = self.client
     if not self.hover_text then
-        self.hover_text = hoverer:AddChild(Text(G.UIFONT, client.settings.font_size, ""))
+        self.hover_text = hoverer:AddChild(Text(G.UIFONT, client.settings.info.font_size, ""))
         self.hover_text:SetColour(.96, .9, .73, 1); self.hover_text:SetClickable(false)
     end
     local fields = client.hover and client.cache:get(client.hover)
-    if not fields or not client.config.info or not hoverer.shown then self.hover_text:Hide(); return end
+    if not fields or not client.config.info.enabled or not hoverer.shown then self.hover_text:Hide(); return end
     local detailed = G.TheInput:IsControlPressed(G.CONTROL_FORCE_INSPECT)
     local content = Format.lines(fields, client.settings, client.lang, detailed, client.visible_bars[client.hover])
-    self.hover_text:SetString(content); self.hover_text:SetSize(client.settings.font_size)
+    self.hover_text:SetString(content); self.hover_text:SetSize(client.settings.info.font_size)
     local _, height = self.hover_text:GetRegionSize()
     self.hover_text:SetPosition(0, -85 - height / 2); self.hover_text:Show()
 end
@@ -69,10 +69,10 @@ function HUD:OnUpdate()
             local x, y, z = target.Transform:GetWorldPosition()
             local sx, sy = G.TheSim:GetScreenPos(x, y + 2.2, z)
             if target.entity:IsVisible() and sx > 50 and sx < w - 50 and sy > 30 and sy < h - 30 then
-                bar:SetPosition(sx / scale, sy / scale); bar:SetScale(c.settings.bar_scale)
+                bar:SetPosition(sx / scale, sy / scale); bar:SetScale(c.settings.healthbars.scale)
                 local fill = 100 * U.clamp(hp.health / hp.health_max, 0, 1)
                 bar.fill:SetSize(math.max(.01, fill), 6); bar.fill:SetPosition((fill - 100) / 2, 0)
-                bar.text:SetString(c.settings.bar_numbers and string.format("%.0f / %.0f", hp.health, hp.health_max) or "")
+                bar.text:SetString(c.settings.healthbars.numbers and string.format("%.0f / %.0f", hp.health, hp.health_max) or "")
                 bar:Show(); c.visible_bars[target] = true
             else bar:Hide() end
         else bar:Hide() end
@@ -92,9 +92,9 @@ function HUD:OnUpdate()
         self.plan_text:SetString(c:L("enabled_points") .. ": " .. valid .. " / " .. #c.plan_points); self.plan:Show()
     else self.plan:Hide() end
     local mount = c.mount and c.cache:peek(c.mount)
-    if mount and c.config.beefalo and c.settings.beefalo_visible then
-        if self.last_mount ~= c.mount then self.hunger_active = (mount.hunger or 0) >= c.settings.hunger_threshold; self.last_mount = c.mount end
-        if mount.hunger and mount.hunger >= c.settings.hunger_threshold then self.hunger_active = true end
+    if mount and c.config.beefalo.enabled and c.settings.beefalo.visible then
+        if self.last_mount ~= c.mount then self.hunger_active = (mount.hunger or 0) >= c.settings.beefalo.hunger_threshold; self.last_mount = c.mount end
+        if mount.hunger and mount.hunger >= c.settings.beefalo.hunger_threshold then self.hunger_active = true end
         if mount.hunger and mount.hunger <= 0 then self.hunger_active = false end
         local lines = { c:L("beefalo") }
         for _, key in ipairs({ "health", "domestication", "obedience", "tendency", "ride_time", "saddle_uses", "hunger" }) do
@@ -102,7 +102,7 @@ function HUD:OnUpdate()
                 lines[#lines + 1] = c:L(key) .. ": " .. Format.value(mount[key], Facts.schema[key], c.lang)
             end
         end
-        self.mount:SetPosition(w / scale - 420 + (c.settings.beefalo_x or 0), h / scale - 230 + (c.settings.beefalo_y or 0))
+        self.mount:SetPosition(w / scale - 420 + (c.settings.beefalo.offset_x or 0), h / scale - 230 + (c.settings.beefalo.offset_y or 0))
         self.mount_text:SetString(table.concat(lines, "\n")); self.mount:Show()
     else self.mount:Hide(); self.last_mount = nil end
     -- 定位结果只保留 8 秒，消失/失去可见性后立即隐藏，不改变实体材质或战斗高亮。
@@ -123,8 +123,8 @@ function HUD:OnUpdate()
 end
 function HUD:update_indicators(w, h, scale)
     local c = self.client
-    local active = c.config.maps and (c.settings.indicators == "always" or
-        (c.settings.indicators == "scoreboard" and G.TheInput:IsControlPressed(G.CONTROL_SHOW_PLAYER_STATUS)))
+    local active = c.config.map.enabled and (c.settings.map.indicators == "always" or
+        (c.settings.map.indicators == "scoreboard" and G.TheInput:IsControlPressed(G.CONTROL_SHOW_PLAYER_STATUS)))
     local index = 0
     if active then
         for _, record in ipairs(c.map.players or {}) do

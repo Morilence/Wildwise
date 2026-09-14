@@ -1,4 +1,5 @@
 local Context = require("wildwise/runtime/context")
+local Config = require("wildwise/core/config")
 local G = Context.G
 local Screen = require("widgets/screen")
 local Widget = require("widgets/widget")
@@ -31,19 +32,20 @@ function Menu:line(text, y)
 end
 function Menu:choice(key, values, y, permission)
     local c, button = self.client, nil
-    local reason = permission and not c.config[permission] and c:L("restricted")
-    if key == "position" or key == "exploration" then
+    local reason = permission and not Config.get(c.config, permission) and c:L("restricted")
+    if key == "map.share_position" or key == "map.share_exploration" then
         local positions, exploration = require("wildwise/core/config").share(c.config, G.TheNet:GetServerGameMode(), G.TheNet:GetPVPEnabled())
-        if (key == "position" and not positions) or (key == "exploration" and not exploration) then reason = c:L("restricted") end
+        if (key == "map.share_position" and not positions) or (key == "map.share_exploration" and not exploration) then reason = c:L("restricted") end
     end
-    if c.conflicts and c.conflicts[permission or key] then reason = c:L("conflict") .. ": " .. c.conflicts[permission or key] end
+    local module = (permission or key):match("^[^.]+")
+    if c.conflicts and c.conflicts[module] then reason = c:L("conflict") .. ": " .. c.conflicts[module] end
     local function text()
-        local v = c.settings[key]
+        local v = Config.get(c.settings, key)
         return c:L(key) .. ": " .. (type(v) == "boolean" and c:L(v and "on" or "off") or c:L(v))
     end
     button = self.content:AddChild(Templates.StandardButton(function()
         if reason then return end
-        local index = 1; for i, v in ipairs(values) do if v == c.settings[key] then index = i % #values + 1 end end
+        local index = 1; for i, v in ipairs(values) do if v == Config.get(c.settings, key) then index = i % #values + 1 end end
         c:set(key, values[index]); button:SetText(text())
     end, text(), { 450, 36 }))
     button:SetPosition(0, y)
@@ -52,7 +54,7 @@ function Menu:choice(key, values, y, permission)
 end
 function Menu:readonly(key, y)
     local c = self.client
-    local value = c.config[key]
+    local value = Config.get(c.config, key)
     self:line(c:L(key) .. ": " .. (type(value) == "boolean" and c:L(value and "on" or "off") or tostring(value)) .. " · " .. c:L("server_rule"), y)
 end
 function Menu:refresh()
@@ -60,21 +62,21 @@ function Menu:refresh()
     local c = self.client
     if self.tab == "info" then
         if self.page == 1 then
-            self:choice("preset", { "minimal", "standard", "detailed" }, 145)
-            self:choice("healthbars", { true, false }, 103, "healthbars")
-            self:choice("hostile_scope", { "self", "followers", "nearby", "nearby_followers" }, 61, "healthbars")
-            self:choice("bar_numbers", { true, false }, 19, "healthbars")
-            self:choice("beefalo_visible", { true, false }, -23, "beefalo")
-            self:choice("font_size", { 18, 22, 26, 30 }, -65)
+            self:choice("info.preset", { "minimal", "standard", "detailed" }, 145)
+            self:choice("healthbars.enabled", { true, false }, 103, "healthbars.enabled")
+            self:choice("healthbars.hostile_scope", { "self", "followers", "nearby", "nearby_followers" }, 61, "healthbars.enabled")
+            self:choice("healthbars.numbers", { true, false }, 19, "healthbars.enabled")
+            self:choice("beefalo.visible", { true, false }, -23, "beefalo.enabled")
+            self:choice("info.font_size", { 18, 22, 26, 30 }, -65)
             self:choice("ui_scale", { .75, 1, 1.25, 1.5 }, -107)
             self:choice("language", { "auto", "zh", "en" }, -149)
         elseif self.page == 2 then
-            self:choice("bar_limit", { 4, 8, 12, 16, 20 }, 145)
-            self:choice("bar_scale", { .75, 1, 1.25, 1.5 }, 103)
-            self:readonly("containers", 61); self:readonly("ranges", 19)
-            self:readonly("world_events", -23)
+            self:choice("healthbars.limit", { 4, 8, 12, 16, 20 }, 145)
+            self:choice("healthbars.scale", { .75, 1, 1.25, 1.5 }, 103)
+            self:readonly("info.container_contents", 61); self:readonly("info.attack_range", 19)
+            self:readonly("info.world_events", -23)
             local fields = c.cache:peek(c.player)
-            self:line(Format.lines(fields, { preset = "detailed" }, c.lang, true, false), -115):SetSize(18)
+            self:line(Format.lines(fields, { info = { preset = "detailed" } }, c.lang, true, false), -115):SetSize(18)
         elseif self.page == 3 then
             self:line(c:L("recipe_query"), 150)
             local choices = require("wildwise/services/recipes").inventory_choices(c.player, require("cooking"))
@@ -101,21 +103,21 @@ function Menu:refresh()
             for i, category in ipairs(keys) do
                 local key = category
                 local button = self.content:AddChild(Templates.StandardButton(function()
-                    c.settings.categories[key] = c.settings.categories[key] == false
+                    c.settings.info.categories[key] = c.settings.info.categories[key] == false
                     c:save_settings(); self:refresh()
-                end, c:L(key) .. ": " .. c:L(c.settings.categories[key] == false and "off" or "on"), { 450, 36 }))
+                end, c:L(key) .. ": " .. c:L(c.settings.info.categories[key] == false and "off" or "on"), { 450, 36 }))
                 button:SetPosition(0, 145 - (i - 1) * 42)
             end
         else
-            self:choice("beefalo_x", { -300, -200, -100, 0, 100, 200, 300 }, 145, "beefalo")
-            self:choice("beefalo_y", { -200, -100, 0, 100, 200 }, 97, "beefalo")
-            self:choice("hunger_threshold", { 0, 15, 30, 60 }, 49, "beefalo")
+            self:choice("beefalo.offset_x", { -300, -200, -100, 0, 100, 200, 300 }, 145, "beefalo.enabled")
+            self:choice("beefalo.offset_y", { -200, -100, 0, 100, 200 }, 97, "beefalo.enabled")
+            self:choice("beefalo.hunger_threshold", { 0, 5, 15, 25 }, 49, "beefalo.enabled")
         end
     elseif self.tab == "maps" then
-        self:choice("position", { true, false }, 145, "maps")
-        self:choice("exploration", { true, false }, 103, "maps")
-        self:choice("indicators", { "scoreboard", "always", "off" }, 61, "maps")
-        self:choice("ping_kind", { "location", "danger", "resource", "rally" }, 19, "maps")
+        self:choice("map.share_position", { true, false }, 145, "map.enabled")
+        self:choice("map.share_exploration", { true, false }, 103, "map.enabled")
+        self:choice("map.indicators", { "scoreboard", "always", "off" }, 61, "map.enabled")
+        self:choice("map.ping_kind", { "location", "danger", "resource", "rally" }, 19, "map.enabled")
         local roster = {}
         for _, record in ipairs(c.map.players or {}) do if record.shard ~= c.shard then roster[#roster + 1] = record.name .. " · " .. record.shard end end
         self:line(table.concat(roster, "\n"), -65)
@@ -131,26 +133,26 @@ function Menu:refresh()
             end, c:L("clear_all"), { 340, 36 })); all:SetPosition(165, -150)
         end
     elseif self.tab == "items" then
-        self:choice("pickup", { false, true }, 145, "pickup_allowed")
-        self:readonly("stack_world", 95); self:readonly("stack_manual", 45); self:readonly("stack_loaded", -5)
-        self:readonly("signs", -55)
+        self:choice("items.pickup", { false, true }, 145, "items.pickup_allowed")
+        self:readonly("items.stack_world", 95); self:readonly("items.stack_manual", 45); self:readonly("items.stack_loaded", -5)
+        self:readonly("signs.enabled", -55)
         local find = self.content:AddChild(Templates.StandardButton(function()
             if c.last_hover then c:send("find", nil, { prefab = c.last_hover.prefab }); self:close() end
         end, c:L("find"), { 250, 36 })); find:SetPosition(0, -115)
-        if not c.config.containers then find:Disable(); find:SetTooltip(c:L("restricted")) end
+        if not c.config.info.container_contents then find:Disable(); find:SetTooltip(c:L("restricted")) end
     elseif self.tab == "queue" then
-        self:line(c:L(c.queue.state) .. " · " .. #c.queue.tasks .. " / " .. c.config.queue_limit, 145)
+        self:line(c:L(c.queue.state) .. " · " .. #c.queue.tasks .. " / " .. c.config.queue.limit, 145)
         self:line(c:L(c.queue.reason), 103)
-        self:choice("grid", { 2, 3, 4 }, 61, "queue")
-        for i, key in ipairs({ "menu_key", "queue_key", "beefalo_key" }) do
+        self:choice("queue.farm_grid", { 2, 3, 4 }, 61, "queue.enabled")
+        for i, key in ipairs({ "menu_key", "queue.modifier_key", "beefalo.toggle_key" }) do
             local id = key
             local button = self.content:AddChild(Templates.StandardButton(function() self.binding = id; self:line(c:L("rebind"), -165) end,
-                c:L(id) .. ": " .. c.settings[id], { 450, 36 }))
+                c:L(id) .. ": " .. Config.get(c.settings, id), { 450, 36 }))
             button:SetPosition(0, 20 - (i - 1) * 44)
         end
     else
         local diag = c.diagnostics or {}
-        self:line("Wildwise 0.1.0 · " .. (c.shard or "…"), 145)
+        self:line("Wildwise 0.2.0 · " .. (c.shard or "…"), 145)
         self:line("Cache " .. c.cache.size .. "/256 · " .. "RPC bytes " .. (diag.bytes or 0), 95)
         self:line("Observers " .. (diag.observations or 0), 45)
         local conflicts = {}; for key, value in pairs(c.conflicts or {}) do conflicts[#conflicts + 1] = c:L(key) .. ": " .. value end

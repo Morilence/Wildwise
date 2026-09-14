@@ -18,13 +18,13 @@ function M.lines(fields, settings, lang, detailed, health_visible)
         if sa.category ~= sb.category then return sa.category < sb.category end
         return a < b
     end)
-    local level = detailed and 2 or (settings.preset == "detailed" and 2 or 1)
-    local limit = detailed and 25 or (settings.preset == "minimal" and 4 or 10)
+    local level = detailed and 2 or (settings.info.preset == "detailed" and 2 or 1)
+    local limit = detailed and 25 or (settings.info.preset == "minimal" and 4 or 10)
     for _, key in ipairs(keys) do
         local schema = Facts.schema[key]
         local is_health = key == "health" or key == "health_max"
         if schema.detail <= level and not (health_visible and is_health)
-            and (not settings.categories or settings.categories[schema.category] ~= false) then
+            and (not settings.info.categories or settings.info.categories[schema.category] ~= false) then
             out[#out + 1] = Strings.get(key, lang) .. ": " .. M.value(fields[key], schema, lang)
             if #out >= limit then break end
         end
