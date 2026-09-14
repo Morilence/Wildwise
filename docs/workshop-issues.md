@@ -57,7 +57,7 @@
 下面“已修复”指 Wildwise 自身发现的缺陷，不意味着修复了参考模组。`WW2-*` 是新增纯 Lua 用例，`WWE-*` 是当前真实引擎用例；旧编号复用首轮回归。所有 `MAN-*` 均有[操作步骤](manual-regressions.md)，**仍待图形客户端／真实联机执行**。`WWE-01` 的检查范围是指定原生实体的创建、只读信息和移除，并非完整 Boss 战。
 
 | ID／场景 | 来源与判断 | Wildwise 处置 | 验证 |
-|---|---|---|
+|---|---|---|---|
 | R01 组件接口变动或信息字段类型错误导致 hover 崩溃 | [Insight (Show Me+) 2026-05-31](https://steamcommunity.com/sharedfiles/filedetails/?id=2189004162#comment_660485761139808420)；[Insight (Show Me+) 2026-09-12](https://steamcommunity.com/sharedfiles/filedetails/?id=2189004162#comment_520883440134067707)。有效机制风险。 | 公共读取器和查看者读取器分别隔离异常；按字段类型过滤。 | `WW-O01`、`WW-O03`、`WW2-08`、`WW2-20` |
 | R02 提示、牛条遮挡库存或在 HUD 重建后残留 | [Beefalo Widget 2023-11-04](https://steamcommunity.com/sharedfiles/filedetails/?id=1852257480#comment_3941272762728799964)；[Item Info 2026-09-08](https://steamcommunity.com/sharedfiles/filedetails/?id=836583293#comment_592940620292783468)。具体 UI 反馈，外观待复现。 | 复用原生 hoverer 并释放自有文本；保留位置和缩放。 | `WW-U01`、`MAN-UI01` |
 | R03 地图／信息组合泄露远处兴趣点并铺满屏幕边缘 | [Global Positions 2024-12-19](https://steamcommunity.com/sharedfiles/filedetails/?id=378160973#comment_597387460190730285)。有效权限风险。 | 观察不授予探索；只回放明确获准的玩家探索点。 | `WW-X01`、`MAN-M01` |
