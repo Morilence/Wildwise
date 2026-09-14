@@ -87,82 +87,106 @@ All **74 values below are defaults**, checked against the native configuration. 
 ```lua
 return {
     Wildwise = {
-        enabled = true,
+        enabled = true, -- Enable the whole mod: true / false
         configuration_options = {
-            language = "auto",
-            ui_scale = 1,
-            menu_key = 288,
-            diagnostics = false,
-            info_enabled = true,
-            info_container_contents = false,
-            info_world_events = false,
-            info_attack_range = false,
-            info_font_size = 22,
-            healthbars_enabled = true,
-            healthbars_limit = 12,
-            healthbars_linger_seconds = 2,
-            healthbars_scale = 1,
-            healthbars_numbers = true,
-            healthbars_hostile_scope = "self",
-            map_enabled = true,
-            map_share_position = "auto",
-            map_share_exploration = "auto",
-            items_enabled = true,
-            items_stack_world = true,
-            items_stack_manual = false,
-            items_stack_loaded = false,
-            items_pickup_allowed = false,
-            items_pickup_existing = true,
-            items_radius = 4,
-            queue_enabled = true,
-            queue_farm_grid = 3,
-            signs_enabled = true,
-            signs_treasurechest = true,
-            signs_dragonflychest = true,
-            signs_boat_ancient_container = true,
-            signs_chester = false,
-            signs_hutch = false,
-            signs_icebox = false,
-            signs_saltbox = false,
-            signs_fish_box = false,
-            beefalo_enabled = true,
-            beefalo_hunger_threshold = 15,
-            info_combat = true,
-            info_food_values = true,
-            info_perishable = true,
-            info_equipment = true,
-            info_progress = true,
-            info_farm = true,
-            info_follower = true,
-            info_cooldowns = true,
-            info_timers = true,
-            info_max_lines = 10,
-            info_inspect_lines = 25,
-            info_time_style = "clock",
-            info_temperature_units = "game",
-            map_wormholes = true,
-            map_pings = true,
-            map_signal_fires = true,
-            items_world_radius = 0,
-            items_manual_radius = 0,
-            items_pickup_radius = 0,
-            items_world_ash = false,
-            items_world_poop = false,
-            items_world_seeds = false,
-            items_manual_ash = false,
-            items_manual_poop = false,
-            items_manual_seeds = false,
-            items_pickup_ash = false,
-            items_pickup_poop = false,
-            items_pickup_seeds = false,
-            queue_collect_after_work = false,
-            queue_double_click_speed = 0.35,
-            queue_double_click_range = 15,
-            signs_bundle_contents = true,
-            signs_body_skins = true,
-            signs_scale = 0.65,
-            beefalo_show_hunger = true,
-            beefalo_scale = 1,
+            -- Initial preferences do not overwrite saved personal settings.
+            -- Radii use world units; one turf tile is 4 units wide.
+
+            -- General settings
+            language = "auto",                          -- Initial interface language; choices: "auto"=Follow game / "en"=English / "zh"=简体中文
+            ui_scale = 1,                               -- Initial overall HUD scale; choices: 0.75 / 1 / 1.25 / 1.5
+            menu_key = 288,                             -- Initial menu key code; choices: 287=F6 / 288=F7 / 289=F8
+            diagnostics = false,                        -- Local reader diagnostics; logs the first failure of each reader; choices: true / false
+
+            -- Information
+            info_enabled = true,                        -- Allow item, creature and world information; choices: true / false
+            info_container_contents = false,            -- Allow container-content queries and matching-item lookup; choices: true / false
+            info_world_events = false,                  -- Allow world-event timer details; choices: true / false
+            info_attack_range = false,                  -- Allow attack-range numbers; choices: true / false
+            info_font_size = 22,                        -- Initial information font size; choices: 18 / 22 / 26 / 30
+            info_combat = true,                         -- Allow combat information; health bars have their own switch; choices: true / false
+            info_food_values = true,                    -- Allow food health, hunger, sanity and ingredient details; choices: true / false
+            info_perishable = true,                     -- Allow freshness, base spoilage budget and environment estimates; choices: true / false
+            info_equipment = true,                      -- Allow durability, insulation, repair and other equipment details; choices: true / false
+            info_progress = true,                       -- Allow processing products, remaining times and growth stages; choices: true / false
+            info_farm = true,                           -- Allow soil nutrients, moisture and recorded crop stress; choices: true / false
+            info_follower = true,                       -- Allow follower leader and loyalty details; choices: true / false
+            info_cooldowns = true,                      -- Allow recharge percentages and cooldown times; choices: true / false
+            info_timers = true,                         -- Allow timers with known meanings; excludes unnamed internal timers; choices: true / false
+            info_max_lines = 10,                        -- Initial normal-hover line limit; minimal preset stays at 4; choices: 4 / 8 / 10 / 15 / 20 / 25
+            info_inspect_lines = 25,                    -- Initial expanded-inspection line limit; choices: 10 / 15 / 20 / 25 / 35
+            -- Choices: "clock"=Minutes:seconds / "seconds"=Seconds / "days"=Game days / "both"=Time and game days
+            info_time_style = "clock",                  -- Initial time format; one game day is 480 seconds
+            info_temperature_units = "game",            -- Initial temperature display units; choices: "game"=Game units / "celsius"=Celsius / "fahrenheit"=Fahrenheit
+
+            -- Combat health bars
+            healthbars_enabled = true,                  -- Allow combat health bars; choices: true / false
+            healthbars_limit = 12,                      -- Initial maximum number of visible health bars; choices: 4 / 8 / 12 / 16 / 20
+            healthbars_linger_seconds = 2,              -- Initial seconds to retain a bar after combat; choices: 0 / 1 / 2 / 3 / 5
+            healthbars_scale = 1,                       -- Initial health-bar scale; choices: 0.75 / 1 / 1.25 / 1.5
+            healthbars_numbers = true,                  -- Initially show health numbers on bars; choices: true / false
+            -- Choices: "self"=Self / "followers"=Self and followers / "nearby"=Nearby players / "nearby_followers"=Players and followers
+            healthbars_hostile_scope = "self",          -- Initial hostility scope used to select health bars
+
+            -- Map collaboration
+            -- Sharing "auto": enabled in Survival/Endless; disabled in Wilderness or PvP.
+            -- Sharing "on" permits personal opt-in; "off" forbids sharing.
+            map_enabled = true,                         -- Enable map collaboration; choices: true / false
+            -- Choices: "auto"=Follow game mode / "on"=Enabled / "off"=Disabled
+            map_share_position = "auto",                -- Position-sharing permission; permitted sharing still needs personal opt-in
+            -- Choices: "auto"=Follow game mode / "on"=Enabled / "off"=Disabled
+            map_share_exploration = "auto",             -- Exploration-sharing permission; learned exploration cannot be withdrawn
+            map_wormholes = true,                       -- Enable discovered wormhole pair markers; endpoints still respect fog; choices: true / false
+            map_pings = true,                           -- Allow temporary map markers; 5 per player, 60-second lifetime; choices: true / false
+            map_signal_fires = true,                    -- Allow charcoal signal-fire markers; choices: true / false
+
+            -- Item handling
+            items_enabled = true,                       -- Enable the stacking and auto-pickup service; choices: true / false
+            items_stack_world = true,                   -- Allow landed new world drops to merge; choices: true / false
+            items_stack_manual = false,                 -- Allow deliberately dropped items to merge; choices: true / false
+            items_stack_loaded = false,                 -- Allow restored ground items to merge; off protects saved decorations; choices: true / false
+            items_pickup_allowed = false,               -- Allow personal auto-pickup opt-in under F7 > Items; choices: true / false
+            items_pickup_existing = true,               -- Only pick up types already carried; false removes this condition; choices: true / false
+            items_radius = 4,                           -- Legacy radius inherited by the three source radii when set to 0; choices: 2 / 4 / 6 / 8
+            items_world_radius = 0,                     -- New/restored-drop stacking radius; 0 inherits items_radius; choices: 0 / 1 / 2 / 4 / 6 / 8 / 10 / 15 / 20 / 25
+            items_manual_radius = 0,                    -- Manual-drop stacking radius; 0 inherits items_radius; choices: 0 / 1 / 2 / 4 / 6 / 8 / 10 / 15 / 20 / 25
+            items_pickup_radius = 0,                    -- Auto-pickup radius; 0 inherits items_radius; choices: 0 / 1 / 2 / 4 / 6 / 8 / 10 / 15 / 20 / 25
+            items_world_ash = false,                    -- Include ash in world/restored-drop stacking; other permissions still apply; choices: true / false
+            items_world_poop = false,                   -- Include manure in world/restored-drop stacking; other permissions still apply; choices: true / false
+            items_world_seeds = false,                  -- Include seeds, including crop seeds in world/restored-drop stacking; other permissions still apply; choices: true / false
+            items_manual_ash = false,                   -- Include ash in manual-drop stacking; other permissions still apply; choices: true / false
+            items_manual_poop = false,                  -- Include manure in manual-drop stacking; other permissions still apply; choices: true / false
+            items_manual_seeds = false,                 -- Include seeds, including crop seeds in manual-drop stacking; other permissions still apply; choices: true / false
+            items_pickup_ash = false,                   -- Include ash in auto pickup; other permissions still apply; choices: true / false
+            items_pickup_poop = false,                  -- Include manure in auto pickup; other permissions still apply; choices: true / false
+            items_pickup_seeds = false,                 -- Include seeds, including crop seeds in auto pickup; other permissions still apply; choices: true / false
+
+            -- Action queues
+            queue_enabled = true,                       -- Allow action queues and batch-placement previews; choices: true / false
+            queue_farm_grid = 3,                        -- Initial planting grid per farm tile; choices: 2=2×2 / 3=3×3 / 4=4×4
+            queue_collect_after_work = false,           -- Initially collect legal drops within 4 units after queued work; choices: true / false
+            queue_double_click_speed = 0.35,            -- Initial maximum interval between selection clicks, in seconds; choices: 0.2 / 0.25 / 0.35 / 0.5 / 0.75
+            queue_double_click_range = 15,              -- Initial same-type selection radius for a double-click; choices: 5 / 10 / 15 / 20 / 25
+
+            -- Smart storage signs
+            signs_enabled = true,                       -- Enable smart storage signs; each container switch also applies; choices: true / false
+            signs_treasurechest = true,                 -- Show a helper sign on chests; choices: true / false
+            signs_dragonflychest = true,                -- Show a helper sign on scaled chests; choices: true / false
+            signs_boat_ancient_container = true,        -- Show a helper sign on ancient boat cargo holds; choices: true / false
+            signs_chester = false,                      -- Show a helper sign on Chester; choices: true / false
+            signs_hutch = false,                        -- Show a helper sign on Hutch; choices: true / false
+            signs_icebox = false,                       -- Show a helper sign on ice boxes; choices: true / false
+            signs_saltbox = false,                      -- Show a helper sign on salt boxes; choices: true / false
+            signs_fish_box = false,                     -- Show a helper sign on tin fishin' bins; choices: true / false
+            signs_bundle_contents = true,               -- Draw the first bundled item; false draws the native wrapper icon; choices: true / false
+            signs_body_skins = true,                    -- Use a stored minisign_item linked skin for the sign body; choices: true / false
+            signs_scale = 0.65,                         -- Scale of the world-space helper sign; choices: 0.5 / 0.65 / 0.8 / 1
+
+            -- Mount status
+            beefalo_enabled = true,                     -- Allow the mount status panel; choices: true / false
+            beefalo_hunger_threshold = 15,              -- Initial hunger value that activates display; 0 is not an off switch; choices: 0 / 5 / 15 / 25
+            beefalo_show_hunger = true,                 -- Allow mount hunger display; players can also hide it individually; choices: true / false
+            beefalo_scale = 1,                          -- Initial mount-panel scale, separate from overall HUD scale; choices: 0.75 / 1 / 1.25 / 1.5
         },
     },
 }

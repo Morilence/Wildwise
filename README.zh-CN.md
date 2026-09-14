@@ -87,82 +87,102 @@ Wildwise 是服务器启用、**所有客户端都需要加载**的模组，无�
 ```lua
 return {
     Wildwise = {
-        enabled = true,
+        enabled = true, -- 启用整个模组：true / false
         configuration_options = {
-            language = "auto",
-            ui_scale = 1,
-            menu_key = 288,
-            diagnostics = false,
-            info_enabled = true,
-            info_container_contents = false,
-            info_world_events = false,
-            info_attack_range = false,
-            info_font_size = 22,
-            healthbars_enabled = true,
-            healthbars_limit = 12,
-            healthbars_linger_seconds = 2,
-            healthbars_scale = 1,
-            healthbars_numbers = true,
-            healthbars_hostile_scope = "self",
-            map_enabled = true,
-            map_share_position = "auto",
-            map_share_exploration = "auto",
-            items_enabled = true,
-            items_stack_world = true,
-            items_stack_manual = false,
-            items_stack_loaded = false,
-            items_pickup_allowed = false,
-            items_pickup_existing = true,
-            items_radius = 4,
-            queue_enabled = true,
-            queue_farm_grid = 3,
-            signs_enabled = true,
-            signs_treasurechest = true,
-            signs_dragonflychest = true,
-            signs_boat_ancient_container = true,
-            signs_chester = false,
-            signs_hutch = false,
-            signs_icebox = false,
-            signs_saltbox = false,
-            signs_fish_box = false,
-            beefalo_enabled = true,
-            beefalo_hunger_threshold = 15,
-            info_combat = true,
-            info_food_values = true,
-            info_perishable = true,
-            info_equipment = true,
-            info_progress = true,
-            info_farm = true,
-            info_follower = true,
-            info_cooldowns = true,
-            info_timers = true,
-            info_max_lines = 10,
-            info_inspect_lines = 25,
-            info_time_style = "clock",
-            info_temperature_units = "game",
-            map_wormholes = true,
-            map_pings = true,
-            map_signal_fires = true,
-            items_world_radius = 0,
-            items_manual_radius = 0,
-            items_pickup_radius = 0,
-            items_world_ash = false,
-            items_world_poop = false,
-            items_world_seeds = false,
-            items_manual_ash = false,
-            items_manual_poop = false,
-            items_manual_seeds = false,
-            items_pickup_ash = false,
-            items_pickup_poop = false,
-            items_pickup_seeds = false,
-            queue_collect_after_work = false,
-            queue_double_click_speed = 0.35,
-            queue_double_click_range = 15,
-            signs_bundle_contents = true,
-            signs_body_skins = true,
-            signs_scale = 0.65,
-            beefalo_show_hunger = true,
-            beefalo_scale = 1,
+            -- 标为“初始值”的选项不覆盖已保存的个人设置。
+            -- 半径使用世界单位；1 块地皮宽 4 个世界单位。
+
+            -- 通用设置
+            language = "auto",                          -- 界面语言初始值；可选："auto"=跟随游戏 / "en"=English / "zh"=简体中文
+            ui_scale = 1,                               -- 整体 HUD 缩放初始值；可选：0.75 / 1 / 1.25 / 1.5
+            menu_key = 288,                             -- 菜单按键初始值（键码）；可选：287=F6 / 288=F7 / 289=F8
+            diagnostics = false,                        -- 本地信息读取诊断；每类首次失败记日志；可选：true / false
+
+            -- 信息洞察
+            info_enabled = true,                        -- 允许物品、生物与世界信息显示；可选：true / false
+            info_container_contents = false,            -- 允许容器内容查询与同类物品定位；可选：true / false
+            info_world_events = false,                  -- 允许世界事件计时详情；可选：true / false
+            info_attack_range = false,                  -- 允许攻击范围数值显示；可选：true / false
+            info_font_size = 22,                        -- 信息字号初始值；可选：18 / 22 / 26 / 30
+            info_combat = true,                         -- 允许战斗信息；血条模块另有独立开关；可选：true / false
+            info_food_values = true,                    -- 允许食物生命／饥饿／理智效果及食材属性；可选：true / false
+            info_perishable = true,                     -- 允许鲜度、基础腐败余量及环境保鲜估时；可选：true / false
+            info_equipment = true,                      -- 允许耐久、保温、维修等装备详情；可选：true / false
+            info_progress = true,                       -- 允许加工产物、剩余时间及生长阶段；可选：true / false
+            info_farm = true,                           -- 允许土壤养分、水分及作物已记录压力信息；可选：true / false
+            info_follower = true,                       -- 允许随从主人与忠诚剩余时间；可选：true / false
+            info_cooldowns = true,                      -- 允许充能百分比与冷却剩余时间；可选：true / false
+            info_timers = true,                         -- 允许含义已知的实体计时器，不展示任意内部计时器；可选：true / false
+            info_max_lines = 10,                        -- 常规提示行数上限初始值；简洁预设固定为 4 行；可选：4 / 8 / 10 / 15 / 20 / 25
+            info_inspect_lines = 25,                    -- 按检查修饰键展开后的行数上限初始值；可选：10 / 15 / 20 / 25 / 35
+            info_time_style = "clock",                  -- 时间格式初始值；1 游戏天为 480 秒；可选："clock"=分:秒 / "seconds"=秒 / "days"=游戏天 / "both"=时间与游戏天
+            info_temperature_units = "game",            -- 温度显示单位初始值；可选："game"=游戏值 / "celsius"=摄氏度 / "fahrenheit"=华氏度
+
+            -- 战斗血条
+            healthbars_enabled = true,                  -- 允许战斗血条；可选：true / false
+            healthbars_limit = 12,                      -- 同时显示的血条数量上限初始值；可选：4 / 8 / 12 / 16 / 20
+            healthbars_linger_seconds = 2,              -- 脱战后血条保留秒数初始值；可选：0 / 1 / 2 / 3 / 5
+            healthbars_scale = 1,                       -- 血条缩放初始值；可选：0.75 / 1 / 1.25 / 1.5
+            healthbars_numbers = true,                  -- 是否默认在血条上显示血量数值；可选：true / false
+            healthbars_hostile_scope = "self",          -- 选择血条目标的敌意范围初始值；可选："self"=仅自己 / "followers"=自己及随从 / "nearby"=附近玩家 / "nearby_followers"=附近玩家及随从
+
+            -- 地图协作
+            -- 共享 "auto"：生存／无尽默认允许，荒野或 PvP 默认禁止。
+            -- 共享 "on"：允许个人开启；"off"：禁止共享。
+            map_enabled = true,                         -- 启用地图协作模块；可选：true / false
+            map_share_position = "auto",                -- 位置共享许可；允许时仍尊重个人开关；可选："auto"=跟随游戏模式 / "on"=开启 / "off"=关闭
+            map_share_exploration = "auto",             -- 探索共享许可；已被队友学到的探索无法撤回；可选："auto"=跟随游戏模式 / "on"=开启 / "off"=关闭
+            map_wormholes = true,                       -- 启用已发现虫洞配对标记；各端点仍遵守迷雾；可选：true / false
+            map_pings = true,                           -- 允许临时地图标记；每人最多 5 个，60 秒失效；可选：true / false
+            map_signal_fires = true,                    -- 允许木炭信号火标记；可选：true / false
+
+            -- 物品整理
+            items_enabled = true,                       -- 启用合堆与自动拾取服务；可选：true / false
+            items_stack_world = true,                   -- 允许新世界掉落落地后合堆；可选：true / false
+            items_stack_manual = false,                 -- 允许玩家主动丢弃的物品合堆；可选：true / false
+            items_stack_loaded = false,                 -- 允许读档地面物品合堆；关闭可保护存档摆设；可选：true / false
+            items_pickup_allowed = false,               -- 允许玩家在 F7 → 物品中另行开启自动拾取；可选：true / false
+            items_pickup_existing = true,               -- 仅拾取已携带的同类物品；false 取消此条件；可选：true / false
+            items_radius = 4,                           -- 基础处理半径；下方三套半径为 0 时继承此值；可选：2 / 4 / 6 / 8
+            items_world_radius = 0,                     -- 世界掉落／读档物合堆半径；0 继承 items_radius；可选：0 / 1 / 2 / 4 / 6 / 8 / 10 / 15 / 20 / 25
+            items_manual_radius = 0,                    -- 玩家丢弃物合堆半径；0 继承 items_radius；可选：0 / 1 / 2 / 4 / 6 / 8 / 10 / 15 / 20 / 25
+            items_pickup_radius = 0,                    -- 自动拾取半径；0 继承 items_radius；可选：0 / 1 / 2 / 4 / 6 / 8 / 10 / 15 / 20 / 25
+            items_world_ash = false,                    -- 允许灰烬参与世界掉落／读档物合堆；仍受对应功能许可限制；可选：true / false
+            items_world_poop = false,                   -- 允许粪便参与世界掉落／读档物合堆；仍受对应功能许可限制；可选：true / false
+            items_world_seeds = false,                  -- 允许种子（含作物种子）参与世界掉落／读档物合堆；仍受对应功能许可限制；可选：true / false
+            items_manual_ash = false,                   -- 允许灰烬参与玩家丢弃物合堆；仍受对应功能许可限制；可选：true / false
+            items_manual_poop = false,                  -- 允许粪便参与玩家丢弃物合堆；仍受对应功能许可限制；可选：true / false
+            items_manual_seeds = false,                 -- 允许种子（含作物种子）参与玩家丢弃物合堆；仍受对应功能许可限制；可选：true / false
+            items_pickup_ash = false,                   -- 允许灰烬参与自动拾取；仍受对应功能许可限制；可选：true / false
+            items_pickup_poop = false,                  -- 允许粪便参与自动拾取；仍受对应功能许可限制；可选：true / false
+            items_pickup_seeds = false,                 -- 允许种子（含作物种子）参与自动拾取；仍受对应功能许可限制；可选：true / false
+
+            -- 行为队列
+            queue_enabled = true,                       -- 允许行为队列与批量布点预览；可选：true / false
+            queue_farm_grid = 3,                        -- 每块农田布点密度初始值；可选：2=2×2 / 3=3×3 / 4=4×4
+            queue_collect_after_work = false,           -- 默认在排队工作完成后收集半径 4 单位内的合法掉落；可选：true / false
+            queue_double_click_speed = 0.35,            -- 双击选取的最大间隔初始值，单位为秒；可选：0.2 / 0.25 / 0.35 / 0.5 / 0.75
+            queue_double_click_range = 15,              -- 双击同类选取半径初始值；可选：5 / 10 / 15 / 20 / 25
+
+            -- 智能小木牌
+            signs_enabled = true,                       -- 智能小木牌总开关；同时要求对应容器类型开启；可选：true / false
+            signs_treasurechest = true,                 -- 在木箱显示辅助小木牌；可选：true / false
+            signs_dragonflychest = true,                -- 在龙鳞宝箱显示辅助小木牌；可选：true / false
+            signs_boat_ancient_container = true,        -- 在远古船货舱显示辅助小木牌；可选：true / false
+            signs_chester = false,                      -- 在切斯特显示辅助小木牌；可选：true / false
+            signs_hutch = false,                        -- 在哈奇显示辅助小木牌；可选：true / false
+            signs_icebox = false,                       -- 在冰箱显示辅助小木牌；可选：true / false
+            signs_saltbox = false,                      -- 在盐盒显示辅助小木牌；可选：true / false
+            signs_fish_box = false,                     -- 在鱼类储物箱显示辅助小木牌；可选：true / false
+            signs_bundle_contents = true,               -- 显示包裹内部首件图标；false 显示原生包裹图标；可选：true / false
+            signs_body_skins = true,                    -- 沿用箱中 minisign_item 的关联皮肤作为牌体；可选：true / false
+            signs_scale = 0.65,                         -- 世界中辅助小木牌的缩放倍数；可选：0.5 / 0.65 / 0.8 / 1
+
+            -- 坐骑状态栏
+            beefalo_enabled = true,                     -- 允许坐骑状态栏；可选：true / false
+            beefalo_hunger_threshold = 15,              -- 激活饥饿显示的阈值初始值；0 不代表关闭显示；可选：0 / 5 / 15 / 25
+            beefalo_show_hunger = true,                 -- 允许坐骑饥饿显示；玩家也可单独隐藏；可选：true / false
+            beefalo_scale = 1,                          -- 坐骑栏独立缩放初始值，叠加于整体 HUD 缩放；可选：0.75 / 1 / 1.25 / 1.5
         },
     },
 }
