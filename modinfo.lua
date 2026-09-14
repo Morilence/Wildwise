@@ -1,5 +1,6 @@
 name = "Wildwise"
-description = "Unified insight, combat bars, shared maps, item handling, action queues, smart storage signs and beefalo status.\n统一信息、血条、协作地图、物品整理、行为队列、智能小木牌与牛状态。"
+description =
+    "Unified insight, combat bars, shared maps, item handling, action queues, smart storage signs and beefalo status.\n统一信息、血条、协作地图、物品整理、行为队列、智能小木牌与牛状态。"
 author = "Morilence"
 version = "0.2.1"
 api_version = 10
@@ -9,13 +10,21 @@ client_only_mod = false
 server_only_mod = false
 server_filter_tags = { "wildwise", "quality-of-life" }
 local zh = locale == "zh" or locale == "zhr" or locale == "zht"
-local function label(en, cn) return zh and cn or en end
-local yesno = { { description = label("Enabled", "开启"), data = true }, { description = label("Disabled", "关闭"), data = false } }
+local function label(en, cn)
+    return zh and cn or en
+end
+local yesno = {
+    { description = label("Enabled", "开启"), data = true },
+    { description = label("Disabled", "关闭"), data = false },
+}
 local function option(name_, en, cn, default, options, hover)
     return { name = name_, label = label(en, cn), default = default, options = options or yesno, hover = hover or "" }
 end
 local function values(numbers)
-    local out = {}; for i = 1, #numbers do out[i] = { description = "" .. numbers[i], data = numbers[i] } end
+    local out = {}
+    for i = 1, #numbers do
+        out[i] = { description = "" .. numbers[i], data = numbers[i] }
+    end
     return out
 end
 local share = {
@@ -28,11 +37,14 @@ configuration_options = {
     -- 通用 / General
     option("language", "Language", "语言", "auto", {
         { description = label("Follow game", "跟随游戏"), data = "auto" },
-        { description = "English", data = "en" }, { description = "简体中文", data = "zh" },
+        { description = "English", data = "en" },
+        { description = "简体中文", data = "zh" },
     }),
-    option("ui_scale", "Interface scale", "界面缩放", 1, values({ .75, 1, 1.25, 1.5 })),
+    option("ui_scale", "Interface scale", "界面缩放", 1, values({ 0.75, 1, 1.25, 1.5 })),
     option("menu_key", "Menu key", "菜单按键", 288, {
-        { description = "F6", data = 287 }, { description = "F7", data = 288 }, { description = "F8", data = 289 },
+        { description = "F6", data = 287 },
+        { description = "F7", data = 288 },
+        { description = "F8", data = 289 },
     }),
     option("diagnostics", "Local diagnostic logs", "本地诊断日志", false),
 
@@ -47,7 +59,7 @@ configuration_options = {
     option("healthbars_enabled", "Combat health bars", "战斗血条", true),
     option("healthbars_limit", "Health bar limit", "血条数量上限", 12, values({ 4, 8, 12, 16, 20 })),
     option("healthbars_linger_seconds", "Out-of-combat delay", "脱战收起延迟", 2, values({ 0, 1, 2, 3, 5 })),
-    option("healthbars_scale", "Health bar scale", "血条缩放", 1, values({ .75, 1, 1.25, 1.5 })),
+    option("healthbars_scale", "Health bar scale", "血条缩放", 1, values({ 0.75, 1, 1.25, 1.5 })),
     option("healthbars_numbers", "Health numbers", "血量数值", true),
     option("healthbars_hostile_scope", "Hostility scope", "敌意范围", "self", {
         { description = label("Self", "仅自己"), data = "self" },
@@ -87,5 +99,11 @@ configuration_options = {
 
     -- 牛状态 / Beefalo
     option("beefalo_enabled", "Beefalo status", "牛状态栏", true),
-    option("beefalo_hunger_threshold", "Beefalo hunger threshold", "牛饥饿显示阈值", 15, values({ 0, 5, 15, 25 })),
+    option(
+        "beefalo_hunger_threshold",
+        "Beefalo hunger threshold",
+        "牛饥饿显示阈值",
+        15,
+        values({ 0, 5, 15, 25 })
+    ),
 }

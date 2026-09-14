@@ -6,14 +6,35 @@ local Client = require("wildwise/runtime/client")
 local Widget = require("widgets/widget")
 local player = G.SpawnPrefab("wilson")
 player.userid = "wildwise_contract_fixture"
-player.HUD = { HasInputFocus = function() return false end, IsMapScreenOpen = function() return false end }
-local controls = Widget("WildwiseClientContract"); controls.owner = player
+player.HUD = {
+    HasInputFocus = function()
+        return false
+    end,
+    IsMapScreenOpen = function()
+        return false
+    end,
+}
+local controls = Widget("WildwiseClientContract")
+controls.owner = player
 local old_client, instance = Context.client, nil
 local ok, message = pcall(function()
     instance = Client.new(controls, G, Context.config)
     Context.client = instance
-    instance:tick(); assert(instance.session, "host handshake did not arrive")
-    instance:tick(); assert(instance.diagnostics, "host heartbeat did not arrive")
+    instance:tick()
+    assert(instance.session, "host handshake did not arrive")
+    instance:tick()
+    assert(instance.diagnostics, "host heartbeat did not arrive")
+    instance.recipe_slots = { "kelp", "kelp", "fishmeat", "ice" }
+    instance.recipe_cooker = "cookpot"
+    instance:query_recipes()
+    assert(instance.recipe_results and instance.recipe_results.request == instance.recipe_request)
+    assert(
+        instance.recipe_results.results[1].name == "californiaroll",
+        "recipe response did not use current ingredients"
+    )
+    instance.recipe_cooker = "portablecookpot"
+    instance:query_recipes()
+    assert(instance.recipe_results.results[1].name == "californiaroll")
     instance:set("items.pickup", false)
     assert(G.TheWorld.components.wildwise_world.players[player].pickup == false)
     instance:set("healthbars.hostile_scope", "followers")
@@ -21,12 +42,27 @@ local ok, message = pcall(function()
     local original = Context.config.beefalo.hunger_threshold
     instance:set("beefalo.hunger_threshold", 0)
     assert(instance.settings.beefalo.hunger_threshold == 0 and Context.config.beefalo.hunger_threshold == original)
-    local encoded = require("wildwise/core/protocol").encode(require("json"), "cancel", "expired-session", 999999, { reason = "death" })
-    instance:receive(nil, encoded); assert(instance.queue.reason ~= "death", "old session accepted")
-    instance:close(); assert(instance.closed)
+    local encoded = require("wildwise/core/protocol").encode(
+        require("json"),
+        "cancel",
+        "expired-session",
+        999999,
+        { reason = "death" }
+    )
+    instance:receive(nil, encoded)
+    assert(instance.queue.reason ~= "death", "old session accepted")
+    instance:close()
+    assert(instance.closed)
 end)
-if instance and not instance.closed then instance:close() end
+if instance and not instance.closed then
+    instance:close()
+end
 Context.client = old_client
-player.HUD = nil; player:Remove(); controls:Kill()
-if ok then print("[WW_CLIENT_RESULT] passed=1 failed=0 host_fixture=true")
-else print("[WW_CLIENT_RESULT] passed=0 failed=1 " .. tostring(message)) end
+player.HUD = nil
+player:Remove()
+controls:Kill()
+if ok then
+    print("[WW_CLIENT_RESULT] passed=1 failed=0 host_fixture=true")
+else
+    print("[WW_CLIENT_RESULT] passed=0 failed=1 " .. tostring(message))
+end

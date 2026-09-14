@@ -3,91 +3,219 @@ local Planner = require("wildwise/services/planner")
 local M = {}
 -- 显式白名单：采集、农业和设施操作可排队，ATTACK/CASTSPELL 等战斗决策不会自动执行。
 M.allowed = {}
-for _, id in ipairs({ "PICKUP", "PICK", "HARVEST", "CHOP", "MINE", "DIG", "HAMMER", "NET", "TILL", "PLANT",
-    "PLANTSOIL", "POUR_WATER", "POUR_WATER_GROUNDTILE", "FERTILIZE", "INTERACT_WITH", "ADDWETFUEL", "ADDFUEL",
-    "GIVE", "FEED", "HEAL", "STORE", "TAKEITEM", "DEPLOY", "DEPLOY_TILEARRIVE", "TERRAFORM", "DRY", "REPAIR",
-    "RESETMINE", "CHECKTRAP", "ACTIVATE", "LOWER_SAIL", "RAISE_SAIL", "LOWER_ANCHOR", "RAISE_ANCHOR",
-    "ROW_FAIL", "GIVEALLTOPLAYER", "ADDCOMPOSTABLE", "EMPTY_CONTAINER", "PICKUP_CHESTER", "DRAW" }) do M.allowed[id] = true end
+for _, id in ipairs({
+    "PICKUP",
+    "PICK",
+    "HARVEST",
+    "CHOP",
+    "MINE",
+    "DIG",
+    "HAMMER",
+    "NET",
+    "TILL",
+    "PLANT",
+    "PLANTSOIL",
+    "POUR_WATER",
+    "POUR_WATER_GROUNDTILE",
+    "FERTILIZE",
+    "INTERACT_WITH",
+    "ADDWETFUEL",
+    "ADDFUEL",
+    "GIVE",
+    "FEED",
+    "HEAL",
+    "STORE",
+    "TAKEITEM",
+    "DEPLOY",
+    "DEPLOY_TILEARRIVE",
+    "TERRAFORM",
+    "DRY",
+    "REPAIR",
+    "RESETMINE",
+    "CHECKTRAP",
+    "ACTIVATE",
+    "LOWER_SAIL",
+    "RAISE_SAIL",
+    "LOWER_ANCHOR",
+    "RAISE_ANCHOR",
+    "ROW_FAIL",
+    "GIVEALLTOPLAYER",
+    "ADDCOMPOSTABLE",
+    "EMPTY_CONTAINER",
+    "PICKUP_CHESTER",
+    "DRAW",
+}) do
+    M.allowed[id] = true
+end
 M.repeated = { CHOP = true, MINE = true, HAMMER = true, DIG = true }
-local tools = { CHOP = "CHOP_tool", MINE = "MINE_tool", HAMMER = "HAMMER_tool", DIG = "DIG_tool", NET = "NET_tool", TILL = "TILL_tool" }
+local tools = {
+    CHOP = "CHOP_tool",
+    MINE = "MINE_tool",
+    HAMMER = "HAMMER_tool",
+    DIG = "DIG_tool",
+    NET = "NET_tool",
+    TILL = "TILL_tool",
+}
+
+-- 从原版动作选择器中选取白名单动作；不推断或生成战斗动作。
 function M.pick(player, target, point, right)
     local picker = player.components.playeractionpicker
-    if not picker then return end
+    if not picker then
+        return
+    end
     local choices = right and picker:GetRightClickActions(point, target) or picker:GetLeftClickActions(point, target)
-    for _, action in ipairs(choices or {}) do if M.allowed[action.action.id] then return action end end
+    for _, action in ipairs(choices or {}) do
+        if M.allowed[action.action.id] then
+            return action
+        end
+    end
 end
+
+-- 创建队列的原版动作适配器；每次仅观察当前提交动作。
 function M.create(client, G)
     local player = client.player
     local pending, native_recipe = {}, nil
     local adapter = {}
+
+    -- 检查角色、连接与输入焦点，返回能否继续及暂停原因。
     function adapter.ready()
-        if not U.valid(player) or player:HasTag("playerghost") then return false, "death" end
-        if not client.session then return false, "disconnected" end
-        if not client:input_ready() then return false, "input_focus" end
+        if not U.valid(player) or player:HasTag("playerghost") then
+            return false, "death"
+        end
+        if not client.session then
+            return false, "disconnected"
+        end
+        if not client:input_ready() then
+            return false, "input_focus"
+        end
         return true
     end
+
+    -- 取消本适配器拥有的动作和预测回调，归还玩家控制。
     function adapter.cancel()
         pending = {}
         local pc = player.components.playercontroller
         if pc then
-            if pc.locomotor then pc.locomotor:Stop() end
-            if pc.ismastersim then player:ClearBufferedAction()
+            if pc.locomotor then
+                pc.locomotor:Stop()
+            end
+            if pc.ismastersim then
+                player:ClearBufferedAction()
             else
                 -- 原版移动 RPC 接管角色，取消服务器上已进入寻路/预览的动作。
                 local x, _, z = player.Transform:GetWorldPosition()
                 local platform, px, pz = pc:GetPlatformRelativePosition(x, z)
-                G.SendRPCToServer(G.RPC.LeftClick, G.ACTIONS.WALKTO.code, px, pz, nil, true, 0, nil, nil, platform, platform ~= nil)
+                G.SendRPCToServer(
+                    G.RPC.LeftClick,
+                    G.ACTIONS.WALKTO.code,
+                    px,
+                    pz,
+                    nil,
+                    true,
+                    0,
+                    nil,
+                    nil,
+                    platform,
+                    platform ~= nil
+                )
             end
         end
     end
-    function adapter.release() client:send("release", nil, {}) end
+
+    -- 释放服务器预留并清空迟到回调，防止影响下一项任务。
+    function adapter.release()
+        pending = {}
+        client:send("release", nil, {})
+    end
+
+    -- 续租当前动作观察，并以实际位移判断寻路进展。
     function adapter.progress()
         -- 长距离寻路可能超过初始观察租约；续租只观察当前动作，不另起执行器。
         for token, record in pairs(pending) do
             if G.GetTime() >= record.watch_at then
                 record.watch_at = G.GetTime() + 2
-                client:send("watch_action", record.task.target, { token = token, action = record.task.recipe and "BUILD" or record.task.action })
+                client:send(
+                    "watch_action",
+                    record.task.target,
+                    { token = token, action = record.task.recipe and "BUILD" or record.task.action }
+                )
             end
         end
         -- 按移动进展续期；站着播放同一无效动画不会无限刷新超时。
         local x, _, z = player.Transform:GetWorldPosition()
         return math.floor(x * 2) .. ":" .. math.floor(z * 2)
     end
+
     local function inventory_items()
         local inv, out = player.replica.inventory, {}
-        for slot, item in pairs(inv:GetItems()) do out[#out + 1] = { item = item, slot = slot, container = inv } end
+        for slot, item in pairs(inv:GetItems()) do
+            out[#out + 1] = { item = item, slot = slot, container = inv }
+        end
         local overflow = inv:GetOverflowContainer()
         if overflow then
-            for slot, item in pairs(overflow:GetItems()) do out[#out + 1] = { item = item, slot = slot, container = overflow } end
+            for slot, item in pairs(overflow:GetItems()) do
+                out[#out + 1] = { item = item, slot = slot, container = overflow }
+            end
         end
         return out
     end
+
+    -- 执行前复查目标、平台、材料、工具和容量，返回 ready/wait/pause/skip。
     function adapter.validate(task)
         local pc, inv = player.components.playercontroller, player.replica.inventory
-        if not pc or not inv then return "pause", "unsupported_state" end
-        if player:HasTag("busy") then return "wait" end
+        if not pc or not inv then
+            return "pause", "unsupported_state"
+        end
+        if player:HasTag("busy") then
+            return "wait"
+        end
         if task.recipe then
             local recipe = G.AllRecipes[task.recipe]
             local builder = player.replica.builder
-            if not recipe or recipe.placer then return "skip" end
-            if not builder or not builder:KnowsRecipe(recipe.name) then return "pause", "recipe_locked" end
-            if not builder:CanBuild(recipe.name) then return "pause", "materials_empty" end
+            if not recipe or recipe.placer then
+                return "skip"
+            end
+            if not builder or not builder:KnowsRecipe(recipe.name) then
+                return "pause", "recipe_locked"
+            end
+            if not builder:CanBuild(recipe.name) then
+                return "pause", "materials_empty"
+            end
             return "ready"
         end
-        if task.target and not U.valid(task.target) then return "skip" end
-        local point = task.plan and Planner.project(task.plan) or (task.target and task.target:GetPosition()) or task.point
-        if not point then return "skip" end
+        if task.target and not U.valid(task.target) then
+            return "skip"
+        end
+        local point
+        if task.plan then
+            point = Planner.project(task.plan)
+        else
+            point = (task.target and task.target:GetPosition()) or task.point
+        end
+        if not point then
+            return "skip"
+        end
         point = G.Vector3(point.x, point.y or 0, point.z)
         -- 空格已满仍可向同类未满堆叠补入；否则暂停，避免不断提交注定失败的拾取。
         if task.action == "PICKUP" and task.target and inv:IsFull() then
             local overflow, capacity = inv:GetOverflowContainer(), false
-            if overflow and not overflow:IsFull() then capacity = true end
+            if overflow and not overflow:IsFull() then
+                capacity = true
+            end
             for _, entry in ipairs(inventory_items()) do
                 local existing = entry.item
-                if existing.prefab == task.target.prefab and existing.skinname == task.target.skinname
-                    and existing.replica.stackable and not existing.replica.stackable:IsFull() then capacity = true end
+                if
+                    existing.prefab == task.target.prefab
+                    and existing.skinname == task.target.skinname
+                    and existing.replica.stackable
+                    and not existing.replica.stackable:IsFull()
+                then
+                    capacity = true
+                end
             end
-            if not capacity then return "pause", "inventory_full" end
+            if not capacity then
+                return "pause", "inventory_full"
+            end
         end
         local active = inv:GetActiveItem()
         if task.material and (not active or active.prefab ~= task.material) then
@@ -101,12 +229,19 @@ function M.create(client, G)
             return "pause", "materials_empty"
         end
         if task.plan and task.action == "TILL" then
-            if not G.TheWorld.Map:CanTillSoilAtPoint(point.x, 0, point.z) then return "skip" end
+            if not G.TheWorld.Map:CanTillSoilAtPoint(point.x, 0, point.z) then
+                return "skip"
+            end
         elseif task.plan and active and task.action == "DEPLOY" then
-            if not active.replica.inventoryitem:CanDeploy(point, nil, player) then return "skip" end
+            if not active.replica.inventoryitem:CanDeploy(point, nil, player) then
+                return "skip"
+            end
         end
         local action = M.pick(player, task.target, point, task.right)
         if (not action or action.action.id ~= task.action) and task.action and tools[task.action] then
+            if U.call(player.replica.rider, "IsRiding") then
+                return "pause", "unsupported_state"
+            end
             for _, entry in ipairs(inventory_items()) do
                 local item = entry.item
                 if U.valid(item) and item:HasTag(tools[task.action]) then
@@ -116,11 +251,17 @@ function M.create(client, G)
             end
             return "pause", "tool_missing"
         end
-        if not action then return "skip" end
-        if task.action and action.action.id ~= task.action then return "skip" end
+        if not action then
+            return "skip"
+        end
+        if task.action and action.action.id ~= task.action then
+            return "skip"
+        end
         task.action, task.buffered, task.point = action.action.id, action, point
         return "ready"
     end
+
+    -- 先登记结果观察，再通过原版控制器或制作入口提交动作。
     function adapter.submit(task, token, callback)
         pending[token] = { callback = callback, task = task, watch_at = G.GetTime() + 2 }
         local id = task.recipe and "BUILD" or task.action
@@ -132,35 +273,81 @@ function M.create(client, G)
             return
         end
         local action, pc = task.buffered, player.components.playercontroller
-        if pc.ismastersim then pc:DoAction(action); return end
+        if pc.ismastersim then
+            pc:DoAction(action)
+            return
+        end
         local point = action:GetActionPoint() or task.point
         local platform, x, z = pc:GetPlatformRelativePosition(point.x, point.z)
+
         local function send()
-            if not pending[token] then return end
+            if not pending[token] then
+                return
+            end
             if task.right then
-                G.SendRPCToServer(G.RPC.RightClick, action.action.code, x, z, task.target, action.rotation,
-                    true, 0, action.action.canforce, action.action.mod_name, platform, platform ~= nil)
+                G.SendRPCToServer(
+                    G.RPC.RightClick,
+                    action.action.code,
+                    x,
+                    z,
+                    task.target,
+                    action.rotation,
+                    true,
+                    0,
+                    action.action.canforce,
+                    action.action.mod_name,
+                    platform,
+                    platform ~= nil
+                )
             else
-                G.SendRPCToServer(G.RPC.LeftClick, action.action.code, x, z, task.target,
-                    true, 0, action.action.canforce, action.action.mod_name, platform, platform ~= nil)
+                G.SendRPCToServer(
+                    G.RPC.LeftClick,
+                    action.action.code,
+                    x,
+                    z,
+                    task.target,
+                    true,
+                    0,
+                    action.action.canforce,
+                    action.action.mod_name,
+                    platform,
+                    platform ~= nil
+                )
             end
         end
         -- 客户端预测仍走 PlayerController；服务器只观察结果，所有原版校验保持生效。
-        if pc.locomotor and pc:CanLocomote() then action.preview_cb = send; pc:DoAction(action) else send() end
+        if pc.locomotor and pc:CanLocomote() then
+            action.preview_cb = send
+            pc:DoAction(action)
+        else
+            send()
+        end
     end
+
+    -- 把原版成功或失败结果映射为队列状态，不以动画开始当作完成。
     function adapter.result(data)
         local record = pending[data.token]
-        if not record then return end
+        if not record then
+            return
+        end
         pending[data.token] = nil
         local task = record.task
         if data.result == "success" then
             if task.recipe then
                 task.remaining = task.remaining - 1
                 record.callback(task.remaining > 0 and "progress" or "done")
-            else record.callback(M.repeated[task.action] and "progress" or "done") end
-        else record.callback("retry", "action_failed") end
+            else
+                record.callback(M.repeated[task.action] and "progress" or "done")
+            end
+        else
+            record.callback("retry", "action_failed")
+        end
     end
-    function adapter.set_recipe_original(fn) native_recipe = fn end
+
+    -- 保存未包装的制作方法，避免队列递归进入自己的快捷键处理。
+    function adapter.set_recipe_original(fn)
+        native_recipe = fn
+    end
     return adapter
 end
 return M

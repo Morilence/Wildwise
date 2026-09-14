@@ -1,0 +1,828 @@
+{
+  "schema": 2,
+  "retrieved_on": "2026-09-14",
+  "timezone": "Asia/Shanghai",
+  "window_start": "2023-09-14T00:00:00+08:00",
+  "window_end_exclusive": "2026-09-15T00:00:00+08:00",
+  "method": "Steam public PublishedFile_Public render API + Exa searches/discussion pages",
+  "dst_mods": 35,
+  "comment_pages": 58,
+  "unique_fetched": 4584,
+  "unique_in_window": 3588,
+  "all_reached_time_boundary_or_end": true,
+  "moderation_placeholder_records": 3,
+  "limitations": [
+    "Only public comments visible at retrieval; deleted, hidden and private reports cannot be recovered.",
+    "Endpoint pagination is not an atomic historical archive; later insertions or deletions can change page offsets.",
+    "Exa discussion pages are supporting evidence, not counted as unique timestamped comments.",
+    "Some current-year discussion dates omit year; not used to establish the precise comment-window count."
+  ],
+  "exa": {
+    "search_queries": 12,
+    "requested_search_slots": 100,
+    "successful_unique_discussion_pages": 27,
+    "successful_discussion_list_pages": 6,
+    "unresolved_fetch": [
+      "https://steamcommunity.com/workshop/filedetails/discussion/727774324/352788917748920052/?ctp=7"
+    ]
+  },
+  "mods": [
+    {
+      "id": "2189004162",
+      "title": "Insight (Show Me+)",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198277438128/2189004162/?start=0&count=100",
+          "offset": 0,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 3425,
+          "oldest": 1781326571
+        },
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198277438128/2189004162/?start=100&count=100",
+          "offset": 100,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 3425,
+          "oldest": 1759913131
+        },
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198277438128/2189004162/?start=200&count=100",
+          "offset": 200,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 3425,
+          "oldest": 1754719575
+        },
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198277438128/2189004162/?start=300&count=100",
+          "offset": 300,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 3425,
+          "oldest": 1750209566
+        },
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198277438128/2189004162/?start=400&count=100",
+          "offset": 400,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 3425,
+          "oldest": 1738467251
+        },
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198277438128/2189004162/?start=500&count=100",
+          "offset": 500,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 3425,
+          "oldest": 1727945014
+        },
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198277438128/2189004162/?start=600&count=100",
+          "offset": 600,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 3425,
+          "oldest": 1720312325
+        },
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198277438128/2189004162/?start=700&count=100",
+          "offset": 700,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 3425,
+          "oldest": 1711741765
+        },
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198277438128/2189004162/?start=800&count=100",
+          "offset": 800,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 3425,
+          "oldest": 1700103941
+        },
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198277438128/2189004162/?start=900&count=100",
+          "offset": 900,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 3425,
+          "oldest": 1694380002
+        }
+      ],
+      "unique_fetched": 1000,
+      "in_window": 992,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "378160973",
+      "title": "Global Positions",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198025931302/378160973/?start=0&count=100",
+          "offset": 0,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 2078,
+          "oldest": 1759693876
+        },
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198025931302/378160973/?start=100&count=100",
+          "offset": 100,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 2078,
+          "oldest": 1720175523
+        },
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198025931302/378160973/?start=200&count=100",
+          "offset": 200,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 2078,
+          "oldest": 1689386165
+        }
+      ],
+      "unique_fetched": 300,
+      "in_window": 276,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "362175979",
+      "title": "Wormhole Marks [DST]",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198027077262/362175979/?start=0&count=100",
+          "offset": 0,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 483,
+          "oldest": 1692367630
+        }
+      ],
+      "unique_fetched": 100,
+      "in_window": 96,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "1803285852",
+      "title": "Auto Stack and Pick Up",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198008781092/1803285852/?start=0&count=100",
+          "offset": 0,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 245,
+          "oldest": 1662085403
+        }
+      ],
+      "unique_fetched": 100,
+      "in_window": 67,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "2873533916",
+      "title": "ActionQueue RB3",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198397747007/2873533916/?start=0&count=100",
+          "offset": 0,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 164,
+          "oldest": 1727653733
+        },
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198397747007/2873533916/?start=100&count=100",
+          "offset": 100,
+          "count": 64,
+          "fresh": 64,
+          "reported_total": 164,
+          "oldest": 1674823840
+        }
+      ],
+      "unique_fetched": 164,
+      "in_window": 130,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "1595631294",
+      "title": "Smart Minisign",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198076228231/1595631294/?start=0&count=100",
+          "offset": 0,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 363,
+          "oldest": 1665020843
+        }
+      ],
+      "unique_fetched": 100,
+      "in_window": 74,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "2477889104",
+      "title": "Beefalo Status Bar",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561197983080587/2477889104/?start=0&count=100",
+          "offset": 0,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 144,
+          "oldest": 1628994934
+        }
+      ],
+      "unique_fetched": 100,
+      "in_window": 55,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "666155465",
+      "title": "Show Me (Origin)",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198023676128/666155465/?start=0&count=100",
+          "offset": 0,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 1069,
+          "oldest": 1706495784
+        },
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198023676128/666155465/?start=100&count=100",
+          "offset": 100,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 1069,
+          "oldest": 1649662561
+        }
+      ],
+      "unique_fetched": 200,
+      "in_window": 124,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "1207269058",
+      "title": "Simple Health Bar DST",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198098319132/1207269058/?start=0&count=100",
+          "offset": 0,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 1404,
+          "oldest": 1743482144
+        },
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198098319132/1207269058/?start=100&count=100",
+          "offset": 100,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 1404,
+          "oldest": 1697945975
+        },
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198098319132/1207269058/?start=200&count=100",
+          "offset": 200,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 1404,
+          "oldest": 1651560664
+        }
+      ],
+      "unique_fetched": 300,
+      "in_window": 207,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "3138571948",
+      "title": "Global Positions (CompleteSync)",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198398453893/3138571948/?start=0&count=100",
+          "offset": 0,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 244,
+          "oldest": 1741086005
+        },
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198398453893/3138571948/?start=100&count=100",
+          "offset": 100,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 244,
+          "oldest": 1710619368
+        },
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198398453893/3138571948/?start=200&count=100",
+          "offset": 200,
+          "count": 44,
+          "fresh": 44,
+          "reported_total": 244,
+          "oldest": 1705189818
+        }
+      ],
+      "unique_fetched": 244,
+      "in_window": 244,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "2115943953",
+      "title": "Auto Stack Pro",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198082172665/2115943953/?start=0&count=100",
+          "offset": 0,
+          "count": 48,
+          "fresh": 48,
+          "reported_total": 48,
+          "oldest": 1592243293
+        }
+      ],
+      "unique_fetched": 48,
+      "in_window": 1,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "2881739960",
+      "title": "Smart Minisign Revisited",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198030183068/2881739960/?start=0&count=100",
+          "offset": 0,
+          "count": 8,
+          "fresh": 8,
+          "reported_total": 8,
+          "oldest": 1667415872
+        }
+      ],
+      "unique_fetched": 8,
+      "in_window": 0,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "1608191708",
+      "title": "ActionQueue Reborn",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198032277590/1608191708/?start=0&count=100",
+          "offset": 0,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 725,
+          "oldest": 1679878760
+        }
+      ],
+      "unique_fetched": 100,
+      "in_window": 75,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "1852257480",
+      "title": "Beefalo Widget",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198387636532/1852257480/?start=0&count=100",
+          "offset": 0,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 143,
+          "oldest": 1619116967
+        }
+      ],
+      "unique_fetched": 100,
+      "in_window": 56,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "2995399263",
+      "title": "😶‍🌫️骑牛状态显示 Beefalo Status Bar",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198970805562/2995399263/?start=0&count=100",
+          "offset": 0,
+          "count": 30,
+          "fresh": 30,
+          "reported_total": 30,
+          "oldest": 1703215285
+        }
+      ],
+      "unique_fetched": 30,
+      "in_window": 30,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "2158755579",
+      "title": "Fix for 'Beefalo information'",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198159719864/2158755579/?start=0&count=100",
+          "offset": 0,
+          "count": 26,
+          "fresh": 26,
+          "reported_total": 26,
+          "oldest": 1598833679
+        }
+      ],
+      "unique_fetched": 26,
+      "in_window": 5,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "375859599",
+      "title": "Health Info",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198025486794/375859599/?start=0&count=100",
+          "offset": 0,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 1040,
+          "oldest": 1661595712
+        }
+      ],
+      "unique_fetched": 100,
+      "in_window": 62,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "1185229307",
+      "title": "Epic Healthbar",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198269382494/1185229307/?start=0&count=100",
+          "offset": 0,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 929,
+          "oldest": 1759947646
+        },
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198269382494/1185229307/?start=100&count=100",
+          "offset": 100,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 929,
+          "oldest": 1721528781
+        },
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198269382494/1185229307/?start=200&count=100",
+          "offset": 200,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 929,
+          "oldest": 1685446429
+        }
+      ],
+      "unique_fetched": 300,
+      "in_window": 274,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "786566397",
+      "title": "[DST] Monster Healthbars",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198039805936/786566397/?start=0&count=100",
+          "offset": 0,
+          "count": 81,
+          "fresh": 81,
+          "reported_total": 81,
+          "oldest": 1477338531
+        }
+      ],
+      "unique_fetched": 81,
+      "in_window": 1,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "2325441848",
+      "title": "ActionQueue RB2 (RWYS supported)",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561197993843368/2325441848/?start=0&count=100",
+          "offset": 0,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 534,
+          "oldest": 1653650683
+        }
+      ],
+      "unique_fetched": 100,
+      "in_window": 24,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "2701099322",
+      "title": "ActionQueue Reborn v2",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198099826343/2701099322/?start=0&count=100",
+          "offset": 0,
+          "count": 27,
+          "fresh": 27,
+          "reported_total": 27,
+          "oldest": 1641532993
+        }
+      ],
+      "unique_fetched": 27,
+      "in_window": 2,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "2892856427",
+      "title": "ActionQueue Expansion: Extra Actions",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198079141001/2892856427/?start=0&count=100",
+          "offset": 0,
+          "count": 20,
+          "fresh": 20,
+          "reported_total": 20,
+          "oldest": 1669470437
+        }
+      ],
+      "unique_fetched": 20,
+      "in_window": 5,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "3639591480",
+      "title": "Auto Stack - Proper",
+      "pages": [],
+      "unique_fetched": 0,
+      "in_window": 0,
+      "complete_to_boundary": false,
+      "excluded": "unavailable, non-DST, or non-mod entry"
+    },
+    {
+      "id": "2281925291",
+      "title": "Finder Redux",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198137380697/2281925291/?start=0&count=100",
+          "offset": 0,
+          "count": 89,
+          "fresh": 89,
+          "reported_total": 89,
+          "oldest": 1604920288
+        }
+      ],
+      "unique_fetched": 89,
+      "in_window": 8,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "836583293",
+      "title": "Item Info",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198074442304/836583293/?start=0&count=100",
+          "offset": 0,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 676,
+          "oldest": 1643816181
+        }
+      ],
+      "unique_fetched": 100,
+      "in_window": 58,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "727774324",
+      "title": "Craft Pot [DS, ROG, SW, DST]",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561197981642997/727774324/?start=0&count=100",
+          "offset": 0,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 1274,
+          "oldest": 1719088382
+        },
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561197981642997/727774324/?start=100&count=100",
+          "offset": 100,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 1274,
+          "oldest": 1683549193
+        }
+      ],
+      "unique_fetched": 200,
+      "in_window": 161,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "3705461241",
+      "title": "Finder 2026",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198383026942/3705461241/?start=0&count=100",
+          "offset": 0,
+          "count": 1,
+          "fresh": 1,
+          "reported_total": 1,
+          "oldest": 1778675060
+        }
+      ],
+      "unique_fetched": 1,
+      "in_window": 1,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "3656163363",
+      "title": "Item Meta",
+      "pages": [],
+      "unique_fetched": 0,
+      "in_window": 0,
+      "complete_to_boundary": false,
+      "excluded": "unavailable, non-DST, or non-mod entry"
+    },
+    {
+      "id": "3436020204",
+      "title": "Show Me (Refresh)",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198397747007/3436020204/?start=0&count=100",
+          "offset": 0,
+          "count": 30,
+          "fresh": 30,
+          "reported_total": 30,
+          "oldest": 1740837162
+        }
+      ],
+      "unique_fetched": 30,
+      "in_window": 30,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "3439927311",
+      "title": "Beefalo Info HUD",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198060372343/3439927311/?start=0&count=100",
+          "offset": 0,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 353,
+          "oldest": 1774757435
+        },
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198060372343/3439927311/?start=100&count=100",
+          "offset": 100,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 353,
+          "oldest": 1763456863
+        },
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198060372343/3439927311/?start=200&count=100",
+          "offset": 200,
+          "count": 100,
+          "fresh": 100,
+          "reported_total": 353,
+          "oldest": 1752283100
+        },
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198060372343/3439927311/?start=300&count=100",
+          "offset": 300,
+          "count": 53,
+          "fresh": 53,
+          "reported_total": 353,
+          "oldest": 1741390013
+        }
+      ],
+      "unique_fetched": 353,
+      "in_window": 353,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "801304958",
+      "title": "Beefalo information",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198203214720/801304958/?start=0&count=100",
+          "offset": 0,
+          "count": 33,
+          "fresh": 33,
+          "reported_total": 33,
+          "oldest": 1479495280
+        }
+      ],
+      "unique_fetched": 33,
+      "in_window": 1,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "2858947939",
+      "title": "Beefalo Buck Timer (Client-Side)",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561197967838462/2858947939/?start=0&count=100",
+          "offset": 0,
+          "count": 57,
+          "fresh": 57,
+          "reported_total": 57,
+          "oldest": 1662403935
+        }
+      ],
+      "unique_fetched": 57,
+      "in_window": 36,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "2622561786",
+      "title": "Domestication Calculator",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561199010353017/2622561786/?start=0&count=100",
+          "offset": 0,
+          "count": 20,
+          "fresh": 20,
+          "reported_total": 20,
+          "oldest": 1633699217
+        }
+      ],
+      "unique_fetched": 20,
+      "in_window": 1,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "3118627881",
+      "title": "Item Info Updated",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198859694446/3118627881/?start=0&count=100",
+          "offset": 0,
+          "count": 62,
+          "fresh": 62,
+          "reported_total": 62,
+          "oldest": 1703107946
+        }
+      ],
+      "unique_fetched": 62,
+      "in_window": 62,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "837819197",
+      "title": "Where's My Stuff, Dude? (Finder For Gamepad)",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198072998413/837819197/?start=0&count=100",
+          "offset": 0,
+          "count": 31,
+          "fresh": 31,
+          "reported_total": 31,
+          "oldest": 1486412170
+        }
+      ],
+      "unique_fetched": 31,
+      "in_window": 17,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "3571706033",
+      "title": "Wormhole Marks [DST Continued]",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198090326836/3571706033/?start=0&count=100",
+          "offset": 0,
+          "count": 15,
+          "fresh": 15,
+          "reported_total": 15,
+          "oldest": 1759144123
+        }
+      ],
+      "unique_fetched": 15,
+      "in_window": 15,
+      "complete_to_boundary": true
+    },
+    {
+      "id": "3424494226",
+      "title": "Health indicators",
+      "pages": [
+        {
+          "url": "https://steamcommunity.com/comment/PublishedFile_Public/render/76561198028907520/3424494226/?start=0&count=100",
+          "offset": 0,
+          "count": 45,
+          "fresh": 45,
+          "reported_total": 45,
+          "oldest": 1740716194
+        }
+      ],
+      "unique_fetched": 45,
+      "in_window": 45,
+      "complete_to_boundary": true
+    }
+  ]
+}

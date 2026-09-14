@@ -6,12 +6,16 @@
   "scripts": {
     "test": "lua5.1 tests/run.lua",
     "lint": "luacheck modmain.lua modinfo.lua scripts tests",
-    "check": "npm run lint && npm test && python3 tools/package.py --check",
+    "check": "npm run format:check && npm run lint && npm test && npm run test:research && python3 tools/package.py --check",
     "package": "python3 tools/package.py",
-    "prepare": "git config core.hooksPath .githooks"
+    "prepare": "git config core.hooksPath .githooks",
+    "format": "stylua modmain.lua modinfo.lua scripts tests",
+    "format:check": "stylua --check modmain.lua modinfo.lua scripts tests",
+    "test:research": "python3 -m unittest discover -s tests -p 'test_workshop_collect.py'"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
-    "@commitlint/config-conventional": "^19.8.1"
+    "@commitlint/config-conventional": "^19.8.1",
+    "@johnnymorganz/stylua-bin": "2.5.2"
   }
 }

@@ -1,0 +1,1981 @@
+{
+  "schema": 1,
+  "date": "2026-09-14",
+  "case_count": 74,
+  "note": "These are distinct actionable scenarios, not an assertion of independent root causes or reproduced defects in reference mods. Shared regression tests are reused; manual checks remain pending.",
+  "cases": [
+    {
+      "id": "R01",
+      "issue": "组件接口变动或信息字段类型错误导致 hover 崩溃",
+      "assessment": "有效机制风险",
+      "wildwise": "公共读取器和查看者读取器分别隔离异常；按字段类型过滤。",
+      "tests": [
+        "WW-O01",
+        "WW-O03",
+        "WW2-08",
+        "WW2-20"
+      ],
+      "sources": [
+        {
+          "workshop_id": "2189004162",
+          "mod": "Insight (Show Me+)",
+          "comment_id": "660485761139808420",
+          "date_cn": "2026-05-31T19:42:08+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2189004162#comment_660485761139808420",
+          "author_is_creator": false,
+          "body_sha256": "412a7cd67572f1481523dbe5977a0d0f8c01ff9a38336879042daaac7eeed726"
+        },
+        {
+          "workshop_id": "2189004162",
+          "mod": "Insight (Show Me+)",
+          "comment_id": "520883440134067707",
+          "date_cn": "2026-09-12T14:28:06+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2189004162#comment_520883440134067707",
+          "author_is_creator": false,
+          "body_sha256": "a8537413a600c72f507d15b62fde05d8517a9fbf432bc28435d40f96306a7f5c"
+        }
+      ],
+      "manual_pending": false
+    },
+    {
+      "id": "R02",
+      "issue": "提示、牛条遮挡库存或在 HUD 重建后残留",
+      "assessment": "具体 UI 反馈，外观待复现",
+      "wildwise": "复用原生 hoverer 并释放自有文本；保留位置和缩放。",
+      "tests": [
+        "WW-U01",
+        "MAN-UI01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "1852257480",
+          "mod": "Beefalo Widget",
+          "comment_id": "3941272762728799964",
+          "date_cn": "2023-11-04T02:35:54+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1852257480#comment_3941272762728799964",
+          "author_is_creator": false,
+          "body_sha256": "25e90464a44c00b0c09387b14d5e4117f5e5bb78b06c47698422714c9669b25f"
+        },
+        {
+          "workshop_id": "836583293",
+          "mod": "Item Info",
+          "comment_id": "592940620292783468",
+          "date_cn": "2026-09-08T06:09:19+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=836583293#comment_592940620292783468",
+          "author_is_creator": false,
+          "body_sha256": "331641c2a6e5b58caa3ae9027a25d535faf606a7ea93c4f33b6acec34d8f6f1c"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R03",
+      "issue": "地图／信息组合泄露远处兴趣点并铺满屏幕边缘",
+      "assessment": "有效权限风险",
+      "wildwise": "观察不授予探索；只回放明确获准的玩家探索点。",
+      "tests": [
+        "WW-X01",
+        "MAN-M01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "378160973",
+          "mod": "Global Positions",
+          "comment_id": "597387460190730285",
+          "date_cn": "2024-12-19T12:01:04+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=378160973#comment_597387460190730285",
+          "author_is_creator": false,
+          "body_sha256": "1806e4b4a8fa05ebb19e443abc8cb385f3ca6c11a736fef3c03184fb0980747f"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R04",
+      "issue": "虚空面具怪失效后洞穴崩溃或掉线",
+      "assessment": "可能；玩家后来报告原版已修复，不能统一归因",
+      "wildwise": "实体移除立即清理订阅，健康读取隔离；保留真正洞穴场景。",
+      "tests": [
+        "WW-H01",
+        "WW-O03",
+        "MAN-L01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "1207269058",
+          "mod": "Simple Health Bar DST",
+          "comment_id": "615423511478078253",
+          "date_cn": "2025-08-16T13:25:27+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1207269058#comment_615423511478078253",
+          "author_is_creator": false,
+          "body_sha256": "b2111b3e43e701d472f06dbc3529c286b1337aa46696d894ab720768da913107"
+        },
+        {
+          "workshop_id": "1207269058",
+          "mod": "Simple Health Bar DST",
+          "comment_id": "687490526751139116",
+          "date_cn": "2025-11-28T10:50:54+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1207269058#comment_687490526751139116",
+          "author_is_creator": false,
+          "body_sha256": "e048f740d8a3e2f09151cfdc2583697c9fff03ed800ad51a7d7660884c24ed7b"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R05",
+      "issue": "地震／遗迹掉落物尚未落地即被处理",
+      "assessment": "有效落地风险，原投诉未完整复现",
+      "wildwise": "同时检查来源、落地、高度、速度和保护标签。",
+      "tests": [
+        "WW-I02",
+        "MAN-I01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "1803285852",
+          "mod": "Auto Stack and Pick Up",
+          "comment_id": "600770973001658480",
+          "date_cn": "2025-02-21T19:10:26+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1803285852#comment_600770973001658480",
+          "author_is_creator": false,
+          "body_sha256": "4e33b9c25083aa9333f605a4dddbf1dfab6d3555b76f66395d4468fdc9e4d462"
+        },
+        {
+          "workshop_id": "1803285852",
+          "mod": "Auto Stack and Pick Up",
+          "comment_id": "832746196752847377",
+          "date_cn": "2026-05-08T16:39:34+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1803285852#comment_832746196752847377",
+          "author_is_creator": true,
+          "body_sha256": "205c3a3934b6fbd46df076637692bfdbc0ed0ca88d3d014d86cccb2074d5b095"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R06",
+      "issue": "合堆方向把岸上物品带入水中",
+      "assessment": "作者解释了合并方向风险",
+      "wildwise": "合入更旧的合法堆；船岸分离，保持原版数量与属性。",
+      "tests": [
+        "WW-I02",
+        "MAN-I01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "1803285852",
+          "mod": "Auto Stack and Pick Up",
+          "comment_id": "605290412319609837",
+          "date_cn": "2025-08-16T07:44:44+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1803285852#comment_605290412319609837",
+          "author_is_creator": false,
+          "body_sha256": "9a596853b3a58b9d19ac8271910769490a1dc69c6338fbbabec0ff002cbf11a3"
+        },
+        {
+          "workshop_id": "1803285852",
+          "mod": "Auto Stack and Pick Up",
+          "comment_id": "592906450273072172",
+          "date_cn": "2025-08-25T01:41:02+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1803285852#comment_592906450273072172",
+          "author_is_creator": true,
+          "body_sha256": "623462442de73b8e0eb424f356a1c74bbc62fb88675cc8e67d3e1c1e0f6a538a"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R07",
+      "issue": "读档、主动丢弃与新掉落来源混淆",
+      "assessment": "Wildwise 源码发现，评论只是来源／库存风险线索",
+      "wildwise": "只在 POPULATING 内标记恢复物，拾取许可不等于合堆许可；运行期解包不是读档。",
+      "tests": [
+        "WW-I01",
+        "WW-I03",
+        "WW-I04",
+        "WW-I05",
+        "MAN-SAVE01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "1803285852",
+          "mod": "Auto Stack and Pick Up",
+          "comment_id": "592892850991097537",
+          "date_cn": "2025-03-28T23:33:12+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1803285852#comment_592892850991097537",
+          "author_is_creator": false,
+          "body_sha256": "01b36c50b49839ac79a0af9d9703cb98b3ceebcdcf248317581ba40b73812810"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R08",
+      "issue": "旧世界地热洞穴与虫洞初始化崩溃",
+      "assessment": "可能；保留分片与旧存档触发",
+      "wildwise": "确认双向原生传送器，按世界保存；损坏存档原样保留。",
+      "tests": [
+        "WW-M01",
+        "WW-M04",
+        "MAN-M02"
+      ],
+      "sources": [
+        {
+          "workshop_id": "362175979",
+          "mod": "Wormhole Marks [DST]",
+          "comment_id": "809099128024976646",
+          "date_cn": "2026-04-02T19:55:54+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=362175979#comment_809099128024976646",
+          "author_is_creator": false,
+          "body_sha256": "34c39755f129bca57093e341c4f3b2bf963e315ae5009bab4e8d490f77fd2c90"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R09",
+      "issue": "专服虫洞地图图标变成粉蓝缺失贴图",
+      "assessment": "具体渲染反馈",
+      "wildwise": "使用原版符号和编号；无画面测试不能确认颜色与材质。",
+      "tests": [
+        "MAN-UI01",
+        "MAN-M02"
+      ],
+      "sources": [
+        {
+          "workshop_id": "362175979",
+          "mod": "Wormhole Marks [DST]",
+          "comment_id": "571540589652416873",
+          "date_cn": "2026-06-13T00:45:59+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=362175979#comment_571540589652416873",
+          "author_is_creator": false,
+          "body_sha256": "26374c7a10911e1772fef9ab5c3ed5aeb8994e5a01e26f60f529cd7c35114443"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R10",
+      "issue": "重启、回档、切换地图模组后丢失探索",
+      "assessment": "有效持久化风险",
+      "wildwise": "深拷贝保存，完整验证后加载；网络快照完成后才切换。",
+      "tests": [
+        "WW-M01",
+        "WW-M02",
+        "WW-M03",
+        "MAN-SAVE01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "3138571948",
+          "mod": "Global Positions (CompleteSync)",
+          "comment_id": "4348858679324065759",
+          "date_cn": "2024-02-22T22:31:12+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3138571948#comment_4348858679324065759",
+          "author_is_creator": false,
+          "body_sha256": "81abdb8ed247c2a53fe852d85b0f48fe1e1d3326bc367e34363a602b7aadd03b"
+        },
+        {
+          "workshop_id": "3138571948",
+          "mod": "Global Positions (CompleteSync)",
+          "comment_id": "594029097881995681",
+          "date_cn": "2025-07-20T02:44:52+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3138571948#comment_594029097881995681",
+          "author_is_creator": false,
+          "body_sha256": "aa3d3a5063bf0800703986a6373b59c30c1d82f92b8bdf560dee4509b580aa15"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R11",
+      "issue": "玩家进入／洞穴旅行触发整图同步卡顿",
+      "assessment": "多条具体反馈，时长仅为报告值",
+      "wildwise": "探索点去重、分批回放与字节／节点预算；不同步原版地图二进制。",
+      "tests": [
+        "WW-M03",
+        "MAN-P01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "3138571948",
+          "mod": "Global Positions (CompleteSync)",
+          "comment_id": "506200271931605709",
+          "date_cn": "2025-04-16T00:00:40+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3138571948#comment_506200271931605709",
+          "author_is_creator": false,
+          "body_sha256": "514a80f3629ad850400a31bf86053d347c1c4ccb3ba4a48f62524a52494c8c93"
+        },
+        {
+          "workshop_id": "3138571948",
+          "mod": "Global Positions (CompleteSync)",
+          "comment_id": "6297799348956875093",
+          "date_cn": "2024-05-20T00:34:14+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3138571948#comment_6297799348956875093",
+          "author_is_creator": false,
+          "body_sha256": "a52b2e7f31c583338d2c77c25d0f9be5e8eba3fd1d147f358728e96a96dd91ed"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R12",
+      "issue": "地图覆盖层干扰 WX 绘图或运输无人机",
+      "assessment": "作者回应修复；保留原生交互风险",
+      "wildwise": "不包装无人机地图控制，不把无人机当玩家会话。",
+      "tests": [
+        "MAN-M03"
+      ],
+      "sources": [
+        {
+          "workshop_id": "3138571948",
+          "mod": "Global Positions (CompleteSync)",
+          "comment_id": "801219096906786738",
+          "date_cn": "2026-04-17T17:20:20+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3138571948#comment_801219096906786738",
+          "author_is_creator": false,
+          "body_sha256": "7b061732171c8cca9a20f36ad3c91ff8ea62f02eeb709f6eb9a2793be50b3ceb"
+        },
+        {
+          "workshop_id": "3138571948",
+          "mod": "Global Positions (CompleteSync)",
+          "comment_id": "801219423226562724",
+          "date_cn": "2026-04-18T20:59:20+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3138571948#comment_801219423226562724",
+          "author_is_creator": true,
+          "body_sha256": "96009062d2c80d70abd7406c929512e0f93901bf81a5f2844a9de6185870e382"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R13",
+      "issue": "Shift 放置吞掉原版网格或放置行为",
+      "assessment": "布点／输入反馈，具体间距仍需图形验证",
+      "wildwise": "普通 placer 透传，批量部署使用原生间距与 CanDeploy。",
+      "tests": [
+        "WW-Q02",
+        "MAN-Q01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "2873533916",
+          "mod": "ActionQueue RB3",
+          "comment_id": "654855914502986973",
+          "date_cn": "2026-05-30T01:35:53+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2873533916#comment_654855914502986973",
+          "author_is_creator": false,
+          "body_sha256": "8c18b3869f5ae2606e725e73e0fe8ed5f3e5fa2b3a8a31a7f404b29e9d8bf6d2"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R14",
+      "issue": "队列开启后不能手动攻击，或晾肉架反复开关",
+      "assessment": "具体原版操作报告",
+      "wildwise": "手动攻击透传并取消队列；不循环 RUMMAGE，新肉架仍手动取物。",
+      "tests": [
+        "WW-Q02",
+        "WW-O05",
+        "MAN-Q01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "2873533916",
+          "mod": "ActionQueue RB3",
+          "comment_id": "617711086156659570",
+          "date_cn": "2026-09-13T07:28:42+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2873533916#comment_617711086156659570",
+          "author_is_creator": false,
+          "body_sha256": "0e4929da18d19db1f283a1c516a34641498196a0551878588a402aba443325fb"
+        },
+        {
+          "workshop_id": "2873533916",
+          "mod": "ActionQueue RB3",
+          "comment_id": "617710833111269581",
+          "date_cn": "2026-09-11T19:31:07+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2873533916#comment_617710833111269581",
+          "author_is_creator": false,
+          "body_sha256": "4179a210b4d20679472aaac5088d919ef0ae113cea32b37ba0758a28e73c8ce5"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R15",
+      "issue": "取消、目标移除或船销毁后旧任务继续操作",
+      "assessment": "有效引用失效风险",
+      "wildwise": "取消清回调与预览；已毁平台不退回旧世界坐标。",
+      "tests": [
+        "WW-Q01",
+        "WW-Q03",
+        "MAN-Q02"
+      ],
+      "sources": [
+        {
+          "workshop_id": "2873533916",
+          "mod": "ActionQueue RB3",
+          "comment_id": "807973052001319796",
+          "date_cn": "2026-03-30T18:21:17+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2873533916#comment_807973052001319796",
+          "author_is_creator": false,
+          "body_sha256": "c337f554345f252b65d3a1657c3c30a1ccfad988b12acd289dd7fdc022a6898a"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R16",
+      "issue": "包裹木牌无图、箱体遮挡及重复更新",
+      "assessment": "图像与生命周期风险",
+      "wildwise": "不生成包裹内容物；首件图像变化合并更新，辅助牌不保存且不可交互。",
+      "tests": [
+        "WW-S01",
+        "WW-S02",
+        "WW-S03",
+        "WW-S04",
+        "WW-S05",
+        "MAN-S01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "1595631294",
+          "mod": "Smart Minisign",
+          "comment_id": "4328601129273578452",
+          "date_cn": "2024-05-27T23:37:05+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1595631294#comment_4328601129273578452",
+          "author_is_creator": false,
+          "body_sha256": "e6efedc9e058fe719b3aae2cbbe523ed646246f4fddba65dc78a209930cd7bc4"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R17",
+      "issue": "骑乘喂食或技能改变后倒计时不重置",
+      "assessment": "具体原生计时变化",
+      "wildwise": "读取原版当前踢落任务，不另写旧技能／喂食公式。",
+      "tests": [
+        "WWE-01",
+        "MAN-B01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "1852257480",
+          "mod": "Beefalo Widget",
+          "comment_id": "501694185121844877",
+          "date_cn": "2025-03-20T03:17:47+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1852257480#comment_501694185121844877",
+          "author_is_creator": false,
+          "body_sha256": "21699ee649f3f86eea5eff813fc19100ace22b832ab3b47e9d0b13b811f258ac"
+        },
+        {
+          "workshop_id": "1852257480",
+          "mod": "Beefalo Widget",
+          "comment_id": "596276418836464588",
+          "date_cn": "2025-06-01T00:05:26+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1852257480#comment_596276418836464588",
+          "author_is_creator": false,
+          "body_sha256": "3ebf069c056c7ceca5aa0605cdc0ed40b82ef4a643dcc5bfc1677267b7d02eef"
+        },
+        {
+          "workshop_id": "1852257480",
+          "mod": "Beefalo Widget",
+          "comment_id": "4036978698784670600",
+          "date_cn": "2023-12-20T21:37:56+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1852257480#comment_4036978698784670600",
+          "author_is_creator": false,
+          "body_sha256": "8520c78f119a03e9dc4d92d69e1e0266de2aa8f87309db60dd8a64cd62685a4c"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R18",
+      "issue": "空坐骑、Woby 或旧存档开启牛条时不显示／崩溃",
+      "assessment": "可能，显示开关与接口分别处理",
+      "wildwise": "缺失组件不伪造牛字段；新客户端会话重新订阅。",
+      "tests": [
+        "WW-B01",
+        "MAN-B01",
+        "MAN-L01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "2477889104",
+          "mod": "Beefalo Status Bar",
+          "comment_id": "598536186508620419",
+          "date_cn": "2025-08-27T12:41:54+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2477889104#comment_598536186508620419",
+          "author_is_creator": false,
+          "body_sha256": "08f0d71cd21d4e80e2f30d238e6e00dc0889c1b2775bd1cc6e2160bb9e637e35"
+        },
+        {
+          "workshop_id": "2477889104",
+          "mod": "Beefalo Status Bar",
+          "comment_id": "592910856401980926",
+          "date_cn": "2025-10-12T08:37:31+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2477889104#comment_592910856401980926",
+          "author_is_creator": false,
+          "body_sha256": "3140e3360a5b617de4f7bd9b0b0a302c8a52478c57bebc3a2d2dd7a9341be711"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R19",
+      "issue": "牛状态与 Show Me 信息组合影响温度／冻伤",
+      "assessment": "内部组合必须保留，原因未确认",
+      "wildwise": "牛和信息共用只读事实，不改温度、受伤或食用方法。",
+      "tests": [
+        "WW-O04",
+        "WW-X02",
+        "MAN-B02"
+      ],
+      "sources": [
+        {
+          "workshop_id": "1852257480",
+          "mod": "Beefalo Widget",
+          "comment_id": "4293692116967274318",
+          "date_cn": "2024-03-22T04:01:48+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1852257480#comment_4293692116967274318",
+          "author_is_creator": false,
+          "body_sha256": "71162f9aec2bb9e10ff04e8b019ffc5553e8657e853e1328a548c6623c758649"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R20",
+      "issue": "菜单快捷键、重置或个人／服务器设置混淆",
+      "assessment": "具体输入／配置反馈",
+      "wildwise": "类型清洗、服主许可与个人偏好分离，所有菜单页构造验证。",
+      "tests": [
+        "WW-C01",
+        "MAN-UI01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "1207269058",
+          "mod": "Simple Health Bar DST",
+          "comment_id": "695374430750197699",
+          "date_cn": "2025-12-26T05:23:45+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1207269058#comment_695374430750197699",
+          "author_is_creator": false,
+          "body_sha256": "4e4b09dcf6630896394427815a567081a5e98035c11dfdebe37559b1f8b9d0a0"
+        },
+        {
+          "workshop_id": "1207269058",
+          "mod": "Simple Health Bar DST",
+          "comment_id": "599650845622055032",
+          "date_cn": "2025-04-25T23:28:37+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1207269058#comment_599650845622055032",
+          "author_is_creator": false,
+          "body_sha256": "ea70d3a6f2c574026486d39c7d8dd15e44307cba5c7c8ac399e35339fcaa6971"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R21",
+      "issue": "草、树枝、浆果已采摘后没有再生时间",
+      "assessment": "已复现 Wildwise 遗漏",
+      "wildwise": "接入 pickable 本地与外部定时器；暂停、可采摘和枯萎状态不显示运行倒计时。",
+      "tests": [
+        "WW2-01",
+        "WW2-02",
+        "WW2-03",
+        "WWE-02"
+      ],
+      "sources": [
+        {
+          "workshop_id": "2189004162",
+          "mod": "Insight (Show Me+)",
+          "comment_id": "588433186648910125",
+          "date_cn": "2026-07-27T05:24:45+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2189004162#comment_588433186648910125",
+          "author_is_creator": false,
+          "body_sha256": "c5dc901c982ef0a43442021e6a2f3b3b664b95cf093913e53077fb3c045c411e"
+        }
+      ],
+      "manual_pending": false
+    },
+    {
+      "id": "R22",
+      "issue": "无限燃料或无限时间使时间格式化崩溃",
+      "assessment": "明确数值边界；不要求兼容外部无限燃料模组",
+      "wildwise": "非有限数值不进入 UI；格式化函数也防御 Infinity／NaN。",
+      "tests": [
+        "WW2-08"
+      ],
+      "sources": [
+        {
+          "url": "https://steamcommunity.com/workshop/filedetails/discussion/2189004162/2793873675751084957/?ctp=56",
+          "mod": "Insight (Show Me+) Bug Reporting",
+          "date_displayed": "Feb 11, 2024",
+          "date_precision": "Steam page display; year stated unless marked inferred"
+        }
+      ],
+      "manual_pending": false
+    },
+    {
+      "id": "R23",
+      "issue": "Woby 晾肉架的成熟物信息导致崩溃／缺失",
+      "assessment": "多个信息／定位模组重复报告；Wildwise 漏读计时",
+      "wildwise": "使用当前 wobyrack 继承的 dryingrack 快照，不访问不存在的 stewer。",
+      "tests": [
+        "WW2-27",
+        "WWE-10",
+        "MAN-WOBY01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "666155465",
+          "mod": "Show Me (Origin)",
+          "comment_id": "592890533790092917",
+          "date_cn": "2025-03-02T00:05:34+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=666155465#comment_592890533790092917",
+          "author_is_creator": false,
+          "body_sha256": "ff4804ec1f51861d3e1eeeae79de5032e5964d59647493abe7d7f2edd52a28ea"
+        },
+        {
+          "workshop_id": "2281925291",
+          "mod": "Finder Redux",
+          "comment_id": "604149434011407589",
+          "date_cn": "2025-03-01T16:46:55+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2281925291#comment_604149434011407589",
+          "author_is_creator": false,
+          "body_sha256": "f48152aa8a6a0013031c543f134664c31e581f4598a7c9e71201656d0c80a212"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R24",
+      "issue": "鼠标经过鱼人劣质工具时崩溃",
+      "assessment": "原版实体的重复报告及更新者说明",
+      "wildwise": "只读取数值武器伤害，工具用途不假定等同武器；两种真实工具检查。",
+      "tests": [
+        "WWE-01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "836583293",
+          "mod": "Item Info",
+          "comment_id": "662737213850933064",
+          "date_cn": "2026-05-31T00:54:54+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=836583293#comment_662737213850933064",
+          "author_is_creator": false,
+          "body_sha256": "76ef55056e7689ce06da9a2e650323be664fb3f6f097f570867c3fe7547b7681"
+        },
+        {
+          "workshop_id": "836583293",
+          "mod": "Item Info",
+          "comment_id": "591813437999452166",
+          "date_cn": "2026-08-24T11:09:21+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=836583293#comment_591813437999452166",
+          "author_is_creator": true,
+          "body_sha256": "cb3a1d0a9a0bf3c1c76f3a0c72a894f9b6bb561a9dd9f330e493bc78b3d299a0"
+        },
+        {
+          "workshop_id": "3118627881",
+          "mod": "Item Info Updated",
+          "comment_id": "686367559407223181",
+          "date_cn": "2025-12-30T02:12:19+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3118627881#comment_686367559407223181",
+          "author_is_creator": false,
+          "body_sha256": "8c27328dc78e552e4ed719e13b72c5ba5822a9b5d50d56fd106eeb43579a58ba"
+        }
+      ],
+      "manual_pending": false
+    },
+    {
+      "id": "R25",
+      "issue": "薇格弗德盾牌在库存提示或制作时崩溃",
+      "assessment": "具体原版盾牌报告",
+      "wildwise": "真实 wathgrithr_shield 和 shieldofterror 检查；未知动态伤害不猜测。",
+      "tests": [
+        "WWE-01",
+        "MAN-CRAFT01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "836583293",
+          "mod": "Item Info",
+          "comment_id": "4847652375940306046",
+          "date_cn": "2024-09-30T21:42:53+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=836583293#comment_4847652375940306046",
+          "author_is_creator": false,
+          "body_sha256": "4af8c57dd0493ef29f304f58515e8f01c22820b050e5c83da828b6f7e44b4482"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R26",
+      "issue": "虚空回旋镖 hover／冷却读取崩溃",
+      "assessment": "多个版本重复报告",
+      "wildwise": "真实 voidcloth_boomerang 读取与移除，不执行武器回调。",
+      "tests": [
+        "WWE-01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "3118627881",
+          "mod": "Item Info Updated",
+          "comment_id": "6610810166138716645",
+          "date_cn": "2024-09-14T23:37:45+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3118627881#comment_6610810166138716645",
+          "author_is_creator": false,
+          "body_sha256": "8887aea04d38e369865fdc33ba27afc9f1b31c79d6689e93ad8f53b01ae99399"
+        },
+        {
+          "workshop_id": "2189004162",
+          "mod": "Insight (Show Me+)",
+          "comment_id": "603019333728277977",
+          "date_cn": "2025-01-14T19:15:06+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2189004162#comment_603019333728277977",
+          "author_is_creator": false,
+          "body_sha256": "4f990b44eda7ca1af515d19eedf25dd44298ab40a27fa1a87f55c2a2c8f8d82a"
+        }
+      ],
+      "manual_pending": false
+    },
+    {
+      "id": "R27",
+      "issue": "兔王装备拾取或库存 hover 崩溃",
+      "assessment": "具体实体报告，原因未确认",
+      "wildwise": "真实 rabbitkingspear／rabbitkinghorn 组件检查。",
+      "tests": [
+        "WWE-01",
+        "MAN-BOSS01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "2189004162",
+          "mod": "Insight (Show Me+)",
+          "comment_id": "594035123771768868",
+          "date_cn": "2025-09-27T09:00:17+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2189004162#comment_594035123771768868",
+          "author_is_creator": false,
+          "body_sha256": "45f0d553d3e3d543a6a01ff3c9c6539c0bffbce40c76543308bef7c1554b0fa8"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R28",
+      "issue": "天体后裔血量读取假定存在 minhealth",
+      "assessment": "提供了具体 nil 字段日志",
+      "wildwise": "使用当前 health 的 currenthealth/GetMaxWithPenalty；真实天体后裔检查。",
+      "tests": [
+        "WWE-01",
+        "MAN-BOSS01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "666155465",
+          "mod": "Show Me (Origin)",
+          "comment_id": "603033083890910163",
+          "date_cn": "2025-06-14T15:13:05+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=666155465#comment_603033083890910163",
+          "author_is_creator": false,
+          "body_sha256": "2dcfdff04f452a4dee7b71a009d173764e174e1f553dfdf13ff0eff5d709586c"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R29",
+      "issue": "月亮变异巨兽与致命亮茄没有血量",
+      "assessment": "具体漏显示反馈",
+      "wildwise": "按健康组件观察，不用旧 prefab 白名单；三种变异巨兽和亮茄检查。",
+      "tests": [
+        "WWE-01",
+        "MAN-BOSS01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "375859599",
+          "mod": "Health Info",
+          "comment_id": "4851030962512962042",
+          "date_cn": "2024-10-09T20:44:01+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=375859599#comment_4851030962512962042",
+          "author_is_creator": false,
+          "body_sha256": "a3c13d76a836900ac7893e76e51d9a3d625af88d573fb74aba5f5423285d9ce2"
+        },
+        {
+          "workshop_id": "375859599",
+          "mod": "Health Info",
+          "comment_id": "6966596977781348861",
+          "date_cn": "2024-10-11T19:50:05+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=375859599#comment_6966596977781348861",
+          "author_is_creator": false,
+          "body_sha256": "c0d5a1e0cd71b86b67a128b1e4cdb4cff590e5db5fc97009ab268c4c705658d0"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R30",
+      "issue": "阿比盖尔快速回血药使健康包装方法报错",
+      "assessment": "具体 DoDelta 日志",
+      "wildwise": "不包装 DoDelta；原生回血前后保持函数、生命值变化和订阅释放。",
+      "tests": [
+        "WWE-07",
+        "MAN-BOSS01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "1207269058",
+          "mod": "Simple Health Bar DST",
+          "comment_id": "594035123771515120",
+          "date_cn": "2025-09-25T02:34:34+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1207269058#comment_594035123771515120",
+          "author_is_creator": false,
+          "body_sha256": "9071ff5bc543e1633e5f06356a2f4205cc75d3146814b9235820f7aefa7af9d5"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R31",
+      "issue": "伏特羊角冻后的电击攻击使服务器断开",
+      "assessment": "具体战斗反馈，当前未复现",
+      "wildwise": "观察不改伤害／电击方法，保留实际吃药战斗验收。",
+      "tests": [
+        "WW-X02",
+        "MAN-BOSS01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "1207269058",
+          "mod": "Simple Health Bar DST",
+          "comment_id": "4210371088510449762",
+          "date_cn": "2024-02-01T23:13:56+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1207269058#comment_4210371088510449762",
+          "author_is_creator": false,
+          "body_sha256": "aed53671bf54116765fc739e21df745cfe72ab47e3b2d851ce7bb36bb936eb67"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R32",
+      "issue": "黄金工具的剩余次数被显示成普通工具次数",
+      "assessment": "具体次数报告；未采信附带外部客户端模组的根因",
+      "wildwise": "读取实体自己的有限次数和上限，真实 goldenaxe 验证。",
+      "tests": [
+        "WWE-01"
+      ],
+      "sources": [
+        {
+          "url": "https://steamcommunity.com/workshop/filedetails/discussion/2189004162/2793873675751084957/?ctp=58",
+          "mod": "Insight (Show Me+) Bug Reporting",
+          "date_displayed": "Sep 17, 2024",
+          "date_precision": "Steam page display; year stated unless marked inferred"
+        }
+      ],
+      "manual_pending": false
+    },
+    {
+      "id": "R33",
+      "issue": "位面武器伤害与位面防御没有显示",
+      "assessment": "已复现 Wildwise 字段遗漏",
+      "wildwise": "独立展示 planardamage/GetDamage 与 planardefense/GetDefense；基础伤害不冒充最终实伤。",
+      "tests": [
+        "WW2-19",
+        "WWE-01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "836583293",
+          "mod": "Item Info",
+          "comment_id": "4338734234985548220",
+          "date_cn": "2024-05-26T21:26:43+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=836583293#comment_4338734234985548220",
+          "author_is_creator": false,
+          "body_sha256": "036638fa44dcd3b0c46c58c64ee8cb27fb717d3a8d7ac9d242d4b349914042d9"
+        },
+        {
+          "workshop_id": "3118627881",
+          "mod": "Item Info Updated",
+          "comment_id": "597396690608062603",
+          "date_cn": "2025-03-30T04:32:53+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3118627881#comment_597396690608062603",
+          "author_is_creator": false,
+          "body_sha256": "0be024346c5e6fe281f85b8429131a6e70902f739d9e05c24ef72afd85a2e98c"
+        }
+      ],
+      "manual_pending": false
+    },
+    {
+      "id": "R34",
+      "issue": "WX 插电路增加最大生命后显示 575/125",
+      "assessment": "作者确认修复的数值刷新问题",
+      "wildwise": "即使没有受伤事件也周期刷新最大生命；条宽钳制到画布内。",
+      "tests": [
+        "WW2-28",
+        "MAN-HEALTH01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "3424494226",
+          "mod": "Health indicators",
+          "comment_id": "804595528394653097",
+          "date_cn": "2026-04-04T13:23:01+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3424494226#comment_804595528394653097",
+          "author_is_creator": false,
+          "body_sha256": "37618dcc7915e18f34716de0846619038115aeafc6d924f515a9b7302d8d0316"
+        },
+        {
+          "workshop_id": "3424494226",
+          "mod": "Health indicators",
+          "comment_id": "797841730484310168",
+          "date_cn": "2026-04-18T23:06:52+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3424494226#comment_797841730484310168",
+          "author_is_creator": true,
+          "body_sha256": "c3c6cc79ca6e650e3fca890ce8535aeed245ef15fb5259b7b4cb98d88aad956d"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R35",
+      "issue": "加州卷错误排除两个海带，正确输入无菜谱",
+      "assessment": "具体配方错误",
+      "wildwise": "直接运行当前原版四格 test，真实加州卷验证；同时修复熟肉三种 prefab 别名。",
+      "tests": [
+        "WW2-09",
+        "WWE-03"
+      ],
+      "sources": [
+        {
+          "workshop_id": "727774324",
+          "mod": "Craft Pot [DS, ROG, SW, DST]",
+          "comment_id": "591759121392374230",
+          "date_cn": "2024-12-31T17:53:12+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=727774324#comment_591759121392374230",
+          "author_is_creator": false,
+          "body_sha256": "a6d612b89931d9b2a2fbc0a01a6c4e12b214a00477804ba1a1e41e01375476d5"
+        },
+        {
+          "workshop_id": "727774324",
+          "mod": "Craft Pot [DS, ROG, SW, DST]",
+          "comment_id": "803469937487294105",
+          "date_cn": "2026-04-06T13:52:34+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=727774324#comment_803469937487294105",
+          "author_is_creator": false,
+          "body_sha256": "86608b19ae7abc7658e64f7ad541ff07cf81503a885308d8cfe05dccfe8aa635"
+        }
+      ],
+      "manual_pending": false
+    },
+    {
+      "id": "R36",
+      "issue": "沃利骨头汤配方错误包含树枝",
+      "assessment": "具体配方错误",
+      "wildwise": "可切换普通锅／便携锅，沃利默认便携锅；分别用原版配方，与带树枝／正确材料的原版结果对照。",
+      "tests": [
+        "WW2-31",
+        "WWE-03",
+        "MAN-RECIPE01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "727774324",
+          "mod": "Craft Pot [DS, ROG, SW, DST]",
+          "comment_id": "591759121392375891",
+          "date_cn": "2024-12-31T18:32:52+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=727774324#comment_591759121392375891",
+          "author_is_creator": false,
+          "body_sha256": "9396ec89b4b0d32946acef4c94765ed6a55bd22daba7efc68ed5de7a526e2948"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R37",
+      "issue": "火鸡正餐最小材料推导错误",
+      "assessment": "同类开发者说明",
+      "wildwise": "不推导最小菜谱；四个明确输入直接判定，保留真实双鸡腿对照。",
+      "tests": [
+        "WWE-03"
+      ],
+      "sources": [
+        {
+          "workshop_id": "727774324",
+          "mod": "Craft Pot [DS, ROG, SW, DST]",
+          "comment_id": "4361247379736595077",
+          "date_cn": "2024-04-03T11:55:42+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=727774324#comment_4361247379736595077",
+          "author_is_creator": false,
+          "body_sha256": "adf3177fc1bb1472797815b05c059b52b6c15443866e775b827bb90bbf63d69b"
+        }
+      ],
+      "manual_pending": false
+    },
+    {
+      "id": "R38",
+      "issue": "料理列表排序或载入时与 nil 比较",
+      "assessment": "明确日志与载入触发",
+      "wildwise": "输入必须四个连续格；校验标签和配方，失败不误报低优先级菜；换食材／锅时清结果并丢弃过期响应。",
+      "tests": [
+        "WW2-10",
+        "WW2-11",
+        "WW2-12",
+        "WW2-13",
+        "WW2-14",
+        "WW2-30",
+        "MAN-RECIPE01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "727774324",
+          "mod": "Craft Pot [DS, ROG, SW, DST]",
+          "comment_id": "632295800477591236",
+          "date_cn": "2025-02-16T14:21:01+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=727774324#comment_632295800477591236",
+          "author_is_creator": false,
+          "body_sha256": "c18bc5835f9b136ab59f5d10ab749813c35a8445239f489006e39218f71d27a1"
+        },
+        {
+          "workshop_id": "727774324",
+          "mod": "Craft Pot [DS, ROG, SW, DST]",
+          "comment_id": "572674734038235749",
+          "date_cn": "2026-09-09T21:14:06+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=727774324#comment_572674734038235749",
+          "author_is_creator": false,
+          "body_sha256": "33862c764fe48b87fb840075836feffd09fad64b6363b741dc27de47b9d2885a"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R39",
+      "issue": "沃尔夫冈最爱食物未计算额外饥饿收益",
+      "assessment": "重复食用数值报告",
+      "wildwise": "把实际查看者传给原版 edible，真实最爱土豆预测与食用差值对照。",
+      "tests": [
+        "WW2-23",
+        "WWE-04"
+      ],
+      "sources": [
+        {
+          "workshop_id": "3118627881",
+          "mod": "Item Info Updated",
+          "comment_id": "597397069919974489",
+          "date_cn": "2025-04-03T21:21:36+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3118627881#comment_597397069919974489",
+          "author_is_creator": false,
+          "body_sha256": "bd6f262b46c19984dbe068a6e11320b947580fa3929cf2dfa6d88939adeef042"
+        },
+        {
+          "workshop_id": "3118627881",
+          "mod": "Item Info Updated",
+          "comment_id": "4300446114899949517",
+          "date_cn": "2024-03-04T19:41:02+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3118627881#comment_4300446114899949517",
+          "author_is_creator": false,
+          "body_sha256": "64cd325be823dfa69932cd90fe4a05751daadfdbe3b7c966e85e5fd407923c35"
+        }
+      ],
+      "manual_pending": false
+    },
+    {
+      "id": "R40",
+      "issue": "保鲜背包内食物时间仍被当成准确腐败倒计时",
+      "assessment": "数值语义问题",
+      "wildwise": "标为基础腐败余量；不执行可能有副作用的 preserver 回调，不承诺环境条件下 ETA。",
+      "tests": [
+        "WW2-24",
+        "MAN-FOOD01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "3118627881",
+          "mod": "Item Info Updated",
+          "comment_id": "4844274022645082330",
+          "date_cn": "2024-09-23T13:50:28+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3118627881#comment_4844274022645082330",
+          "author_is_creator": false,
+          "body_sha256": "8ad872dc6fbe423bdf100f12aebd6313a7fafbf6acc2ac92f3181e94d9255eea"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R41",
+      "issue": "礼物／包裹信息读取 nil 导致崩溃",
+      "assessment": "具体 unwrappable 日志",
+      "wildwise": "只读保存摘要，异常独立于角色食用／世界信息；不临时 SpawnPrefab。",
+      "tests": [
+        "WW2-18",
+        "WW2-20",
+        "WWE-05"
+      ],
+      "sources": [
+        {
+          "url": "https://steamcommunity.com/workshop/filedetails/discussion/2189004162/2793873675751084957/?ctp=65",
+          "mod": "Insight (Show Me+) Bug Reporting",
+          "date_displayed": "Oct 8, 2025",
+          "date_precision": "Steam page display; year stated unless marked inferred"
+        }
+      ],
+      "manual_pending": false
+    },
+    {
+      "id": "R42",
+      "issue": "节日礼物中的物品无法被定位",
+      "assessment": "Wildwise 原先只匹配直接内容，能力缺口已补",
+      "wildwise": "容器定位读取有界一层包裹快照，保留权限与总访问预算。",
+      "tests": [
+        "WW2-17",
+        "WWE-05",
+        "MAN-FIND01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "2189004162",
+          "mod": "Insight (Show Me+)",
+          "comment_id": "594034489924339791",
+          "date_cn": "2025-09-20T08:04:47+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2189004162#comment_594034489924339791",
+          "author_is_creator": false,
+          "body_sha256": "a106d73aef886422bdb7e820ba82ed5d94d27a3d13c4e7cfefaa0750589bc62f"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R43",
+      "issue": "暗影切斯特／魔术箱的共享内容无法定位",
+      "assessment": "原版口袋存储形态风险",
+      "wildwise": "经当前 container_proxy 公开主存储接口查询，失效主存储不读取。",
+      "tests": [
+        "WW2-21",
+        "MAN-FIND01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "666155465",
+          "mod": "Show Me (Origin)",
+          "comment_id": "4199112956967750002",
+          "date_cn": "2024-02-11T20:02:26+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=666155465#comment_4199112956967750002",
+          "author_is_creator": false,
+          "body_sha256": "c0edbf645d0e61d4ad42dc2c1bf2a27170898312fed28dafb93383eebc6c3c10"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R44",
+      "issue": "拆分箱中堆叠或离开箱子后高亮永久残留",
+      "assessment": "多个定位模组重复反馈",
+      "wildwise": "使用有时限的自有屏幕标记，不改实体 highlight 组件；保留拆堆与离屏实机用例。",
+      "tests": [
+        "MAN-FIND01",
+        "MAN-L01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "837819197",
+          "mod": "Where's My Stuff, Dude? (Finder For Gamepad)",
+          "comment_id": "594022757599048463",
+          "date_cn": "2025-05-11T03:17:52+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=837819197#comment_594022757599048463",
+          "author_is_creator": false,
+          "body_sha256": "8e9c3ca2dceab46096623e7fe432079cc6ab7cecf1d46d89726af03b61c6d388"
+        },
+        {
+          "workshop_id": "837819197",
+          "mod": "Where's My Stuff, Dude? (Finder For Gamepad)",
+          "comment_id": "594021624312805630",
+          "date_cn": "2025-04-29T03:19:39+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=837819197#comment_594021624312805630",
+          "author_is_creator": true,
+          "body_sha256": "9e3bc53f9138a73551cd3438aa5e2f47bb7ca305f519788aa9af6b27fc540360"
+        },
+        {
+          "workshop_id": "2281925291",
+          "mod": "Finder Redux",
+          "comment_id": "4034725235914491668",
+          "date_cn": "2023-12-03T00:55:26+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2281925291#comment_4034725235914491668",
+          "author_is_creator": false,
+          "body_sha256": "0187bce6f714e2acc1fb7576fcbeef8f0e391c58ab2f02e27568e9e2ad56c434"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R45",
+      "issue": "切换背包／护甲后提示堆在左下角",
+      "assessment": "重复且有稳定步骤",
+      "wildwise": "提示归属当前 hoverer；食材选择忽略失效背包物并包含鼠标物品。",
+      "tests": [
+        "WW-U01",
+        "WW2-15",
+        "MAN-UI02"
+      ],
+      "sources": [
+        {
+          "workshop_id": "836583293",
+          "mod": "Item Info",
+          "comment_id": "592940620292783468",
+          "date_cn": "2026-09-08T06:09:19+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=836583293#comment_592940620292783468",
+          "author_is_creator": false,
+          "body_sha256": "331641c2a6e5b58caa3ae9027a25d535faf606a7ea93c4f33b6acec34d8f6f1c"
+        },
+        {
+          "workshop_id": "3118627881",
+          "mod": "Item Info Updated",
+          "comment_id": "595142971903488063",
+          "date_cn": "2025-03-09T14:05:14+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3118627881#comment_595142971903488063",
+          "author_is_creator": false,
+          "body_sha256": "5e5e38c9d8a8cceb3739997995340c462e718dad4d2153576daad96d4a809957"
+        },
+        {
+          "workshop_id": "3118627881",
+          "mod": "Item Info Updated",
+          "comment_id": "4425436358662253430",
+          "date_cn": "2024-08-22T00:07:00+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3118627881#comment_4425436358662253430",
+          "author_is_creator": false,
+          "body_sha256": "b3e2d0f924126170b4354c086f3dd0d3e38c7f5425ac84253324ca5d8fcf6030"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R46",
+      "issue": "长时间游戏后断线重进导致客户端崩溃",
+      "assessment": "内存泄漏是玩家推测，保留长时场景",
+      "wildwise": "有界 LRU、按玩家销毁观察和 UI，不接收已关闭实例更新。",
+      "tests": [
+        "WW2-29",
+        "MAN-L01",
+        "MAN-P01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "836583293",
+          "mod": "Item Info",
+          "comment_id": "571542424813465513",
+          "date_cn": "2026-07-02T13:00:19+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=836583293#comment_571542424813465513",
+          "author_is_creator": false,
+          "body_sha256": "d685928fad6a92bed2883262b96e40e3f8b9baad66e5dbb0b12d06b02f185c64"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R47",
+      "issue": "客户端 RPC 到达时 ThePlayer 为空",
+      "assessment": "明确 RPC 日志",
+      "wildwise": "先有当前客户端会话才接收；旧会话和已销毁实例不更新。",
+      "tests": [
+        "WW2-29",
+        "MAN-L01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "1185229307",
+          "mod": "Epic Healthbar",
+          "comment_id": "595153695607452384",
+          "date_cn": "2025-07-06T20:51:11+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1185229307#comment_595153695607452384",
+          "author_is_creator": false,
+          "body_sha256": "8ede963bd48f5b6bac543e41bba54f66c408d2ac42d004d62f273dfef0315a7c"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R48",
+      "issue": "过多信息序列化造成卡死／丢失提示",
+      "assessment": "已发现 Wildwise 预算和发送确认缺陷",
+      "wildwise": "文本按 UTF-8 边界裁剪并限制总量；失败快照／增量不推进已发送缓存。",
+      "tests": [
+        "WW2-04",
+        "WW2-05",
+        "WW2-06",
+        "WW2-07",
+        "WWE-08",
+        "WWE-09"
+      ],
+      "sources": [
+        {
+          "workshop_id": "2189004162",
+          "mod": "Insight (Show Me+)",
+          "comment_id": "603018408517202212",
+          "date_cn": "2025-01-03T21:51:12+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2189004162#comment_603018408517202212",
+          "author_is_creator": false,
+          "body_sha256": "de2ba699620fb48552c8d8c6e2d2f3edc3f92b9dbc25a69b20f589079da9673b"
+        }
+      ],
+      "manual_pending": false
+    },
+    {
+      "id": "R49",
+      "issue": "血条代理网络字段越界，日志持续刷屏",
+      "assessment": "具体类型／范围日志",
+      "wildwise": "消息先过 schema 类型过滤，客户端再次验证；不使用参考模组的窄位宽代理。",
+      "tests": [
+        "WW2-08",
+        "WW2-29"
+      ],
+      "sources": [
+        {
+          "workshop_id": "1185229307",
+          "mod": "Epic Healthbar",
+          "comment_id": "596288191849387433",
+          "date_cn": "2025-10-09T02:20:46+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1185229307#comment_596288191849387433",
+          "author_is_creator": false,
+          "body_sha256": "b01a1168b7277c5fe59aa4726dbe4646fbd7ee5aef69a9e2c979c6863c0bb625"
+        },
+        {
+          "workshop_id": "1185229307",
+          "mod": "Epic Healthbar",
+          "comment_id": "760682600544364512",
+          "date_cn": "2026-03-04T01:18:42+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1185229307#comment_760682600544364512",
+          "author_is_creator": false,
+          "body_sha256": "dd54da8a44d1a6da0cae43b778e9149ac9ab1061549e2917015d0a2c9d7e9e7d"
+        }
+      ],
+      "manual_pending": false
+    },
+    {
+      "id": "R50",
+      "issue": "智能小木牌与 Insight 同时开启卡在加载阶段",
+      "assessment": "内部木牌＋信息组合，根因尚未确认",
+      "wildwise": "避免全局 RegisterPrefabs 接管；真实全模块启动与原版 drawable 检查。",
+      "tests": [
+        "WW-S01",
+        "WWE-05",
+        "MAN-SIGN01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "1595631294",
+          "mod": "Smart Minisign",
+          "comment_id": "586181093023038696",
+          "date_cn": "2026-07-22T11:28:54+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1595631294#comment_586181093023038696",
+          "author_is_creator": false,
+          "body_sha256": "caca9d880c248c97d0d38f5ab344988092b2705b744898986632b6170f179101"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R51",
+      "issue": "Craft Pot 与 ActionQueue 一起新建世界崩溃",
+      "assessment": "内部料理＋队列组合必须保留",
+      "wildwise": "服务器读取配方、客户端 UI 只负责选择；菜单焦点不触发批量制作。",
+      "tests": [
+        "WW2-16",
+        "WWE-03",
+        "MAN-RECIPE01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "727774324",
+          "mod": "Craft Pot [DS, ROG, SW, DST]",
+          "comment_id": "568163224011351737",
+          "date_cn": "2026-06-16T08:53:23+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=727774324#comment_568163224011351737",
+          "author_is_creator": false,
+          "body_sha256": "fdffacce136c4dcf25a81801077a243982a661c8cf90e854797da496d77de0ab"
+        },
+        {
+          "workshop_id": "2189004162",
+          "mod": "Insight (Show Me+)",
+          "comment_id": "599648970674849509",
+          "date_cn": "2025-04-05T03:16:52+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=2189004162#comment_599648970674849509",
+          "author_is_creator": false,
+          "body_sha256": "6da6ada6e2df5c8c9c11830664664e85558c77a354076f1bf929d92c2fd098a6"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R52",
+      "issue": "骑牛耕地与列队行为学组合使人物消失并卡住",
+      "assessment": "明确内部牛＋队列组合",
+      "wildwise": "缺少原生骑乘动作时暂停，不循环换工具强制动作；不改骑乘 StateGraph。",
+      "tests": [
+        "WW2-26",
+        "MAN-RIDEQUEUE01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "3439927311",
+          "mod": "Beefalo Info HUD",
+          "comment_id": "546740620659555265",
+          "date_cn": "2025-07-12T19:47:36+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3439927311#comment_546740620659555265",
+          "author_is_creator": false,
+          "body_sha256": "42b9a58fca441f6f6273fb8567a2a6d406d0174cde899454f67d60523bfd2caa"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R53",
+      "issue": "镀金骑士掉落马蹄铁时自动整理崩溃",
+      "assessment": "具体掉落实体报告",
+      "wildwise": "用真实 horseshoe 检查信息与整理资格，不对不适合堆叠实体改组件。",
+      "tests": [
+        "WWE-01",
+        "WWE-06",
+        "MAN-I02"
+      ],
+      "sources": [
+        {
+          "workshop_id": "1803285852",
+          "mod": "Auto Stack and Pick Up",
+          "comment_id": "589561020200073617",
+          "date_cn": "2026-08-16T18:25:43+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1803285852#comment_589561020200073617",
+          "author_is_creator": false,
+          "body_sha256": "96eafa411af6800b4447c1fe595a3ab235180cbd79326e30ce3423a0903c5402"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R54",
+      "issue": "满背包制作／转移后出现幽灵格或重复物品",
+      "assessment": "可能，作者未确认归因；保留内部库存＋制作风险",
+      "wildwise": "使用原版容量与部分接收，余量留地；排队预留防止重复消费。",
+      "tests": [
+        "WW-I02",
+        "MAN-I02",
+        "MAN-CRAFT01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "1803285852",
+          "mod": "Auto Stack and Pick Up",
+          "comment_id": "592892850991097537",
+          "date_cn": "2025-03-28T23:33:12+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1803285852#comment_592892850991097537",
+          "author_is_creator": false,
+          "body_sha256": "01b36c50b49839ac79a0af9d9703cb98b3ceebcdcf248317581ba40b73812810"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R55",
+      "issue": "Shift 点击种子把它丢在农田上而未种植",
+      "assessment": "具体输入报告",
+      "wildwise": "每项执行前重新用原版动作选择器判断；不把 DROP 映射成种植。",
+      "tests": [
+        "WW-Q02",
+        "MAN-Q03"
+      ],
+      "sources": [
+        {
+          "workshop_id": "1608191708",
+          "mod": "ActionQueue Reborn",
+          "comment_id": "806844795448297990",
+          "date_cn": "2026-03-05T14:50:15+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1608191708#comment_806844795448297990",
+          "author_is_creator": false,
+          "body_sha256": "fc64eb2bd397e7d2e04e9be2642ef833d9d6da37208f829094d0add5953329f1"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R56",
+      "issue": "穿虫洞后采草却跑回旧虫洞并忽略操作",
+      "assessment": "Wildwise 缺少同世界旅行取消通知，已补",
+      "wildwise": "监听原版 wormholetravel；跨分片监听世界事件；清队列、预览与旧按下状态。",
+      "tests": [
+        "WWE-09",
+        "MAN-Q03"
+      ],
+      "sources": [
+        {
+          "workshop_id": "1608191708",
+          "mod": "ActionQueue Reborn",
+          "comment_id": "592887920829998734",
+          "date_cn": "2025-02-02T04:54:05+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1608191708#comment_592887920829998734",
+          "author_is_creator": false,
+          "body_sha256": "7e12bd4cdabd8249d7bd0d4d895407945e7f2c78fc302f19ec29a5a8543582a6"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R57",
+      "issue": "打开制作栏就连续制作上次物品",
+      "assessment": "已复现 Wildwise 焦点判断遗漏",
+      "wildwise": "只有输入就绪且主动按 Shift 才建立制作队列；菜单／文本焦点走原生路径。",
+      "tests": [
+        "WW2-16",
+        "MAN-CRAFT01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "1608191708",
+          "mod": "ActionQueue Reborn",
+          "comment_id": "598518433314774927",
+          "date_cn": "2025-02-12T11:50:44+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1608191708#comment_598518433314774927",
+          "author_is_creator": false,
+          "body_sha256": "29ff13651ba20689b3db5e0f13faa22b1f0746df45fa43028bfdfa7ae4bd82ac"
+        },
+        {
+          "workshop_id": "1608191708",
+          "mod": "ActionQueue Reborn",
+          "comment_id": "592885445492229155",
+          "date_cn": "2025-01-05T01:16:50+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1608191708#comment_592885445492229155",
+          "author_is_creator": false,
+          "body_sha256": "ba5178e813094109daa08f4cecccdfb855980ae1baf395c2515304ae73902667"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R58",
+      "issue": "沃拓克斯框选后角色锁定方向持续行走",
+      "assessment": "具体客户端控制反馈",
+      "wildwise": "手动接管清队列；失焦、服务器取消会使旧鼠标按下失效。",
+      "tests": [
+        "WW-Q02",
+        "WW-Q03",
+        "MAN-Q03"
+      ],
+      "sources": [
+        {
+          "workshop_id": "1608191708",
+          "mod": "ActionQueue Reborn",
+          "comment_id": "595144081821163053",
+          "date_cn": "2025-03-21T19:25:25+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1608191708#comment_595144081821163053",
+          "author_is_creator": false,
+          "body_sha256": "26c65d0b9c335e92464152bca848378b15cde0b335884da9fe51a1dc8e1b0a52"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R59",
+      "issue": "船上制作最后一个箱子时崩溃",
+      "assessment": "具体制作／平台反馈，未确认根因",
+      "wildwise": "带 placer 的配方走原版；平台销毁不能使用旧坐标。",
+      "tests": [
+        "WW-Q01",
+        "WW-Q02",
+        "MAN-CRAFT01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "1608191708",
+          "mod": "ActionQueue Reborn",
+          "comment_id": "563626538148320470",
+          "date_cn": "2025-06-13T23:27:08+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1608191708#comment_563626538148320470",
+          "author_is_creator": false,
+          "body_sha256": "e353b3af1385e80e6df7669c99e67d1c584c31212eebf9efed19d5e3a0d8589e"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R60",
+      "issue": "新桥梁套件部署时队列崩溃",
+      "assessment": "具体新版部署触发",
+      "wildwise": "保留原生 DEPLOY/CanDeploy 与特殊 placer；测试实际船岸点位。",
+      "tests": [
+        "WW-Q01",
+        "MAN-Q03"
+      ],
+      "sources": [
+        {
+          "workshop_id": "1608191708",
+          "mod": "ActionQueue Reborn",
+          "comment_id": "595136186401467725",
+          "date_cn": "2024-12-24T20:08:20+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1608191708#comment_595136186401467725",
+          "author_is_creator": false,
+          "body_sha256": "d832a5fddcfb8d479a3b61c5e2ea6bd5e3e9c27ef3bc48de8f38839168ad6fc6"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R61",
+      "issue": "手柄操作料理锅后按键失灵或声音消失",
+      "assessment": "重复且有明确操作顺序",
+      "wildwise": "队列不抢菜单焦点；纯键鼠／无画面构造不能替代手柄回归。",
+      "tests": [
+        "WW2-16",
+        "MAN-PAD01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "727774324",
+          "mod": "Craft Pot [DS, ROG, SW, DST]",
+          "comment_id": "591780787069868223",
+          "date_cn": "2025-08-30T04:04:28+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=727774324#comment_591780787069868223",
+          "author_is_creator": false,
+          "body_sha256": "e660070d381ab7e8e010c9bc0c036d0792f1e8e550788fc5a7380c13a6da04d0"
+        },
+        {
+          "workshop_id": "727774324",
+          "mod": "Craft Pot [DS, ROG, SW, DST]",
+          "comment_id": "6918175214330229463",
+          "date_cn": "2024-07-15T19:13:16+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=727774324#comment_6918175214330229463",
+          "author_is_creator": false,
+          "body_sha256": "c4d837be0e3a2e0bfaef5f6f537437db84c939b6d7d3c7799e8f4e35b688c742"
+        },
+        {
+          "workshop_id": "727774324",
+          "mod": "Craft Pot [DS, ROG, SW, DST]",
+          "comment_id": "4038104984931637641",
+          "date_cn": "2024-01-02T13:09:52+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=727774324#comment_4038104984931637641",
+          "author_is_creator": false,
+          "body_sha256": "2136635f1f3776a41e713ea544e22323b8b86ad6514ee61387b394a946f60319"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R62",
+      "issue": "把菜单按钮隐藏并删除热键后无法重置",
+      "assessment": "具体无法恢复设置的报告",
+      "wildwise": "Wildwise 菜单入口固定保留，F7 可改绑；配置恢复清洗非法键值。",
+      "tests": [
+        "WW-C01",
+        "MAN-UI01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "1207269058",
+          "mod": "Simple Health Bar DST",
+          "comment_id": "599650845622055032",
+          "date_cn": "2025-04-25T23:28:37+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1207269058#comment_599650845622055032",
+          "author_is_creator": false,
+          "body_sha256": "ea70d3a6f2c574026486d39c7d8dd15e44307cba5c7c8ac399e35339fcaa6971"
+        },
+        {
+          "workshop_id": "1207269058",
+          "mod": "Simple Health Bar DST",
+          "comment_id": "599652058746853631",
+          "date_cn": "2025-05-08T16:45:53+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1207269058#comment_599652058746853631",
+          "author_is_creator": false,
+          "body_sha256": "671c04707407ed4cbc39da5b98161170851657092a8e2937cc469695a6e24aa0"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R63",
+      "issue": "旧存档已绑定牛铃，启用模块后不显示牛信息",
+      "assessment": "绑定时机／显示状态反馈",
+      "wildwise": "显示读取当前原生坐骑，不要求重新绑定牛铃；按 B 控制当前面板。",
+      "tests": [
+        "WW-B01",
+        "MAN-B01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "3439927311",
+          "mod": "Beefalo Info HUD",
+          "comment_id": "589561710754570806",
+          "date_cn": "2026-08-25T14:25:54+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3439927311#comment_589561710754570806",
+          "author_is_creator": false,
+          "body_sha256": "60b46020e00364bbf75950bf4d885c3fa05a9ae21d90ae498f992d989e67c9f8"
+        },
+        {
+          "workshop_id": "3439927311",
+          "mod": "Beefalo Info HUD",
+          "comment_id": "814724377262468547",
+          "date_cn": "2026-02-16T21:41:19+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3439927311#comment_814724377262468547",
+          "author_is_creator": false,
+          "body_sha256": "8a9d8455ac38ac534d0bda0d410dfcfe20dc11d95582519961d7d59f4e630efc"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R64",
+      "issue": "窗口缩放后牛 HUD 移到屏幕外",
+      "assessment": "作者说明坐标处理问题",
+      "wildwise": "按当前屏幕尺寸重新布局，保留偏移／缩放；图形尺寸验收待执行。",
+      "tests": [
+        "MAN-UI02"
+      ],
+      "sources": [
+        {
+          "workshop_id": "3439927311",
+          "mod": "Beefalo Info HUD",
+          "comment_id": "797838226728518552",
+          "date_cn": "2026-03-12T10:45:53+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3439927311#comment_797838226728518552",
+          "author_is_creator": true,
+          "body_sha256": "f8a899388806ad44a8454ffff6501a3d6d72daf67db722363fc5c7575d42e098"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R65",
+      "issue": "牛 HUD 回档崩溃、打包恢复后血量错或复制牛",
+      "assessment": "具体持久化反馈；该同类还修改牛属性",
+      "wildwise": "Wildwise 不保存牛副本、不改牛血量或驯化；只保存自有地图设置。",
+      "tests": [
+        "WW-X02",
+        "MAN-SAVE02"
+      ],
+      "sources": [
+        {
+          "workshop_id": "3439927311",
+          "mod": "Beefalo Info HUD",
+          "comment_id": "597412591711661593",
+          "date_cn": "2025-09-22T17:15:50+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3439927311#comment_597412591711661593",
+          "author_is_creator": false,
+          "body_sha256": "a7465f7688ecaa6b7567b95f66f3f43d9947b8afa8a7eb8ef6e9c15d511395de"
+        },
+        {
+          "workshop_id": "3439927311",
+          "mod": "Beefalo Info HUD",
+          "comment_id": "658216290030333744",
+          "date_cn": "2025-11-18T16:31:49+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3439927311#comment_658216290030333744",
+          "author_is_creator": false,
+          "body_sha256": "ca2b92a77ce997a478f50a3c59aa3a6285f34e23ae720133035cd803b6b7f722"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R66",
+      "issue": "骑牛开箱后下牛，右键只剩打不开的存放选项",
+      "assessment": "同类扩展容器导致动作优先级问题",
+      "wildwise": "Wildwise 不给牛加箱子或改变剃毛／骑乘动作；保留原生交互检查。",
+      "tests": [
+        "WW2-26",
+        "MAN-RIDEQUEUE01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "3439927311",
+          "mod": "Beefalo Info HUD",
+          "comment_id": "797838866430241935",
+          "date_cn": "2026-03-20T15:57:48+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3439927311#comment_797838866430241935",
+          "author_is_creator": false,
+          "body_sha256": "18fe18a2811329ac2216dbbffcfa7400466f23dc9715cf83d35a7166f54c38bf"
+        },
+        {
+          "workshop_id": "3439927311",
+          "mod": "Beefalo Info HUD",
+          "comment_id": "565911724530803560",
+          "date_cn": "2026-06-19T06:36:24+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3439927311#comment_565911724530803560",
+          "author_is_creator": false,
+          "body_sha256": "53cd60ba83f2a832f5f1b178a18bfec847f404dd7b2de75f68770d3e1fbeb578"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R67",
+      "issue": "智能木牌持续打印测试日志",
+      "assessment": "具体日志污染反馈",
+      "wildwise": "运行期诊断默认关闭；读取器同类异常只打印第一次，计数有固定类别。",
+      "tests": [
+        "WW2-22",
+        "MAN-SIGN01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "1595631294",
+          "mod": "Smart Minisign",
+          "comment_id": "565911724530655651",
+          "date_cn": "2026-06-17T23:24:09+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1595631294#comment_565911724530655651",
+          "author_is_creator": false,
+          "body_sha256": "ffdf5837b4dae21f8566d77340b14a0a2440743fe18c582ae4d51c3a8a01f4a3"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R68",
+      "issue": "箱子里小丑牌没有木牌图像",
+      "assessment": "特定原版新物图标反馈",
+      "wildwise": "读取原生 inventoryitem 图像与皮肤；图集渲染仍需真实客户端核对。",
+      "tests": [
+        "MAN-SIGN01"
+      ],
+      "sources": [
+        {
+          "workshop_id": "1595631294",
+          "mod": "Smart Minisign",
+          "comment_id": "587307906418923736",
+          "date_cn": "2026-08-01T23:57:37+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=1595631294#comment_587307906418923736",
+          "author_is_creator": false,
+          "body_sha256": "1ae0f2a7c191d34843b14d38ee48fb21d9873474e278819286ef4df42f3249dd"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R69",
+      "issue": "WX 备用躯体或切斯特的地图揭示扫描遇到伪玩家崩溃",
+      "assessment": "作者未确认伪实体归属，原版标签／组件契约风险有效",
+      "wildwise": "不创建带 maprevealer 标签的伪玩家，地图分享只操作真实玩家。",
+      "tests": [
+        "MAN-M03",
+        "MAN-M04"
+      ],
+      "sources": [
+        {
+          "workshop_id": "3138571948",
+          "mod": "Global Positions (CompleteSync)",
+          "comment_id": "845130655609151157",
+          "date_cn": "2026-05-01T16:42:47+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3138571948#comment_845130655609151157",
+          "author_is_creator": false,
+          "body_sha256": "68a63bee88c2a34b12afd2ae108e3f770d60fa6528d0bf8967960109bf25beac"
+        },
+        {
+          "workshop_id": "3138571948",
+          "mod": "Global Positions (CompleteSync)",
+          "comment_id": "845130655609129438",
+          "date_cn": "2026-05-01T10:10:14+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3138571948#comment_845130655609129438",
+          "author_is_creator": false,
+          "body_sha256": "47a1575b654b5cfae90e30f749a38ed4bd3653dda65e8bc975fa4243cfb5dacf"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R70",
+      "issue": "角色变幽灵或 Wonkey 时地图模组持有旧引用",
+      "assessment": "明确玩家生命周期日志",
+      "wildwise": "玩家离开时释放观察与地图会话；迁移取消仅作用对应玩家。",
+      "tests": [
+        "WW2-29",
+        "MAN-L01",
+        "MAN-M04"
+      ],
+      "sources": [
+        {
+          "workshop_id": "3138571948",
+          "mod": "Global Positions (CompleteSync)",
+          "comment_id": "4637112066660969883",
+          "date_cn": "2024-11-02T16:07:49+08:00",
+          "url": "https://steamcommunity.com/sharedfiles/filedetails/?id=3138571948#comment_4637112066660969883",
+          "author_is_creator": false,
+          "body_sha256": "320fce3dc812bde83738c166c00a05ae9f3bbde64a5b7588c327c3cfdc8c5f9d"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R71",
+      "issue": "32:9 屏幕的定位箭头方向偏移",
+      "assessment": "明确超宽屏反馈",
+      "wildwise": "沿用原版屏幕／地图投影，保留超宽屏和缩放实测，不凭构造测试判定正确。",
+      "tests": [
+        "MAN-M04"
+      ],
+      "sources": [
+        {
+          "url": "https://steamcommunity.com/workshop/filedetails/discussion/378160973/613948093871206440/?ctp=13",
+          "mod": "Global Positions Bug Reports",
+          "date_displayed": "May 16, 2025",
+          "date_precision": "Steam page display"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R72",
+      "issue": "Alt 查看曼德拉草却使附近角色睡眠",
+      "assessment": "查询触发游戏行为的具体报告",
+      "wildwise": "读取器不调用食用／激活动作，包裹也不生成临时实体；原版睡眠事件作对照。",
+      "tests": [
+        "WW-O04",
+        "WWE-05",
+        "MAN-FOOD01"
+      ],
+      "sources": [
+        {
+          "url": "https://steamcommunity.com/workshop/filedetails/discussion/2189004162/2793873675751084957/?ctp=61",
+          "mod": "Insight (Show Me+) Bug Reporting",
+          "date_displayed": "Mar 30, 2025",
+          "date_precision": "Steam page display; year stated unless marked inferred"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R73",
+      "issue": "WX 喝舒缓茶、沃姆伍德用堆肥时崩溃",
+      "assessment": "含信息＋血条＋地图＋牛等内部组合，作者称修复 buff 错误",
+      "wildwise": "信息层不包装 buff／食用／自我施肥事件；真实角色操作另留人工对照。",
+      "tests": [
+        "WW-O04",
+        "WW-X02",
+        "MAN-FOOD01"
+      ],
+      "sources": [
+        {
+          "url": "https://steamcommunity.com/workshop/filedetails/discussion/2189004162/2793873675751084957/?ctp=57",
+          "mod": "Insight (Show Me+) Bug Reporting",
+          "date_displayed": "Jun 26–27, 2024",
+          "date_precision": "Steam page display; year stated unless marked inferred"
+        }
+      ],
+      "manual_pending": true
+    },
+    {
+      "id": "R74",
+      "issue": "最新狩猎终点的提示贴图缺失导致崩溃",
+      "assessment": "作者确认修复的版本适配问题",
+      "wildwise": "Wildwise 暂无追踪足迹提示；不替换该图集或狩猎过程，记录为范围外能力。",
+      "tests": [
+        "MAN-BOSS01"
+      ],
+      "sources": [
+        {
+          "url": "https://steamcommunity.com/workshop/filedetails/discussion/2189004162/2793873675751084957/?ctp=61",
+          "mod": "Insight (Show Me+) Bug Reporting",
+          "date_displayed": "Jan 24, 2025",
+          "date_precision": "Steam page display; year stated unless marked inferred"
+        }
+      ],
+      "manual_pending": true
+    }
+  ]
+}

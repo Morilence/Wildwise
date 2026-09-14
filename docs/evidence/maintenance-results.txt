@@ -1,0 +1,86 @@
+Wildwise maintenance verification, 2026-09-14
+Official public game 747465 / Steam build 24700372 / Linux dedicated nullrenderer.
+Offline LAN, isolated Master world, no connected human players.
+Selected complete successful test groups follow; full local session log was retained during work.
+Earlier new-regression fixtures failed because headless Wilson lacked local action components
+and GetParent() returns an EntityScript rather than its .entity handle.
+Fixtures were corrected to use native components / parent identity, then rerun successfully.
+Native minisign OnDrawn emits FROMNUM in nullrenderer; these are data/lifecycle checks, not rendering acceptance.
+The initial seven pure Lua regression cases failed before production fixes (52 pass / 7 fail);
+final standalone suite includes additional boundaries and passes 68 tests.
+
+[00:00:54]: [WW_ENGINE_PASS] world service loaded on dedicated server
+[00:00:54]: [WW_ENGINE_PASS] server does not load UI
+[00:00:54]: [WW_ENGINE_PASS] facts:beefalo
+[00:00:54]: [WW_ENGINE_PASS] facts:berries
+[00:00:54]: [WW_ENGINE_PASS] facts:axe
+[00:00:54]: [WW_ENGINE_PASS] facts:armorwood
+[00:00:54]: [WW_ENGINE_PASS] facts:strawhat
+[00:00:54]: [WW_ENGINE_PASS] facts:icebox
+[00:00:54]: [WW_ENGINE_PASS] facts:farm_plant_carrot
+[00:00:54]: [WW_ENGINE_PASS] facts:meatballs
+[00:00:54]: [WW_ENGINE_PASS] facts:raincoat
+[00:00:54]: [WW_ENGINE_PASS] facts:lantern
+[00:00:54]: [WW_ENGINE_PASS] facts:pigman
+[00:00:54]: [WW_ENGINE_PASS] facts:firepit
+[00:00:54]: [WW_ENGINE_PASS] facts:saddle_basic
+[00:00:54]: [WW_ENGINE_PASS] facts:rope
+[00:00:54]: [WW_ENGINE_PASS] facts:bundle
+[00:00:54]: [WW_ENGINE_PASS] food estimates match actual engine eating
+[00:00:54]: [WW_ENGINE_PASS] native stack count conservation
+[00:00:54]: [WW_ENGINE_PASS] manual and unknown items protected as merge targets
+[00:00:54]: [WW_ENGINE_PASS] native icon resolves without copying assets
+[00:00:54]: [WW_ENGINE_PASS] observer healthdelta produces delta and releases listeners
+[00:00:54]: [WW_ENGINE_PASS] native MapExplorer isolation
+[00:00:54]: [WW_ENGINE_PASS] persistent map round trip
+[00:00:54]: [WW_ENGINE_PASS] native partial inventory pickup preserves leftover stack
+[00:00:54]: [WW_ENGINE_PASS] native mount facts follow saddle and obedience values
+[00:00:54]: [WW_ENGINE_RESULT] passed=26 failed=0 build=747465
+[00:00:54]: [WW_UI_PASS] native HUD constructor and update
+[00:00:54]: [WW_UI_PASS] all native menu pages in Chinese and English
+[00:00:54]: [WW_UI_PASS] native general key callback receives key and down
+[00:00:54]: [WW_UI_PASS] native menu edits module settings without changing server defaults
+[00:00:55]: [WW_UI_PASS] native mod configuration screen exposes all scalar options including container signs
+[00:00:55]: [WW_UI_PASS] native batch outline has no pointer-following component
+[00:00:55]: [WW_UI_PASS] WW-U01 hover text follows replacement owner and is removed with HUD
+[00:00:55]: [WW_UI_RESULT] passed=7 failed=0 build=747465
+[00:00:55]: [WW_CLIENT_RESULT] passed=1 failed=0 host_fixture=true
+[00:01:56]: [WW_EVENT_PASS] real lootdropper events land and merge with count conservation
+[00:01:56]: [WW_EVENT_PASS] manual DropItem remains protected after landing
+[00:01:56]: [WW_EVENT_RESULT] passed=2 failed=0 build=747465
+[00:06:32]: [WW_LOAD] count=100 conserved=true stacks=4 samples=200 p50_ms=0.0170 p95_ms=0.0760 p99_ms=2.1150 elapsed=20.00 pending=0
+[00:06:52]: [WW_LOAD] count=500 conserved=true stacks=14 samples=200 p50_ms=0.0180 p95_ms=2.1080 p99_ms=2.1650 elapsed=20.00 pending=0
+[00:07:12]: [WW_LOAD] count=1000 conserved=true stacks=26 samples=200 p50_ms=0.0340 p95_ms=2.1380 p99_ms=2.2130 elapsed=20.00 pending=0
+[00:07:12]: [WW_LOAD_COMPLETE]
+[00:17:47]: [WW_SIGN_PASS] saltbox expected=false
+[00:17:47]: [WW_SIGN_PASS] hutch expected=false
+[00:17:47]: [WW_SIGN_PASS] treasurechest expected=true
+[00:17:47]: [WW_SIGN_PASS] dragonflychest expected=true
+[00:17:47]: [WW_SIGN_PASS] boat_ancient_container expected=true
+[00:17:47]: [WW_SIGN_PASS] icebox expected=false
+[00:17:47]: [WW_SIGN_PASS] fish_box expected=false
+[00:17:47]: [WW_SIGN_PASS] chester expected=false
+[00:17:47]: [WW_SIGN_RESULT] passed=8 failed=0 build=747465
+[00:09:07]: [WW_REG_PASS] WW-B01 Woby and missing mount are safe
+[00:09:07]: [WW_REG_PASS] WW-X02 beefalo and information readers preserve native player state
+[00:09:07]: [WW_REG_PASS] WW-O05 new dryingrack snapshot and queue do not toggle container
+[00:09:07]: [WW_REG_PASS] WW-H01 removing a parasite target releases combined subscriptions
+[00:09:07]: [WW_REG_PASS] WW-M04 reciprocal wormholes work independently of forest-only components
+[00:09:07]: [WW_REG_PASS] WW-S02 repeated attachment shares one lifetime
+[00:09:08]: [WW_REG_PASS] WW-S03 signs are decorative and do not own item actions
+[00:09:08]: [WW_REG_PASS] WW-S04 first-slot imagechange refreshes without reopening chest
+[00:09:08]: [WW_REG_PASS] WW-S05 empty chest and teardown remove stale signs
+[00:09:08]: [WW_REG_RESULT] passed=9 failed=0 build=747465
+
+Final engineering checks: npm run check
+Total: 0 warnings / 0 errors in 45 files
+68 passed, 0 failed
+Package check: 52 UTF-8 files; Lua syntax valid
+Chinese-comment audit: 166 named public methods in scripts/, all with a preceding Chinese comment.
+
+Reload with items_stack_loaded=true; valid saved world recovered on game 747465.
+[00:01:07]: [WW_RESTORE_DATA] restored_ground_items=981
+[00:01:07]: [WW_RESTORE_PASS] WW-I04 saved ground items are recognized during real world population
+[00:01:07]: [WW_RESTORE_PASS] WW-I05 native unwrapping is not classified as world-load stacking
+[00:01:07]: [WW_RESTORE_RESULT] passed=2 failed=0 build=747465
+WW-I01 runtime-unwrapping extension: 67 passed / 1 failed before POPULATING guard; 68 passed / 0 failed after fix.

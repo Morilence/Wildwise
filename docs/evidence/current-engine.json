@@ -1,0 +1,43 @@
+{
+  "verified_on": "2026-09-14",
+  "source": "Official SteamCMD app_info_update 1; app_info_print 343050; installed appmanifest_343050.acf; version.txt; bundled scripts.zip",
+  "app_id": 343050,
+  "branch": "public",
+  "latest_public_build": "24700372",
+  "installed_build": "24700372",
+  "game_version": "747465",
+  "public_updated_utc": "2026-08-13T17:01:55+00:00",
+  "linux_depot": "343052",
+  "linux_manifest": "3802424534343984195",
+  "scripts_sha256": "a08856fd0a36e989a72be1676563b5da7357e60f9a6572ea9737e9cb7fadc275",
+  "newer_beta": {
+    "branch": "updatebeta",
+    "build": "25265075",
+    "updated_utc": "2026-09-12T00:56:05+00:00",
+    "tested": false
+  },
+  "platform": "Linux x86_64 dedicated server; nullrenderer; offline LAN; Master",
+  "connected_human_players": 0,
+  "interfaces_reviewed": [
+    "entityscript.lua: EntityScript:SetPersistData",
+    "components/dryingrack.lua: DryingRack:GetDryingInfoSnapshot",
+    "prefabs/meatrack2.lua: native multi-slot meatrack container",
+    "components/inventory.lua: CanAcceptCount, GiveItem, DropItem",
+    "components/stackable.lua: Get, Put",
+    "components/teleporter.lua: Activate, targetTeleporter",
+    "components/domesticatable.lua and prefabs/beefalo.lua: obedience and _bucktask",
+    "components/playeractionpicker.lua and playercontroller.lua: native actions and placer",
+    "components/drawable.lua and prefabs/minisign.lua: native drawing data",
+    "gamelogic.lua: POPULATING world restore phase",
+    "components/unwrappable.lua: Unwrap also calls SetPersistData",
+    "components/pickable.lua and prefabs/grass.lua, sapling.lua, berrybush.lua: regeneration timer callbacks receive the entity",
+    "components/wobyrack.lua: inherited DryingRack:GetDryingInfoSnapshot",
+    "components/container_proxy.lua: CanBeOpened, GetMaster and shared master storage",
+    "components/planardamage.lua and planardefense.lua: separate planar damage and defense getters",
+    "cooking.lua: native ingredient aliases, cooker recipe tests, priority, weight and CalculateRecipe",
+    "components/edible.lua: viewer-dependent GetHunger and current food affinity",
+    "components/kramped.lua: private naughtiness state; no structured public getter used",
+    "screens/playerhud.lua: HasInputFocus, including controller crafting and text focus",
+    "prefabs/wormhole.lua and components/playerspawner.lua: wormholetravel and world ms_playerdespawnandmigrate events"
+  ]
+}

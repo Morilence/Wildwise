@@ -4,6 +4,18 @@
 
 用户补充的智能小木牌与 Beefalo Status Bar 已加入独立功能模块。本文区分读过源码、确认过接口、实际执行过测试与尚未进行的兼容验收。
 
+本轮[三年工坊评论审查](workshop-issues.md)已补采至 **35 个模组、58 个公开接口分页、4,584 条去重评论，其中窗口内 3,588 条**。另通过 Exa 搜索与讨论串补充上下文，整理 74 个具体场景。精确日期使用评论 Unix 时间转北京时间，不把缓存页面的日期标签数当评论数；完整步骤、边界和缺口见 [workshop-coverage.json](evidence/workshop-coverage.json)。
+
+## 最新正式版核验
+
+2026-09-14 重新调用官方 SteamCMD 的 `app_info_update 1` 和 `app_info_print 343050`：public build **24700372** 与安装的 appmanifest 一致，`version.txt` 为 **747465**；Linux depot **343052** 的 public manifest 为 **3802424534343984195**。引擎接口和专服测试均使用该安装的 `scripts.zip`，SHA-256 与核对接口列表见 [current-engine.json](evidence/current-engine.json)。
+
+同次查询发现 updatebeta build **25265075** 比正式分支更新；本轮未下载或测试该测试分支，不能把“最新正式版验证”表述为“全部最新测试版已兼容”。公开 [Klei 更新列表](https://forums.kleientertainment.com/game-updates/dst/) 的检索缓存不能独立证明当前 Steam 分支，本次以官方实时分支元数据和本机安装共同核对。
+
+新增核对包括：`gamelogic.lua` 的 `POPULATING` 阶段、真实 `EntityScript:SetPersistData` 恢复时机（`unwrappable` 解包也调用它，必须区分）、`dryingrack:GetDryingInfoSnapshot()`、`prefabs/meatrack2.lua` 的多格容器、原生 RUMMAGE／placer 输入以及首件物品 imagechange。新增多格晾肉架信息读取已接入；自动队列暂不批量收取它，保留玩家手动开关和取物。
+
+第二轮另核对 `pickable` 的本地／外部定时器、`worldsettingsutil` 的原生回调参数、`wobyrack` 对 `dryingrack` 的继承、`container_proxy:GetMaster()`、`planardamage/GetDamage`、`planardefense/GetDefense`、`cooking.lua` 的三个熟肉别名与最高优先级判定、`edible` 的角色食物偏好，以及 `wormholetravel` 和发给世界的迁移事件。`kramped` 的计数在世界私有闭包中，未提供结构化读取接口，因此不再假定玩家存在该组件；腐败余量也不冒充已计算环境倍率的准确倒计时。
+
 ## 参考快照
 
 | 参考 | 实际取得的源码 | 关注实现 | Wildwise 的处理 |
