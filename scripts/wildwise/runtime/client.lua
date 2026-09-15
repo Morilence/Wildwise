@@ -116,7 +116,11 @@ function Client:receive(target, bytes)
         if msg.data.nonce ~= self.nonce then
             return
         end
+        if self.session == msg.session and msg.seq <= self.received then
+            return
+        end
         self.session, self.received = msg.session, msg.seq
+        self.server_seen = self.G.GetTime()
         self.config, self.conflicts, self.shard = msg.data.config, msg.data.conflicts, msg.data.shard
         self.settings.map.share_position = msg.data.preferences.position
         self.settings.map.share_exploration = msg.data.preferences.exploration
@@ -174,12 +178,17 @@ function Client:receive(target, bytes)
             state.last_hostile = state.at
         end
     elseif msg.kind == "map" then
-        self.map, self.map_pending = msg.data, nil
+        self:apply_map(msg.data)
     elseif msg.kind == "map_begin" or msg.kind == "map_chunk" or msg.kind == "map_end" then
         local snapshot
-        self.map_pending, snapshot = MapTransfer.receive(self.map_pending, msg.kind, msg.data)
+        local channel = msg.data.channel or "legacy"
+        if not ({ legacy = true, players = true, pairs = true, pings = true, fires = true })[channel] then
+            return
+        end
+        self.map_pending = self.map_pending or {}
+        self.map_pending[channel], snapshot = MapTransfer.receive(self.map_pending[channel], msg.kind, msg.data)
         if snapshot then
-            self.map = snapshot
+            self:apply_map(snapshot)
         end
     elseif msg.kind == "recipes" then
         if msg.data.request == self.recipe_request then
@@ -202,6 +211,20 @@ function Client:receive(target, bytes)
         self.diagnostics = msg.data
         self.server_seen = self.G.GetTime()
     end
+end
+
+-- 只原子替换本次完整收到的频道；位置更新不会擦掉正在接收或已经显示的配对。
+function Client:apply_map(snapshot)
+    local map = U.copy(self.map)
+    for _, key in ipairs({ "players", "pings", "fires", "pairs" }) do
+        if type(snapshot[key]) == "table" then
+            map[key] = snapshot[key]
+            if self.map_pending then
+                self.map_pending[key] = nil
+            end
+        end
+    end
+    self.map = map
 end
 
 -- 更换食材或锅类型时作废旧结果及仍在网络途中的旧查询。

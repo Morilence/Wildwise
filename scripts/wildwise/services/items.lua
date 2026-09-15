@@ -1,4 +1,5 @@
 local U = require("wildwise/core/util")
+local Index = require("wildwise/core/ordered_index")
 local Items = {}
 Items.__index = Items
 
@@ -25,13 +26,14 @@ function Items:unindex(item)
     local record = self.known[item]
     local bucket = record and record.cell and self.index[record.cell]
     if bucket then
-        bucket[item] = nil
-        if next(bucket) == nil then
+        bucket:remove(record.order)
+        if not bucket.root then
             self.index[record.cell] = nil
         end
     end
     if record then
         record.cell = nil
+        record.merge_after, record.merge_location = nil, nil
     end
 end
 
@@ -108,31 +110,28 @@ function Items:indexitem(item)
     end
     local prefix, x, z = self:cell(item)
     local key = prefix .. ":" .. x .. ":" .. z
-    local bucket = self.index[key] or {}
+    local bucket = self.index[key] or Index.new()
     self.index[key] = bucket
-    bucket[item] = true
+    bucket:set(self.known[item].order, item)
     self.known[item].cell = key
 end
 
--- 只查询相邻九格中的已知目标，避免反复全场扫描。
-function Items:neighbors(item)
+-- 合并九个有序桶的后继，固定九次 O(log N) 查询，不展开或排序整片邻居。
+function Items:next_neighbor(item, after)
     local prefix, x, z = self:cell(item)
-    local out = {}
-    -- 只索引已确认来源的可合堆物，不对千件掉落反复调用整片 FindEntities 并排序。
+    local best, order
     for dx = -1, 1 do
         for dz = -1, 1 do
-            for target in pairs(self.index[prefix .. ":" .. (x + dx) .. ":" .. (z + dz)] or {}) do
-                if
-                    target ~= item
-                    and U.valid(target)
-                    and U.distance(item, target) <= self:radius(self.known[item].source) ^ 2
-                then
-                    out[#out + 1] = target
+            local bucket = self.index[prefix .. ":" .. (x + dx) .. ":" .. (z + dz)]
+            if bucket then
+                local target, key = bucket:after(after)
+                if key and (not order or key < order) then
+                    best, order = target, key
                 end
             end
         end
     end
-    return out
+    return best, order
 end
 
 -- 记录明确来源和顺序，获准物品延迟到落地后处理。
@@ -239,7 +238,7 @@ function Items:eligible(item, now)
 end
 
 -- 处理单个候选，按原版库存与堆叠语义转移，保留地面余量。
-function Items:process(item, now)
+function Items:process(item, now, deadline)
     if not self:eligible(item, now) then
         if U.valid(item) and self.known[item] and now - self.known[item].at < 30 then
             self:enqueue(item, now + 0.25)
@@ -300,12 +299,23 @@ function Items:process(item, now)
     if not self:operation_allowed(item, "stack", now) then
         return
     end
-    local neighbors = self:neighbors(item)
-    table.sort(neighbors, function(a, b)
-        return (self.known[a] and self.known[a].order or math.huge)
-            < (self.known[b] and self.known[b].order or math.huge)
-    end)
-    for _, target in ipairs(neighbors) do
+    local record = self.known[item]
+    local prefix, cx, cz = self:cell(item)
+    local location = prefix .. ":" .. cx .. ":" .. cz
+    if record.merge_location ~= location then
+        record.merge_location, record.merge_after = location, 0
+    end
+    local complete = false
+    for _ = 1, 64 do
+        if deadline and self.env.clock() >= deadline then
+            break
+        end
+        local target, order = self:next_neighbor(item, record.merge_after or 0)
+        if not target or order >= record.order then
+            complete = true
+            break
+        end
+        record.merge_after = order
         if
             target ~= item
             and self:eligible(target, now)
@@ -313,6 +323,7 @@ function Items:process(item, now)
             and self.known[target].order < self.known[item].order
             and U.sameplatform(item, target)
             and item.prefab == target.prefab
+            and U.distance(item, target) <= self:radius(record.source) ^ 2
         then
             -- 原版 Put 校验皮肤、自定义可堆叠规则，并转移保鲜、湿度与余量，不删除再重建。
             target.components.stackable:Put(item)
@@ -324,8 +335,16 @@ function Items:process(item, now)
                 self.env.result(item, "merged", target)
                 return
             end
+            if self.known[item] ~= record or not self:eligible(item, now) then
+                return
+            end
         end
     end
+    if not complete then
+        self:enqueue(item, now)
+        return
+    end
+    record.merge_after, record.merge_location = nil, nil
     if self:eligible(item, now) then
         self:indexitem(item)
     end
@@ -345,7 +364,7 @@ function Items:tick(now)
         self.head = self.head + 1
         self.queued[entry.item] = nil
         if now >= entry.at then
-            self:process(entry.item, now)
+            self:process(entry.item, now, started and started + 0.002)
             self.processed = self.processed + 1
         else
             self:enqueue(entry.item, entry.at)

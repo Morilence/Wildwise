@@ -1,0 +1,160 @@
+Wildwise review and optimization, 2026-09-14
+Baseline: 7618aba8c977da139475c074af078dbc03ea0318
+Final runtime source fingerprints: optimization-status.json
+
+PRE-CHANGE ISOLATED PROBES
+R02_snapshot_mask_switch {"initial":{"health":100,"health_max":100},"recovered_on_refresh":false,"expanded":{"damage":20},"reduced":[]}
+R01_RPC_entity_boundary {"numeric_target_accepted_by_handler":false,"numeric_target_error":"./scripts/wildwise/core/util.lua:27: attempt to index local \'e\' (a number value)","nil_unsubscribe_error":"./scripts/wildwise/services/observer.lua:83: table index is nil","nil_unsubscribe_accepted_by_handler":false}
+R03_hello_rebase {"session_rotated":false,"old_session_release_accepted":true,"static_map_messages_after_new_hello":0}
+R04_nearest_100 {"cpu_ms":2.406,"entities":100,"position_reads":5150}
+R04_nearest_1000 {"cpu_ms":140.004,"entities":1000,"position_reads":501500}
+R04_nearest_5000 {"cpu_ms":3797.398,"entities":5000,"position_reads":12507500}
+R05_item_single_candidate_1000 {"cpu_ms":9.0170000000001,"indexed":1000,"budget_ms":2,"processed":1}
+R05_item_single_candidate_5000 {"cpu_ms":52.9,"indexed":5000,"budget_ms":2,"processed":1}
+R06_map_position_change_20 {"players":6,"pairs":20,"cpu_ms":14.037999999999,"bytes":18381,"messages":6}
+R06_map_position_change_200 {"players":6,"pairs":200,"cpu_ms":417.933,"bytes":172590,"messages":120}
+R06_map_position_change_2048 {"players":6,"pairs":2048,"cpu_ms":4788.478,"bytes":1785588,"messages":1044}
+R07_wait_timeout_leaks_between_tasks {"state":"paused","next_task":2,"reason":"unsupported_state"}
+REVIEW_PROBES_COMPLETED
+R08 subscriptions=120 idle_invocations=100 sanitizer_calls=12000 messages=0 mean_cpu_ms=7.8639
+
+POST-CHANGE ISOLATED BENCHMARKS
+AFTER_nearest_100 {"cpu_ms":1.63,"selected":100,"position_reads":100}
+AFTER_nearest_1000 {"cpu_ms":5.586,"selected":200,"position_reads":1000}
+AFTER_nearest_5000 {"cpu_ms":11.643,"selected":200,"position_reads":5000}
+AFTER_items_1000 {"first_tick_ms":1.398,"pending":0,"ticks":16,"attempts":1000,"max_tick_ms":2.25}
+AFTER_items_5000 {"first_tick_ms":1.194,"pending":0,"ticks":79,"attempts":5000,"max_tick_ms":2.003}
+AFTER_map_position_20 {"players":6,"pairs":20,"cpu_ms":2.742,"bytes":3210,"messages":6}
+AFTER_map_position_200 {"players":6,"pairs":200,"cpu_ms":3.565,"bytes":3216,"messages":6}
+AFTER_map_position_2048 {"players":6,"pairs":2048,"cpu_ms":6.1269999999998,"bytes":3222,"messages":6}
+AFTER_idle_health {"mean_cpu_ms":0.27396,"filter_calls":0}
+
+FINAL ENGINE AND NATIVE LOAD MARKERS
+[00:00:37]: [WW_ENGINE_PASS] world service loaded on dedicated server
+[00:00:37]: [WW_ENGINE_PASS] server does not load UI
+[00:00:38]: [WW_ENGINE_PASS] facts:beefalo
+[00:00:38]: [WW_ENGINE_PASS] facts:berries
+[00:00:38]: [WW_ENGINE_PASS] facts:axe
+[00:00:38]: [WW_ENGINE_PASS] facts:armorwood
+[00:00:38]: [WW_ENGINE_PASS] facts:strawhat
+[00:00:38]: [WW_ENGINE_PASS] facts:icebox
+[00:00:38]: [WW_ENGINE_PASS] facts:farm_plant_carrot
+[00:00:38]: [WW_ENGINE_PASS] facts:meatballs
+[00:00:38]: [WW_ENGINE_PASS] facts:raincoat
+[00:00:38]: [WW_ENGINE_PASS] facts:lantern
+[00:00:38]: [WW_ENGINE_PASS] facts:pigman
+[00:00:38]: [WW_ENGINE_PASS] facts:firepit
+[00:00:38]: [WW_ENGINE_PASS] facts:saddle_basic
+[00:00:38]: [WW_ENGINE_PASS] facts:rope
+[00:00:38]: [WW_ENGINE_PASS] facts:bundle
+[00:00:38]: [WW_ENGINE_PASS] food estimates match actual engine eating
+[00:00:38]: [WW_ENGINE_PASS] native stack count conservation
+[00:00:38]: [WW_ENGINE_PASS] manual and unknown items protected as merge targets
+[00:00:38]: [WW_ENGINE_PASS] native icon resolves without copying assets
+[00:00:38]: [WW_ENGINE_PASS] observer healthdelta produces delta and releases listeners
+[00:00:38]: [WW_ENGINE_PASS] native MapExplorer isolation
+[00:00:38]: [WW_ENGINE_PASS] persistent map round trip
+[00:00:38]: [WW_ENGINE_PASS] native partial inventory pickup preserves leftover stack
+[00:00:38]: [WW_ENGINE_PASS] native mount facts follow saddle and obedience values
+[00:00:38]: [WW_ENGINE_RESULT] passed=26 failed=0 build=747465
+[00:00:38]: [WW_UI_PASS] native HUD constructor and update
+[00:00:38]: [WW_UI_PASS] all native menu pages in Chinese and English
+[00:00:38]: [WW_UI_PASS] native general key callback receives key and down
+[00:00:38]: [WW_UI_PASS] native menu edits module settings without changing server defaults
+[00:00:38]: [WW_UI_PASS] native mod configuration screen exposes all scalar options including container signs
+[00:00:38]: [WW_UI_PASS] native batch outline has no pointer-following component
+[00:00:38]: [WW_UI_PASS] WW-U01 hover text follows replacement owner and is removed with HUD
+[00:00:38]: [WW_UI_RESULT] passed=7 failed=0 build=747465
+[00:00:39]: [WW2_ENGINE_PASS] WWE-01 merm_tool read-only inspection and retirement
+[00:00:39]: [WW2_ENGINE_PASS] WWE-01 merm_tool_upgraded read-only inspection and retirement
+[00:00:39]: [WW2_ENGINE_PASS] WWE-01 shieldofterror read-only inspection and retirement
+[00:00:39]: [WW2_ENGINE_PASS] WWE-01 wathgrithr_shield read-only inspection and retirement
+[00:00:39]: [WW2_ENGINE_PASS] WWE-01 voidcloth_boomerang read-only inspection and retirement
+[00:00:39]: [WW2_ENGINE_PASS] WWE-01 rabbitkingspear read-only inspection and retirement
+[00:00:39]: [WW2_ENGINE_PASS] WWE-01 rabbitkinghorn read-only inspection and retirement
+[00:00:39]: [WW2_ENGINE_PASS] WWE-01 horseshoe read-only inspection and retirement
+[00:00:39]: [WW2_ENGINE_PASS] WWE-01 cotl_trinket read-only inspection and retirement
+[00:00:39]: [WW2_ENGINE_PASS] WWE-01 slingshot read-only inspection and retirement
+[00:00:39]: [WW2_ENGINE_PASS] WWE-01 slingshotammo_rock read-only inspection and retirement
+[00:00:39]: [WW2_ENGINE_PASS] WWE-01 alterguardian_phase4_lunarrift read-only inspection and retirement
+[00:00:39]: [WW2_ENGINE_PASS] WWE-01 mutateddeerclops read-only inspection and retirement
+[00:00:39]: [WW2_ENGINE_PASS] WWE-01 mutatedbearger read-only inspection and retirement
+[00:00:39]: [WW2_ENGINE_PASS] WWE-01 mutatedwarg read-only inspection and retirement
+[00:00:39]: [WW2_ENGINE_PASS] WWE-01 lunarthrall_plant read-only inspection and retirement
+[00:00:39]: [WW2_ENGINE_PASS] WWE-01 worm_boss read-only inspection and retirement
+[00:00:39]: [WW2_ENGINE_PASS] WWE-01 oceanfishingrod read-only inspection and retirement
+[00:00:39]: [WW2_ENGINE_PASS] WWE-01 wobybig read-only inspection and retirement
+[00:00:39]: [WW2_ENGINE_PASS] WWE-01 chester read-only inspection and retirement
+[00:00:39]: [WW2_ENGINE_PASS] WWE-01 wx78_scanner read-only inspection and retirement
+[00:00:39]: [WW2_ENGINE_PASS] WWE-01 horn read-only inspection and retirement
+[00:00:39]: [WW2_ENGINE_PASS] WWE-01 goldenaxe read-only inspection and retirement
+[00:00:39]: [WW2_ENGINE_PASS] WWE-02 grass regeneration follows the live timer
+[00:00:39]: [WW2_ENGINE_PASS] WWE-02 sapling regeneration follows the live timer
+[00:00:39]: [WW2_ENGINE_PASS] WWE-02 berrybush regeneration follows the live timer
+[00:00:39]: [WW2_ENGINE_PASS] WWE-03 California roll and Warly recipes agree with native cooking
+[00:00:39]: [WW2_ENGINE_PASS] WWE-04 Wolfgang favorite food uses current affinity instead of an old hunger formula
+[00:00:39]: [WW2_ENGINE_PASS] WWE-05 sealed bundle is found and described without unwrapping
+[00:00:39]: [WW2_ENGINE_PASS] WWE-06 horseshoe loot processing keeps native quantity and components
+[00:00:39]: [WW2_ENGINE_PASS] WWE-07 Abigail regeneration keeps native health method and observer lifecycle
+[00:00:39]: [WW2_ENGINE_PASS] WWE-08 encoded facts retain health under worst-case text expansion
+[00:00:39]: [WW2_ENGINE_PASS] WWE-09 World propagates transport failure and wormhole cancellation
+[00:00:39]: [WW2_ENGINE_PASS] WWE-10 Woby rack uses the native dryingrack compatibility component
+[00:00:39]: [WW2_ENGINE_RESULT] passed=34 failed=0
+[00:00:40]: [WW_REG_PASS] WW-B01 Woby and missing mount are safe
+[00:00:40]: [WW_REG_PASS] WW-X02 beefalo and information readers preserve native player state
+[00:00:40]: [WW_REG_PASS] WW-O05 new dryingrack snapshot and queue do not toggle container
+[00:00:40]: [WW_REG_PASS] WW-H01 removing a parasite target releases combined subscriptions
+[00:00:40]: [WW_REG_PASS] WW-M04 reciprocal wormholes work independently of forest-only components
+[00:00:40]: [WW_REG_PASS] WW-S02 repeated attachment shares one lifetime
+[00:00:40]: [WW_REG_PASS] WW-S03 signs are decorative and do not own item actions
+[00:00:40]: [WW_REG_PASS] WW-S04 first-slot imagechange refreshes without reopening chest
+[00:00:40]: [WW_REG_PASS] WW-S05 empty chest and teardown remove stale signs
+[00:00:40]: [WW_REG_RESULT] passed=9 failed=0 build=747465
+[00:00:52]: [WW_SIGN_PASS] saltbox expected=false
+[00:00:52]: [WW_SIGN_PASS] hutch expected=false
+[00:00:52]: [WW_SIGN_PASS] treasurechest expected=true
+[00:00:52]: [WW_SIGN_PASS] dragonflychest expected=true
+[00:00:52]: [WW_SIGN_PASS] boat_ancient_container expected=true
+[00:00:52]: [WW_SIGN_PASS] icebox expected=false
+[00:00:52]: [WW_SIGN_PASS] fish_box expected=false
+[00:00:52]: [WW_SIGN_PASS] chester expected=false
+[00:00:52]: [WW_SIGN_RESULT] passed=8 failed=0 build=747465
+[00:00:53]: [WW_CLIENT_RESULT] passed=1 failed=0 host_fixture=true
+[00:00:53]: [WW3_ENGINE_PASS] real spoilage getter observes fridge multiplier without consuming food
+[00:00:53]: [WW3_ENGINE_PASS] native recharge cooldown sewing and timer details
+[00:00:53]: [WW3_ENGINE_PASS] plant stress details read recorded state without invoking stress tests
+[00:00:53]: [WW3_ENGINE_PASS] display day agrees with native clock cycle plus one
+[00:00:53]: [WW3_ENGINE_PASS] native cooked dish is identified from the stewer state
+[00:00:53]: [WW3_ENGINE_PASS] original pitchfork and watering can expose agricultural modes
+[00:00:53]: [WW3_ENGINE_PASS] native agricultural plan tills one explicit tile and consumes a tool use
+[00:00:53]: [WW3_ENGINE_PASS] native container transfer frees a drying slot before hanging new meat
+[00:00:53]: [WW3_ENGINE_PASS] drying queue leaves still-drying items untouched
+[00:00:53]: [WW3_ENGINE_PASS] ordinary chests and players cannot enter rack or gifting automation
+[00:00:53]: [WW3_ENGINE_PASS] burning native twigs remain separate
+[00:00:53]: [WW3_ENGINE_PASS] native bundle display respects independent content permission
+[00:00:53]: [WW3_ENGINE_PASS] native mount badge percentages and scale render into real Widgets
+[00:00:53]: [WW3_ENGINE_PASS] native drying rack reports product and pause without advancing its timer
+[00:00:53]: [WW3_ENGINE_PASS] native seasoned food preserves the dish and spice drawable layers
+[00:00:53]: [WW3_ENGINE_PASS] native map wheel keeps its opening coordinates and deletes only own ping
+[00:00:53]: [WW3_ENGINE_PASS] sign display RPC enforces distance and supported container type
+[00:00:53]: [WW3_ENGINE_RESULT] passed=17 failed=0 build=747465 no_graphics=true no_remote_players=true
+[00:00:54]: [WW3_APPEARANCE_PASS] native spice drawing and helper scale
+[00:00:54]: [WW3_APPEARANCE_PASS] linked skin arguments rebuild helper without duplicate entities (asset stub)
+[00:00:55]: [WW3_APPEARANCE_PASS] removing linked skin returns helper to native default (asset stub)
+[00:00:55]: [WW3_APPEARANCE_PASS] per-container hide removes helper and preserves all contents
+[00:00:55]: [WW3_APPEARANCE_PASS] show recreates one helper which follows container movement
+[00:00:55]: [WW3_APPEARANCE_PASS] burn event closes owned listeners and destroys the helper
+[00:00:55]: [WW3_APPEARANCE_RESULT] passed=6 failed=0 no_graphics=true skin_asset_stub=true
+[00:01:02]: [WW_EVENT_PASS] real lootdropper events land and merge with count conservation
+[00:01:02]: [WW_EVENT_PASS] manual DropItem remains protected after landing
+[00:01:02]: [WW_EVENT_PASS] twiggy tree's real landed drops preserve the native entity count
+[00:01:02]: [WW_EVENT_RESULT] passed=3 failed=0 build=747465
+[00:01:23]: [WW_LOAD] count=100 conserved=true stacks=5 samples=200 p50_ms=0.0240 p95_ms=0.1550 p99_ms=2.1080 elapsed=20.00 pending=0
+[00:01:44]: [WW_LOAD] count=500 conserved=true stacks=15 samples=201 p50_ms=0.0300 p95_ms=2.1120 p99_ms=2.1780 elapsed=20.00 pending=0
+[00:02:04]: [WW_LOAD] count=1000 conserved=true stacks=27 samples=199 p50_ms=0.0500 p95_ms=2.1420 p99_ms=2.2340 elapsed=20.00 pending=0
+[00:02:04]: [WW_LOAD_COMPLETE]
+
+Known fixture limitations: generated identities may log Invalid RPC sender list; nullrenderer FROMNUM output does not establish rendered graphics; skin asset entry uses a stub.
+
+ENGINEERING CHECK
+139 Lua passed, 0 failed; 7 Python passed; 55 Lua linted, 0 warnings/errors; StyLua passed. Final npm run check exited 0 after these evidence documents were written; 64 UTF-8 package files and Lua syntax passed.

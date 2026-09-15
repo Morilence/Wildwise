@@ -227,7 +227,7 @@ npm run check
 npm run package
 ```
 
-Pinned StyLua uses Lua 5.1, four spaces, separated function declarations and expanded bodies. `check` runs formatting, static analysis, 121 pure Lua tests, 7 collector fixture tests, package allowlisting and Lua compilation. Packaging writes `dist/Wildwise-0.3.0.zip` and its SHA-256. Test code, development dependencies, reference sources and game assets are excluded.
+Pinned StyLua uses Lua 5.1, four spaces, separated function declarations and expanded bodies. `check` runs formatting, static analysis, 139 pure Lua tests, 7 collector fixture tests, package allowlisting and Lua compilation. Packaging writes `dist/Wildwise-0.3.0.zip` and its SHA-256. Test code, development dependencies, reference sources and game assets are excluded.
 
 This version passed **111 native engine / headless UI contract checks**: 85 existing checks, 17 capability checks, 6 appearance lifecycle checks and 3 asynchronous drop checks. The skin asset entry uses a stub in the lifecycle tests; actual skin rendering remains unverified. Earlier save-restore / unwrap checks remain historical evidence. **These do not certify graphics, real multiplayer, Master/Caves travel or comparative performance.** See the [test report](docs/testing.md) for scope, load measurements and reproduction commands.
 

@@ -24,7 +24,7 @@ end
 
 -- 检查实体引用仍然有效；不持有或重建实体。
 function M.valid(e)
-    return e ~= nil and e.IsValid ~= nil and e:IsValid()
+    return type(e) == "table" and type(e.IsValid) == "function" and e:IsValid()
 end
 
 -- 计算键值表的条目数。

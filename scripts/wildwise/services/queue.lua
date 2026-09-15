@@ -43,7 +43,7 @@ function Queue:finish(skipped)
     if task and task.key then
         self.seen[task.key] = nil
     end
-    self.inflight = nil
+    self.inflight, self.wait_since = nil, nil
     self.adapter.release()
     if skipped then
         self.skipped = self.skipped + 1
@@ -96,7 +96,6 @@ function Queue:result(token, result, reason)
         return
     end
     self.inflight = nil
-    self.adapter.release()
     if result == "done" then
         self:finish(false)
     elseif result == "skip" then
@@ -104,8 +103,10 @@ function Queue:result(token, result, reason)
     elseif result == "pause" then
         self:pause(reason)
     elseif result == "progress" then
+        self.adapter.release()
         self.tasks[1].retries = 0
     else
+        self.adapter.release()
         local task = self.tasks[1]
         if task.retries < 1 then
             task.retries = task.retries + 1

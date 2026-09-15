@@ -140,6 +140,8 @@ for id, schema in pairs(M.schema) do
 end
 -- stage 在不同原生组件中可能是索引或名称；水分目前由农田只读接口返回布尔值。
 M.schema.stage.value_type = "scalar"
+-- schema 在模块加载阶段完成登记；热路径复用有序键，不为每个订阅重新排序。
+local schema_keys = U.sortedkeys(M.schema)
 
 local function put(fields, key, value)
     if type(value) == "number" and U.finite(value) then
@@ -625,6 +627,15 @@ end
 
 -- 按订阅用途与服务器规则筛选可发送字段。
 function M.filter(fields, mask, config)
+    if mask == "health" then
+        local health = {}
+        for _, key in ipairs({ "health", "health_max" }) do
+            if U.finite(fields[key]) then
+                health[key] = fields[key]
+            end
+        end
+        return health
+    end
     local out = {}
     for key, value in pairs(fields) do
         local schema = M.schema[key]
@@ -653,7 +664,7 @@ function M.sanitize(fields)
     if type(fields) ~= "table" then
         return out
     end
-    for _, key in ipairs(U.sortedkeys(M.schema)) do
+    for _, key in ipairs(schema_keys) do
         local value, expected = fields[key], M.schema[key].value_type
         local kind = type(value)
         if kind == "number" and U.finite(value) and (expected == "number" or expected == "scalar") then

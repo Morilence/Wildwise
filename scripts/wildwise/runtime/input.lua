@@ -77,23 +77,26 @@ function M.attach(client, G)
             local ax, az, bx, bz = selected.point.x, selected.point.z, finish.x, finish.z
             local mx, mz = (ax + bx) / 2, (az + bz) / 2
             local radius = math.min(50, math.sqrt((ax - bx) ^ 2 + (az - bz) ^ 2) / 2 + 1)
-            local candidates, targets =
-                G.TheSim:FindEntities(mx, 0, mz, radius, nil, { "INLIMBO", "FX", "NOCLICK" }), {}
-            for _, target in ipairs(candidates) do
+            local candidates = G.TheSim:FindEntities(mx, 0, mz, radius, nil, { "INLIMBO", "FX", "NOCLICK" })
+            local function selected_target(target)
                 local x, _, z = target.Transform:GetWorldPosition()
-                if
-                    x >= math.min(ax, bx)
+                return x >= math.min(ax, bx)
                     and x <= math.max(ax, bx)
                     and z >= math.min(az, bz)
                     and z <= math.max(az, bz)
-                then
-                    targets[#targets + 1] = target
-                    if #targets >= client.config.queue.limit then
-                        break
-                    end
-                end
+                    and not client.queue.seen[target]
+                    and Actions.pick(player, target, target:GetPosition(), right) ~= nil
             end
-            for _, target in ipairs(Planner.nearest(targets, player:GetPosition())) do
+            for _, target in
+                ipairs(
+                    Planner.nearest(
+                        candidates,
+                        player:GetPosition(),
+                        client.config.queue.limit - #client.queue.tasks,
+                        selected_target
+                    )
+                )
+            do
                 add(target, right, target:GetPosition())
             end
         elseif right and player.replica.inventory:GetActiveItem() and not U.valid(selected.target) then
@@ -123,10 +126,22 @@ function M.attach(client, G)
                     nil,
                     { "INLIMBO", "FX", "NOCLICK" }
                 )
-                for _, target in ipairs(Planner.nearest(targets, player:GetPosition())) do
-                    if target.prefab == selected.target.prefab then
-                        add(target, right, target:GetPosition())
-                    end
+                local function matching(target)
+                    return target.prefab == selected.target.prefab
+                        and not client.queue.seen[target]
+                        and Actions.pick(player, target, target:GetPosition(), right) ~= nil
+                end
+                for _, target in
+                    ipairs(
+                        Planner.nearest(
+                            targets,
+                            player:GetPosition(),
+                            client.config.queue.limit - #client.queue.tasks,
+                            matching
+                        )
+                    )
+                do
+                    add(target, right, target:GetPosition())
                 end
             else
                 add(selected.target, right, selected.point)

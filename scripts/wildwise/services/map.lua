@@ -18,6 +18,7 @@ function Map.new(worldid)
         preferences = {},
         revision = 0,
         load_error = nil,
+        pair_views = {},
     }, Map)
 end
 
@@ -130,7 +131,8 @@ function Map:discover(userid, a, b, shared)
         self.pairs[id] = { id = id, a = a, b = b, shared = shared == true }
         self.endpoints[a.key], self.endpoints[b.key] = id, id
     elseif shared then
-        self.pairs[id].shared = true
+        local previous = self.pairs[id]
+        self.pairs[id] = { id = id, a = previous.a, b = previous.b, shared = true }
     end
     self.discoveries[userid] = self.discoveries[userid] or {}
     self.discoveries[userid][tostring(id)] = true
@@ -147,22 +149,33 @@ function Map:remove_pair(id)
     if pair then
         self.endpoints[pair.a.key], self.endpoints[pair.b.key] = nil, nil
         self.pairs[id] = nil
+        for _, discovery in pairs(self.discoveries) do
+            discovery[tostring(id)] = nil
+        end
         self.revision = self.revision + 1
     end
 end
 
 -- 只返回本玩家已发现或获准共享的配对，按编号排序。
 function Map:visible_pairs(userid, share)
-    local out = {}
+    local cached = self.pair_views[userid]
+    if cached and cached.revision == self.revision and cached.share == share then
+        return cached.rows, cached.group
+    end
+    local out, private = {}, false
     for _, pair in pairs(self.pairs) do
-        if (share and pair.shared) or (self.discoveries[userid] and self.discoveries[userid][tostring(pair.id)]) then
+        local personal = self.discoveries[userid] and self.discoveries[userid][tostring(pair.id)]
+        if (share and pair.shared) or personal then
             out[#out + 1] = pair
+            private = private or not (share and pair.shared)
         end
     end
     table.sort(out, function(a, b)
         return a.id < b.id
     end)
-    return out
+    local group = share and (not private and "shared" or "shared+" .. userid) or "private:" .. userid
+    self.pair_views[userid] = { revision = self.revision, share = share, rows = out, group = group }
+    return out, group
 end
 
 -- 只记录共享开启期间的探索来源。不会把任何玩家的完整个人地图复制进公共状态。
@@ -333,6 +346,7 @@ function Map:load(data)
     self.discoveries, self.preferences = discoveries, preferences
     self.exploration, self.exploration_keys = exploration, keys
     self.load_error, self.original = nil, nil
+    self.revision, self.pair_views = self.revision + 1, {}
     return true
 end
 return Map

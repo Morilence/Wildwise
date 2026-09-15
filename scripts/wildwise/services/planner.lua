@@ -51,26 +51,59 @@ function M.project(record)
     return { x = x, y = y, z = z }
 end
 
--- 按贪心最近邻稳定排序已筛选的目标。
-function M.nearest(targets, start)
+-- 先用有界最大堆选出最近 K 项，再规划路线；O(N log K + K²)，每个候选只读一次坐标。
+-- accept 在读取坐标前过滤无关实体；内部调用默认也不允许规划超过 200 项。
+function M.nearest(targets, start, limit, accept)
+    limit = math.max(0, math.min(limit or 200, 200))
+    if limit == 0 then
+        return {}
+    end
     local pending, ordered = {}, {}
-    for _, t in ipairs(targets) do
-        pending[#pending + 1] = t
+    local function farther(a, b)
+        return a.distance > b.distance or (a.distance == b.distance and a.target.GUID > b.target.GUID)
+    end
+    for _, target in ipairs(targets) do
+        if U.valid(target) and (not accept or accept(target)) then
+            local x, _, z = target.Transform:GetWorldPosition()
+            local entry = { target = target, x = x, z = z, distance = (x - start.x) ^ 2 + (z - start.z) ^ 2 }
+            if #pending < limit then
+                local i = #pending + 1
+                while i > 1 and farther(entry, pending[math.floor(i / 2)]) do
+                    pending[i] = pending[math.floor(i / 2)]
+                    i = math.floor(i / 2)
+                end
+                pending[i] = entry
+            elseif farther(pending[1], entry) then
+                local i = 1
+                while i * 2 <= #pending do
+                    local child = i * 2
+                    if child < #pending and farther(pending[child + 1], pending[child]) then
+                        child = child + 1
+                    end
+                    if not farther(pending[child], entry) then
+                        break
+                    end
+                    pending[i], i = pending[child], child
+                end
+                pending[i] = entry
+            end
+        end
     end
     local x, z = start.x, start.z
     while #pending > 0 do
         local best, distance = 1, math.huge
-        for i, target in ipairs(pending) do
-            local tx, _, tz = target.Transform:GetWorldPosition()
-            local d = (tx - x) ^ 2 + (tz - z) ^ 2
-            if d < distance or (d == distance and target.GUID < pending[best].GUID) then
+        for i, entry in ipairs(pending) do
+            local d = (entry.x - x) ^ 2 + (entry.z - z) ^ 2
+            if d < distance or (d == distance and entry.target.GUID < pending[best].target.GUID) then
                 best, distance = i, d
             end
         end
-        local target = table.remove(pending, best)
-        ordered[#ordered + 1] = target
-        local tx, _, tz = target.Transform:GetWorldPosition()
-        x, z = tx, tz
+        local entry = pending[best]
+        local last = #pending
+        pending[best] = pending[last]
+        pending[last] = nil
+        ordered[#ordered + 1] = entry.target
+        x, z = entry.x, entry.z
     end
     return ordered
 end

@@ -55,15 +55,22 @@ function M.receive(pending, kind, data)
         if type(data.chunks) ~= "number" or data.chunks < 0 or data.chunks > 8192 or data.chunks % 1 ~= 0 then
             return nil
         end
-        return {
+        local state = {
             revision = data.revision,
             expected = data.chunks,
             received = 0,
-            players = {},
-            pings = {},
-            pairs = {},
-            fires = {},
         }
+        local selected = data.keys or keys
+        if type(selected) ~= "table" or #selected > 4 or #selected == 0 then
+            return nil
+        end
+        for _, key in ipairs(selected) do
+            if not allowed[key] or state[key] then
+                return nil
+            end
+            state[key] = {}
+        end
+        return state
     end
     if not pending or pending.revision ~= data.revision then
         return nil
@@ -71,6 +78,7 @@ function M.receive(pending, kind, data)
     if kind == "map_chunk" then
         if
             not allowed[data.key]
+            or type(pending[data.key]) ~= "table"
             or type(data.entries) ~= "table"
             or data.index ~= pending.received + 1
             or pending.received >= pending.expected
@@ -88,7 +96,13 @@ function M.receive(pending, kind, data)
         return pending
     end
     if kind == "map_end" and pending.received == pending.expected then
-        return nil, { players = pending.players, pings = pending.pings, pairs = pending.pairs, fires = pending.fires }
+        local snapshot = {}
+        for _, key in ipairs(keys) do
+            if pending[key] then
+                snapshot[key] = pending[key]
+            end
+        end
+        return nil, snapshot
     end
     return nil
 end

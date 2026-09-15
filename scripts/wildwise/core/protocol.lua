@@ -40,6 +40,39 @@ function M.encode(json, kind, session, sequence, data)
     return encoded
 end
 
+-- 地图频道可共享不可变载荷；只编码一次正文，每个接收者仅重建会话信封。
+function M.prepare(json, kind, data)
+    local envelope = { v = M.VERSION, kind = kind, session = string.rep("s", 96), seq = 9007199254740991, data = data }
+    if not safe(envelope, 0, { n = 0 }) then
+        return nil
+    end
+    local ok, body = pcall(json.encode, data)
+    if not ok then
+        return nil
+    end
+    local packet = { kind = kind, body = body }
+    local bytes = M.wrap(json, packet, envelope.session, envelope.seq)
+    if bytes then
+        packet.max_bytes = #bytes
+        return packet
+    end
+end
+
+function M.wrap(json, packet, session, sequence)
+    local bytes = '{"v":'
+        .. M.VERSION
+        .. ',"kind":'
+        .. json.encode(packet.kind)
+        .. ',"session":'
+        .. json.encode(session)
+        .. ',"seq":'
+        .. tostring(sequence)
+        .. ',"data":'
+        .. packet.body
+        .. "}"
+    return #bytes <= M.MAX_BYTES and bytes or nil
+end
+
 -- 校验协议、类型、深度与预算，拒绝损坏或不受支持的消息。
 function M.decode(json, bytes)
     if type(bytes) ~= "string" or #bytes > M.MAX_BYTES then
@@ -56,6 +89,7 @@ function M.decode(json, bytes)
         or type(msg.kind) ~= "string"
         or not U.finite(msg.seq)
         or msg.seq < 0
+        or msg.seq > 9007199254740991
         or msg.seq % 1 ~= 0
         or type(msg.data) ~= "table"
     then

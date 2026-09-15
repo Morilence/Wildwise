@@ -79,6 +79,9 @@ end
 
 -- 释放一个玩家的实体订阅，无订阅者时销毁实体缓存。
 function Observer:unsubscribe(player, target)
+    if target == nil then
+        return
+    end
     if self.players[player] then
         self.players[player][target] = nil
         if next(self.players[player]) == nil then
@@ -149,7 +152,13 @@ function Observer:tick(now)
                 if now > sub.expires or not self:authorized(player, target) then
                     self.send(player, target, "invalidate", {})
                     self:unsubscribe(player, target)
-                elseif sub.fresh or refresh or record.health_dirty or now >= sub.next_dynamic then
+                elseif
+                    sub.fresh
+                    or sub.retry
+                    or refresh
+                    or record.health_dirty
+                    or (sub.mask ~= "health" and now >= sub.next_dynamic)
+                then
                     local fields = U.copy(record.common)
                     if sub.mask ~= "health" and (refresh or sub.fresh or now >= sub.next_dynamic) then
                         sub.view = Facts.viewer(target, player, self.context)
@@ -165,11 +174,15 @@ function Observer:tick(now)
                             player,
                             target,
                             sub.fresh and "snapshot" or "delta",
-                            { fields = changes, removed = removed }
+                            { fields = sub.fresh and fields or changes, removed = sub.fresh and {} or removed }
                         )
+                        sub.retry = sent == false
                         if sent ~= false then
                             sub.previous, sub.fresh = fields, false
                         end
+                    else
+                        -- 失败的短暂变化可能已经恢复到已发送值，无差异时不再保持重试热循环。
+                        sub.retry = false
                     end
                 end
             end

@@ -1,0 +1,161 @@
+{
+  "date": "2026-09-14",
+  "version": "0.3.0",
+  "review_baseline": "7618aba8c977da139475c074af078dbc03ea0318",
+  "source_state": "working tree, uncommitted",
+  "resolved_review_findings": {
+    "P1": 2,
+    "P2": 6
+  },
+  "verification": {
+    "lua_passed": 139,
+    "lua_failed": 0,
+    "new_lua_regressions": 18,
+    "python_passed": 7,
+    "lint_files": 55,
+    "lint_warnings": 0,
+    "lint_errors": 0,
+    "format": "passed",
+    "package": "UTF-8 and Lua syntax checked",
+    "package_files": 64,
+    "npm_run_check_exit": 0
+  },
+  "engine": {
+    "game_version": "747465",
+    "steam_build": "24700372",
+    "scripts_zip_sha256": "a08856fd0a36e989a72be1676563b5da7357e60f9a6572ea9737e9cb7fadc275",
+    "json_lua_sha256": "f9e943bb5a25e4d85ef4c4f707aa1bb5e86e6e064a22d951b8649a095b0446fc",
+    "mode": "Linux x86_64, nullrenderer, offline LAN, isolated Master, fresh process on final runtime source",
+    "human_players": 0,
+    "passed": 111,
+    "failed": 0,
+    "suites": {
+      "WW_ENGINE_RESULT": {
+        "passed": 26,
+        "failed": 0
+      },
+      "WW_UI_RESULT": {
+        "passed": 7,
+        "failed": 0
+      },
+      "WW2_ENGINE_RESULT": {
+        "passed": 34,
+        "failed": 0
+      },
+      "WW_REG_RESULT": {
+        "passed": 9,
+        "failed": 0
+      },
+      "WW_SIGN_RESULT": {
+        "passed": 8,
+        "failed": 0
+      },
+      "WW_CLIENT_RESULT": {
+        "passed": 1,
+        "failed": 0
+      },
+      "WW3_ENGINE_RESULT": {
+        "passed": 17,
+        "failed": 0
+      },
+      "WW3_APPEARANCE_RESULT": {
+        "passed": 6,
+        "failed": 0
+      },
+      "WW_EVENT_RESULT": {
+        "passed": 3,
+        "failed": 0
+      }
+    }
+  },
+  "native_load": {
+    "method": "wildwise_world:Tick CPU via os.clock; native flint at one landed location; 20 seconds per scene; scenes serial after async assertions; excludes entity creation, whole game frames, graphics and network",
+    "scenes": [
+      {
+        "count": 100,
+        "conserved": true,
+        "stacks": 5,
+        "samples": 200,
+        "p50_ms": 0.024,
+        "p95_ms": 0.155,
+        "p99_ms": 2.108,
+        "elapsed_seconds": 20.0,
+        "pending": 0
+      },
+      {
+        "count": 500,
+        "conserved": true,
+        "stacks": 15,
+        "samples": 201,
+        "p50_ms": 0.03,
+        "p95_ms": 2.112,
+        "p99_ms": 2.178,
+        "elapsed_seconds": 20.0,
+        "pending": 0
+      },
+      {
+        "count": 1000,
+        "conserved": true,
+        "stacks": 27,
+        "samples": 199,
+        "p50_ms": 0.05,
+        "p95_ms": 2.142,
+        "p99_ms": 2.234,
+        "elapsed_seconds": 20.0,
+        "pending": 0
+      }
+    ]
+  },
+  "isolated_benchmark_limits": [
+    "single observations, Lua 5.1 interpreter, fake entities and send endpoint, official engine JSON",
+    "planner now caps selection at 200; old probe planned every entity",
+    "item attempts complete across ticks; total work is not omitted",
+    "map initial synchronization completed before moving one unit; after cost includes ten drain ticks",
+    "health probe stays before next 500 ms refresh"
+  ],
+  "not_validated": [
+    "real remote multiplayer",
+    "graphical client rendering and frame times",
+    "real skin assets",
+    "Master/Caves travel",
+    "two-hour stability",
+    "mixed old/new client protocol compatibility"
+  ],
+  "runtime_file_sha256": {
+    "modmain.lua": "e8acc2fc81bfc69348ec7c546d9772e83c0e893637ca56e218b7dec33c649532",
+    "modinfo.lua": "fc31444d7ea1189bfec28bfdf03c7d753f64bbb056cb17b380e0f8b0869c4068",
+    "scripts/components/wildwise_world.lua": "0e5a813c77e1e5027323ade290b0283a6eb013893fab967e13f3d6cbffba1939",
+    "scripts/wildwise/core/config.lua": "d473d27d0c8275551a1defd9d02e21359cdd22a40855fad3875f0a2bdffdc414",
+    "scripts/wildwise/core/hooks.lua": "c4f440f81d25e7e4a5070e80e523780279f6ba060b9af991543b3e9a54d8d1b0",
+    "scripts/wildwise/core/lifetime.lua": "1da98a28bb81e47981a0949dcace7b74c97b67da3cc45618315bc26ce3cd4f29",
+    "scripts/wildwise/core/lru.lua": "005fbc45cdc0bd37f6a47795426ae15b3b8054e4d994774f6b48215b94d7076a",
+    "scripts/wildwise/core/map_transfer.lua": "98cf5c7652034038b1b25778e1cc32effb0569f2c5d9eb8c703292453a733e6d",
+    "scripts/wildwise/core/ordered_index.lua": "3aa7be6a5182a83d883f618321749ae47ac64e26e58d0bd05d596664087e0788",
+    "scripts/wildwise/core/protocol.lua": "dbaa4a14478b40940c96669302296c225db49fa61095a63cb0b87e9372bd909f",
+    "scripts/wildwise/core/util.lua": "d84e627bdbd4fa04ee9b7bef70278e0e55dab3917349b852f49a5e090ce7bff8",
+    "scripts/wildwise/runtime/actions.lua": "cf2e9ccf7655ca44d80a451861500bc5eade48f89da0b397dd7f5212dc12fce1",
+    "scripts/wildwise/runtime/bootstrap.lua": "47637c2ece5a34b84421e1168301150781219cf62f956262c6899bcbcb339521",
+    "scripts/wildwise/runtime/client.lua": "93bbb2d9413457c9e12da8787dad250e677eb873214274c54630ebf373231e98",
+    "scripts/wildwise/runtime/context.lua": "72f8e42e3b65281d09cb3dba8301193085d4307110eb3550a55ab2f4ebd3ab7b",
+    "scripts/wildwise/runtime/input.lua": "bfde4ef1298d7887712939e0fe74411bd92eb54bef384dd1da19a1ea29506c17",
+    "scripts/wildwise/runtime/items.lua": "8ffe95c8036f2ef1760f35ffd287b952bf3b12e6c145626db25301c1e4766a57",
+    "scripts/wildwise/runtime/signs.lua": "52e77267910f868f239d9c1daff35a37d6c7c5221142ca5ee68f85efd3d475e9",
+    "scripts/wildwise/services/containers.lua": "842305188a0d331b4da003fdbb49fa40797c4195032ee9022f5a11cf36b59f4e",
+    "scripts/wildwise/services/details.lua": "8a73c3c0ff55709aefa155d1d69c8951c82c5931c14cb9c519371c930613cc92",
+    "scripts/wildwise/services/facts.lua": "0339356ed9f452e4d91da49ffcce0990262d7ef95d0b0b476e3e2d07bf171967",
+    "scripts/wildwise/services/health.lua": "61eaac2f8f75d9879d34ceef1e438c6d017c2a7a25f5725858da621b8d9901a3",
+    "scripts/wildwise/services/items.lua": "61cd2a72f1ea18dd9101f5fa3b7efcbd8a8670849940d87ac9409da07fdf4418",
+    "scripts/wildwise/services/map.lua": "d5f2bc80527c8f1fe1f593ac4a3f98e476db8e72084b63ecff9323903f5fedfd",
+    "scripts/wildwise/services/map_sync.lua": "9f77a8d2f7efaa841fb7a0b2237cce6cf2f14f812ee2074e35a1120f830e5804",
+    "scripts/wildwise/services/observer.lua": "8b8acd3f0660b811cd09e615e40249aee5e67a96c4972bf55762a42946ce1302",
+    "scripts/wildwise/services/planner.lua": "16565f298c30f3c77bcc1b574e391788b10ec88b481d93229df6a375632e6415",
+    "scripts/wildwise/services/queue.lua": "4714d747a6dfa392db51445ff371aee37828ccfd2b8c3368c2e4eba8d8f59535",
+    "scripts/wildwise/services/recipes.lua": "1959d916f0060053f00584dfdaa01b7b37aa02d33f5e83873a362bb61b23838c",
+    "scripts/wildwise/services/signs.lua": "dcc4043e7dbe8f3e6efb07be84f60f276ab2b717b5fc30bc7bb769a95a29e61a",
+    "scripts/wildwise/ui/format.lua": "3c00c0b97b06f8798141b34f69627c5a7e8a07b3804c59f26a9bb434cc7214c5",
+    "scripts/wildwise/ui/hud.lua": "71bd69a43f7f2db8cbfd15ca4031eb944cff5c2d879b3a1df6521ec21fbfcb2a",
+    "scripts/wildwise/ui/map.lua": "ca84b4140d2a15080294e3327398132f2beb8eb0cca48730b2a515f2c0527a7c",
+    "scripts/wildwise/ui/menu.lua": "fd5c5b68d06b29132e1d77ddd8bc701f5c11df81b11bae11851899ad7d0ac1a9",
+    "scripts/wildwise/ui/strings.lua": "4ed5bdab780cc1dfd2d6ae823e621d5cd3c4cf2a091bc1c7f8f1a0d92f56c951"
+  }
+}

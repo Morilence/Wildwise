@@ -1,7 +1,7 @@
 local Context = require("wildwise/runtime/context")
 local U = require("wildwise/core/util")
 local Protocol = require("wildwise/core/protocol")
-local MapTransfer = require("wildwise/core/map_transfer")
+local MapSync = require("wildwise/services/map_sync")
 local Lifetime = require("wildwise/core/lifetime")
 local Config = require("wildwise/core/config")
 local Health = require("wildwise/services/health")
@@ -18,6 +18,9 @@ local World = G.Class(function(self, inst)
     self.portals, self.fires = {}, {}
     self.boot = tostring(os.time())
     self.map = Map.new(G.TheShard and G.TheShard:GetShardId() or "1")
+    self.map_sync = MapSync.new(json, function(player, packet)
+        return self:Send(player, nil, packet.kind, nil, packet)
+    end, os.clock)
     self.observer = Observer.new(
         { G = G, config = self.config, cooking = require("cooking"), now = G.GetTime() },
         function(player, target, kind, data)
@@ -67,13 +70,18 @@ local World = G.Class(function(self, inst)
 end)
 
 -- 给当前玩家会话发送校验后的消息；成功发送返回 true。
-function World:Send(player, target, kind, data)
+function World:Send(player, target, kind, data, packet)
     local state = self.players[player]
     if not state or not U.valid(player) then
         return false
     end
     self.send_sequence = self.send_sequence + 1
-    local bytes = Protocol.encode(json, kind, state.session, self.send_sequence, data)
+    local bytes
+    if packet then
+        bytes = Protocol.wrap(json, packet, state.session, self.send_sequence)
+    else
+        bytes = Protocol.encode(json, kind, state.session, self.send_sequence, data)
+    end
     if bytes then
         if Context.client and Context.client.player == player then
             Context.client:receive(target, bytes)
@@ -84,21 +92,6 @@ function World:Send(player, target, kind, data)
         return true
     end
     return false
-end
-
--- 预检地图快照并顺序发送，任一失败时保留待重试状态。
-function World:SendMap(player, state, data)
-    state.map_revision = (state.map_revision or 0) + 1
-    local messages = MapTransfer.pack(json, data, state.map_revision)
-    if not messages then
-        return false
-    end
-    for _, message in ipairs(messages) do
-        if not self:Send(player, nil, message.kind, message.data) then
-            return false
-        end
-    end
-    return true
 end
 
 -- 为玩家建立独立会话和原版动作结果监听。
@@ -134,10 +127,14 @@ function World:AddPlayer(player)
         end
         state.action = nil
         action:AddSuccessAction(function()
-            self:Send(player, nil, "action_result", { token = watch.token, result = "success" })
+            if state.session == watch.session then
+                self:Send(player, nil, "action_result", { token = watch.token, result = "success" })
+            end
         end)
         action:AddFailAction(function()
-            self:Send(player, nil, "action_result", { token = watch.token, result = "failed" })
+            if state.session == watch.session then
+                self:Send(player, nil, "action_result", { token = watch.token, result = "failed" })
+            end
         end)
     end)
     scope:listen(player, "actionfailed", function()
@@ -180,6 +177,8 @@ function World:RemovePlayer(player)
     end
     state.scope:close()
     self.observer:forget(player)
+    self.map_sync:remove(player)
+    self.map.pair_views[player.userid] = nil
     if self.items then
         self.items:reserve(player, nil, G.GetTime())
     end
@@ -203,12 +202,40 @@ function World:Request(player, target, bytes)
     if not msg then
         return
     end
+    -- 实体引用是独立 RPC 参数，不在 JSON 信封里；先检查类型，再进入内部服务。
+    if target ~= nil and not U.valid(target) then
+        return
+    end
     local data = msg.data
     if msg.kind == "hello" then
         if type(data.nonce) ~= "string" or #data.nonce > 64 then
             return
         end
-        state.seq = 0
+        if state.nonce ~= data.nonce then
+            state.retired_nonces = state.retired_nonces or {}
+            for _, nonce in ipairs(state.retired_nonces) do
+                if nonce == data.nonce then
+                    return
+                end
+            end
+            if state.nonce then
+                state.retired_nonces[#state.retired_nonces + 1] = state.nonce
+                if #state.retired_nonces > 16 then
+                    table.remove(state.retired_nonces, 1)
+                end
+            end
+            self.session_sequence = self.session_sequence + 1
+            state.session = self.map.worldid .. ":" .. self.boot .. ":" .. self.session_sequence
+            state.nonce, state.seq, state.action = data.nonce, 0, nil
+            state.threats = {}
+            self.observer:forget(player)
+            if self.map_sync then
+                self.map_sync:remove(player)
+            end
+            if self.items then
+                self.items:reserve(player, nil, now)
+            end
+        end
         state.active_until = now + 10
         self:Send(player, nil, "welcome", {
             nonce = data.nonce,
@@ -330,7 +357,13 @@ function World:Request(player, target, bytes)
         if target and (not U.valid(target) or not target.Transform or U.distance(player, target) > 80 ^ 2) then
             return
         end
-        state.action = { token = data.token, action = data.action, target = target, expires = now + 7 }
+        state.action = {
+            token = data.token,
+            action = data.action,
+            target = target,
+            expires = now + 7,
+            session = state.session,
+        }
         if self.items and data.action == "PICKUP" then
             self.items:reserve(player, target, now)
         end
@@ -416,9 +449,6 @@ function World:MapUpdate(now)
             end
         end
     end
-    table.sort(roster, function(a, b)
-        return a.userid < b.userid
-    end)
     for shard, remote in pairs(self.remote) do
         if now - remote.time > 20 then
             self.remote[shard] = nil
@@ -428,6 +458,9 @@ function World:MapUpdate(now)
             end
         end
     end
+    table.sort(roster, function(a, b)
+        return a.userid == b.userid and a.shard < b.shard or a.userid < b.userid
+    end)
     local pings = {}
     for _, ping in pairs(self.map.pings) do
         if self.config.map.pings ~= false then
@@ -440,27 +473,32 @@ function World:MapUpdate(now)
             self.fires[fire] = nil
         elseif self.config.map.signal_fires ~= false then
             local x, _, z = fire.Transform:GetWorldPosition()
-            fires[#fires + 1] = { x = x, z = z, prefab = fire.prefab }
+            fires[#fires + 1] = { x = x, z = z, prefab = fire.prefab, id = fire.GUID }
         end
     end
     table.sort(pings, function(a, b)
         return a.id < b.id
     end)
+    table.sort(fires, function(a, b)
+        return a.id < b.id
+    end)
+    local channels = {
+        players = self.map_sync:publish_rows("players", "players", roster),
+        pings = self.map_sync:publish_rows("pings", "pings", pings),
+        fires = self.map_sync:publish_rows("fires", "fires", fires),
+    }
     for player, state in pairs(self.players) do
         if state.active_until and now < state.active_until then
             local prefs = self.map:preferences_for(player.userid)
-            local data = {
-                players = roster,
-                pings = pings,
-                fires = fires,
-                pairs = self.map:visible_pairs(player.userid, exploration and prefs.exploration),
-            }
-            local encoded = json.encode(data)
-            if encoded ~= state.last_map then
-                if self:SendMap(player, state, data) then
-                    state.last_map = encoded
-                end
+            for key, job in pairs(channels) do
+                self.map_sync:watch(player, key, job)
             end
+            local rows, group = self.map:visible_pairs(player.userid, exploration and prefs.exploration)
+            self.map_sync:watch(
+                player,
+                "pairs",
+                self.map_sync:publish("pairs:" .. group, "pairs", self.map.revision, rows)
+            )
             -- 每次最多回放 8 个允许共享的点，加入时不会瞬间执行整张地图的恢复。
             if
                 exploration
@@ -476,6 +514,8 @@ function World:MapUpdate(now)
                 end
                 state.explore_cursor = finish
             end
+        else
+            self.map_sync:remove(player)
         end
     end
     if now >= self.next_shard and G.TheShard then
@@ -586,6 +626,7 @@ function World:Tick()
             self:ValidatePairs()
         end
     end
+    self.map_sync:tick()
 end
 
 -- 供引擎保存持久地图状态；执行队列和 UI 不入档。
@@ -604,6 +645,7 @@ end
 function World:OnRemoveFromEntity()
     self.scope:close()
     self.observer:close()
+    self.map_sync:close()
     if self.items then
         self.items:close()
     end
